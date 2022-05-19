@@ -2,8 +2,8 @@ package com.example.vfarmrdbackend.controllers;
 
 import java.util.List;
 
-import com.example.vfarmrdbackend.models.UserRole;
-import com.example.vfarmrdbackend.repositories.UserRoleRepository;
+import com.example.vfarmrdbackend.models.Role;
+import com.example.vfarmrdbackend.repositories.RoleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api")
-public class UserRoleController {
+public class RoleController {
     @Autowired
-    private UserRoleRepository repo;
+    private RoleRepository repo;
 
-    @GetMapping("/userrole")
-    public ResponseEntity<List<UserRole>> getAllUserRoles() {
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getAllRoles() {
         try {
-            List<UserRole> _listUserRoles = repo.findAll();
-            if (_listUserRoles.isEmpty()) {
+            List<Role> _listRoles = repo.findAll();
+            if (_listRoles.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(_listUserRoles, HttpStatus.OK);
+            return new ResponseEntity<>(_listRoles, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
