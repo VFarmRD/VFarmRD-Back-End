@@ -3,7 +3,6 @@ package com.example.vfarmrdbackend.controllers;
 import java.util.List;
 
 import com.example.vfarmrdbackend.models.Role;
-import com.example.vfarmrdbackend.payload.response.MessageResponse;
 import com.example.vfarmrdbackend.repositories.RoleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +26,13 @@ public class RoleController {
             List<Role> _listRoles = repo.findAll();
             if (_listRoles.isEmpty()) {
                 return new ResponseEntity<>(
-                        new MessageResponse("List Role is null!"),
+                        "List Role is null!",
                         HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(_listRoles, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
-                    new MessageResponse("The server is downnnn!!!"),
+                    "The server is down!!!",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

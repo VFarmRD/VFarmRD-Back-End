@@ -1,11 +1,9 @@
 package com.example.vfarmrdbackend.models;
 
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.GenerationType;
 

@@ -1,9 +1,7 @@
 package com.example.vfarmrdbackend.controllers;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -13,7 +11,6 @@ import com.example.vfarmrdbackend.models.User;
 import com.example.vfarmrdbackend.payload.request.LoginRequest;
 import com.example.vfarmrdbackend.payload.request.SignupRequest;
 import com.example.vfarmrdbackend.payload.response.JwtResponse;
-import com.example.vfarmrdbackend.payload.response.MessageResponse;
 import com.example.vfarmrdbackend.repositories.RoleRepository;
 import com.example.vfarmrdbackend.repositories.UserRepository;
 import com.example.vfarmrdbackend.security.jwt.JwtUtils;
@@ -103,13 +100,13 @@ public class AuthController {
           Role managerRole = roleRepository.findRoleByRole_name("manager");
           roles.add(managerRole);
           break;
-        default:
+        case "user":
           Role userRole = roleRepository.findRoleByRole_name("user");
           roles.add(userRole);
       }
     });
     user.listRoles(roles);
     userRepository.save(user);
-    return new ResponseEntity<>(null, HttpStatus.OK);
+    return new ResponseEntity<>("Sign up account completed!", HttpStatus.OK);
   }
 }
