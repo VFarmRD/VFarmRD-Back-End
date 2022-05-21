@@ -1,12 +1,16 @@
 package com.example.vfarmrdbackend.models;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.GenerationType;
+import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "users")
@@ -15,16 +19,30 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int user_id;
     private String user_name;
+    private String email;
+    private String password;
     private boolean user_status;
     private Date created_time;
     private Date modified_time;
+    @ManyToMany
+    @JoinTable(name = "userrole", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
 
     public User() {
     }
 
-    public User(int user_id, String user_name, boolean user_status, Date created_time, Date modified_time) {
+    public User(String user_name, String email, String password) {
+        this.user_name = user_name;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(int user_id, String user_name, String email, String password, boolean user_status, Date created_time,
+            Date modified_time) {
         this.user_id = user_id;
         this.user_name = user_name;
+        this.email = email;
+        this.password = password;
         this.user_status = user_status;
         this.created_time = created_time;
         this.modified_time = modified_time;
@@ -44,6 +62,22 @@ public class User {
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean isUser_status() {
@@ -68,5 +102,13 @@ public class User {
 
     public void setModified_time(Date modified_time) {
         this.modified_time = modified_time;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void listRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }
