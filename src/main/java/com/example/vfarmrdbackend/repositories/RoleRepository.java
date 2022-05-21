@@ -1,7 +1,5 @@
 package com.example.vfarmrdbackend.repositories;
 
-import java.util.List;
-
 import com.example.vfarmrdbackend.models.Role;
 
 import org.springframework.data.jpa.repository.JpaRepository;
