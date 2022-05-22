@@ -10,6 +10,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface RoleRepository extends JpaRepository<Role, Integer> {
 
-    @Query(value = "SELECT r.* FROM roles r WHERE r.role_name LIKE %:keyword% ", nativeQuery = true)
-    List<Role> findRoleNameByKeyword(@Param("keyword") String keyword);
+    @Query(value = "select * from roles r where r.role_name = :role_name", nativeQuery = true)
+    Role findRoleByRole_name(@Param("role_name") String role_name);
 }

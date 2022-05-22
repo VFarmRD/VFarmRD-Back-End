@@ -18,10 +18,10 @@ public class UserController {
     @Autowired
     private UserRepository repo;
 
-    @GetMapping("/Users")
+    @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         try {
-            List<User> _listUsers = repo.findAll();
+            List<User> _listUsers = repo.getAllUsers();
             if (_listUsers.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
