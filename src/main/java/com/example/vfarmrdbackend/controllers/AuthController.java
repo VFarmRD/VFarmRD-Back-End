@@ -50,6 +50,8 @@ public class AuthController {
   @Autowired
   JwtUtils jwtUtils;
 
+  Date date = new Date();
+
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -107,8 +109,7 @@ public class AuthController {
       }
     });
     user.listRoles(roles);
-    Date d = new Date();
-    user.setCreated_time(d);
+    user.setCreated_time(date);
     userRepository.save(user);
     return new ResponseEntity<>("Sign up account completed!", HttpStatus.OK);
   }
