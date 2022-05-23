@@ -1,6 +1,7 @@
 package com.example.vfarmrdbackend.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,12 +101,14 @@ public class AuthController {
           Role managerRole = roleRepository.findRoleByRole_name("manager");
           roles.add(managerRole);
           break;
-        case "user":
+        default:
           Role userRole = roleRepository.findRoleByRole_name("user");
           roles.add(userRole);
       }
     });
     user.listRoles(roles);
+    Date d = new Date();
+    user.setCreated_time(d);
     userRepository.save(user);
     return new ResponseEntity<>("Sign up account completed!", HttpStatus.OK);
   }
