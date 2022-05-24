@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -69,9 +70,22 @@ public class FileController {
             "or hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getFileById(@PathVariable("id") int id) {
-        File _file = repo.findFileByFile_id(id);
+        File _file = repo.getFileByFile_id(id);
         if (_file != null) {
             return new ResponseEntity<>(_file, HttpStatus.FOUND);
+        } else {
+            return new ResponseEntity<>("File not found!", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/files/search")
+    @PreAuthorize("hasAuthority('admin')" +
+            "or hasAuthority('staff') " +
+            "or hasAuthority('manager')")
+    public ResponseEntity<?> findFileWithKeyword(@RequestParam("keyword") String keyword) {
+        List<File> _listFile = repo.findFileWithKeyword("%" + keyword + "%");
+        if (_listFile != null) {
+            return new ResponseEntity<>(_listFile, HttpStatus.FOUND);
         } else {
             return new ResponseEntity<>("File not found!", HttpStatus.NOT_FOUND);
         }
@@ -100,7 +114,7 @@ public class FileController {
             "or hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> updateRole(@PathVariable("id") int id, @RequestBody File file) {
-        File _file = repo.findFileByFile_id(id);
+        File _file = repo.getFileByFile_id(id);
         if (_file != null) {
             _file.setFile_name(file.getFile_name());
             _file.setFile_path(file.getFile_path());

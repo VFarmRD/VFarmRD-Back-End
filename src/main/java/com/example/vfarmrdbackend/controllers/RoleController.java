@@ -45,7 +45,7 @@ public class RoleController {
     @GetMapping("/roles/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> getRoleById(@PathVariable("id") int id) {
-        Role _role = repo.findRoleByRole_id(id);
+        Role _role = repo.getRoleByRole_id(id);
         if (_role != null) {
             return new ResponseEntity<>(_role, HttpStatus.FOUND);
         } else {
@@ -71,7 +71,7 @@ public class RoleController {
     @PutMapping("/roles/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> updateRole(@PathVariable("id") int id, @RequestBody Role role) {
-        Role _role = repo.findRoleByRole_id(id);
+        Role _role = repo.getRoleByRole_id(id);
         if (_role != null) {
             _role.setRole_name(role.getRole_name());
             repo.save(_role);

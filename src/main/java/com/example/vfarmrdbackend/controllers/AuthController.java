@@ -75,11 +75,11 @@ public class AuthController {
 
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-    User user = userRepository.findUserByUser_name(signUpRequest.getUser_name());
+    User user = userRepository.getUserByUser_name(signUpRequest.getUser_name());
     if (user != null) {
       return new ResponseEntity<>(null, HttpStatus.CONFLICT);
     }
-    user = userRepository.findUserByEmail(signUpRequest.getEmail());
+    user = userRepository.getUserByEmail(signUpRequest.getEmail());
     if (user != null) {
       return new ResponseEntity<>(null, HttpStatus.IM_USED);
     }
@@ -92,19 +92,19 @@ public class AuthController {
     strRoles.forEach(role -> {
       switch (role) {
         case "admin":
-          Role adminRole = roleRepository.findRoleByRole_name("admin");
+          Role adminRole = roleRepository.getRoleByRole_name("admin");
           roles.add(adminRole);
           break;
         case "staff":
-          Role staffRole = roleRepository.findRoleByRole_name("staff");
+          Role staffRole = roleRepository.getRoleByRole_name("staff");
           roles.add(staffRole);
           break;
         case "manager":
-          Role managerRole = roleRepository.findRoleByRole_name("manager");
+          Role managerRole = roleRepository.getRoleByRole_name("manager");
           roles.add(managerRole);
           break;
         default:
-          Role userRole = roleRepository.findRoleByRole_name("user");
+          Role userRole = roleRepository.getRoleByRole_name("user");
           roles.add(userRole);
       }
     });
