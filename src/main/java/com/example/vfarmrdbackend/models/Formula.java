@@ -8,11 +8,11 @@ import java.util.Date;
 public class Formula {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int formula_id ;
+    private int formula_id;
     private int product_id;
     private String formula_version;
     private String formula_name;
-    private boolean formula_status;
+    private String formula_status;
     private float formula_cost;
     private Date created_time;
     private Date modified_time;
@@ -20,7 +20,8 @@ public class Formula {
     public Formula() {
     }
 
-    public Formula(int formula_id, int product_id, String formula_version, String formula_name, boolean formula_status, float formula_cost, Date created_time, Date modified_time) {
+    public Formula(int formula_id, int product_id, String formula_version, String formula_name, String formula_status,
+            float formula_cost, Date created_time, Date modified_time) {
         this.formula_id = formula_id;
         this.product_id = product_id;
         this.formula_version = formula_version;
@@ -63,11 +64,11 @@ public class Formula {
         this.formula_name = formula_name;
     }
 
-    public boolean isFormula_status() {
+    public String getFormula_status() {
         return formula_status;
     }
 
-    public void setFormula_status(boolean formula_status) {
+    public void setFormula_status(String formula_status) {
         this.formula_status = formula_status;
     }
 

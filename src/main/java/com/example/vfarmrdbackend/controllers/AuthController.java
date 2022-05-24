@@ -1,6 +1,7 @@
 package com.example.vfarmrdbackend.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,8 @@ public class AuthController {
   @Autowired
   JwtUtils jwtUtils;
 
+  Date date = new Date();
+
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -72,11 +75,11 @@ public class AuthController {
 
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-    User user = userRepository.findUserByUser_name(signUpRequest.getUser_name());
+    User user = userRepository.getUserByUser_name(signUpRequest.getUser_name());
     if (user != null) {
       return new ResponseEntity<>(null, HttpStatus.CONFLICT);
     }
-    user = userRepository.findUserByEmail(signUpRequest.getEmail());
+    user = userRepository.getUserByEmail(signUpRequest.getEmail());
     if (user != null) {
       return new ResponseEntity<>(null, HttpStatus.IM_USED);
     }
@@ -89,23 +92,22 @@ public class AuthController {
     strRoles.forEach(role -> {
       switch (role) {
         case "admin":
-          Role adminRole = roleRepository.findRoleByRole_name("admin");
+          Role adminRole = roleRepository.getRoleByRole_name("admin");
           roles.add(adminRole);
           break;
         case "staff":
-          Role staffRole = roleRepository.findRoleByRole_name("staff");
+          Role staffRole = roleRepository.getRoleByRole_name("staff");
           roles.add(staffRole);
           break;
         case "manager":
-          Role managerRole = roleRepository.findRoleByRole_name("manager");
+          Role managerRole = roleRepository.getRoleByRole_name("manager");
           roles.add(managerRole);
           break;
-        case "user":
-          Role userRole = roleRepository.findRoleByRole_name("user");
-          roles.add(userRole);
       }
     });
+    user.setUser_status(true);
     user.listRoles(roles);
+    user.setCreated_time(date);
     userRepository.save(user);
     return new ResponseEntity<>("Sign up account completed!", HttpStatus.OK);
   }
