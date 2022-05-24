@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,20 +61,21 @@ public class ProductController {
     @GetMapping("/products/search")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> findFileWithKeyword(@RequestParam("keyword") String keyword) {
+    public ResponseEntity<?> findProductWithKeyword(@RequestParam("keyword") String keyword) {
         List<Product> _listFile = repo.findProductWithKeyword("%" + keyword + "%");
         if (_listFile != null) {
             return new ResponseEntity<>(_listFile, HttpStatus.FOUND);
         } else {
-            return new ResponseEntity<>("File not found!", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Product not found!", HttpStatus.NOT_FOUND);
         }
     }
 
-    @PostMapping("/products")
+    @PostMapping("/products/create")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
         try {
             product.setCreated_time(date);
+            product.setProduct_status("activated");
             repo.save(product);
             return new ResponseEntity<>(
                     "Create new product completed!",
@@ -87,7 +87,7 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/products/update/{id}")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> updateProduct(@PathVariable("id") int id, @RequestBody Product product) {
         Product _product = repo.getProductByProduct_id(id);
@@ -95,7 +95,6 @@ public class ProductController {
             _product.setProduct_name(product.getProduct_name());
             _product.setClient_id(product.getClient_id());
             _product.setProduct_inquiry(product.getProduct_inquiry());
-            _product.setProject_status(product.isProject_status());
             _product.setModified_time(date);
             repo.save(_product);
             return new ResponseEntity<>("Update product successfully!", HttpStatus.OK);
@@ -104,16 +103,17 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("/products/{id}")
+    @PutMapping("/products/delete/{id}")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") int id) {
-        try {
-            repo.deleteById(id);
+        Product _product = repo.getProductByProduct_id(id);
+        if (_product != null) {
+            _product.setProduct_status("deactivated");
+            _product.setModified_time(date);
+            repo.save(_product);
             return new ResponseEntity<>("Delete product successfully!", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "The server is down!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

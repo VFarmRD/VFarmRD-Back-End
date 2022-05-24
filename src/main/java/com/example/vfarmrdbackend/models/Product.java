@@ -3,7 +3,6 @@ package com.example.vfarmrdbackend.models;
 import javax.persistence.*;
 import java.util.Date;
 
-
 @Entity
 @Table(name = "products")
 public class Product {
@@ -14,20 +13,21 @@ public class Product {
     private int client_id;
     private int user_id;
     private String product_inquiry;
-    private boolean project_status;
+    private String product_status;
     private Date created_time;
     private Date modified_time;
 
     public Product() {
     }
 
-    public Product(int product_id, String product_name, int client_id, int user_id, String product_inquiry, boolean project_status, Date created_time, Date modified_time) {
+    public Product(int product_id, String product_name, int client_id, int user_id, String product_inquiry,
+            String product_status, Date created_time, Date modified_time) {
         this.product_id = product_id;
         this.product_name = product_name;
         this.client_id = client_id;
         this.user_id = user_id;
         this.product_inquiry = product_inquiry;
-        this.project_status = project_status;
+        this.product_status = product_status;
         this.created_time = created_time;
         this.modified_time = modified_time;
     }
@@ -72,12 +72,12 @@ public class Product {
         this.product_inquiry = product_inquiry;
     }
 
-    public boolean isProject_status() {
-        return project_status;
+    public String getProduct_status() {
+        return product_status;
     }
 
-    public void setProject_status(boolean project_status) {
-        this.project_status = project_status;
+    public void setProduct_status(String product_status) {
+        this.product_status = product_status;
     }
 
     public Date getCreated_time() {

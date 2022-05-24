@@ -28,27 +28,10 @@ public class FileController {
 
     Date date = new Date();
 
-    // @GetMapping("/files")
-    // public ResponseEntity<?> getAllFiles() {
-    // try {
-    // List<File> _listFiles = repo.findAll();
-    // if (_listFiles.isEmpty()) {
-    // return new ResponseEntity<>(
-    // "Can't found any file!",
-    // HttpStatus.NO_CONTENT);
-    // }
-    // return new ResponseEntity<>(_listFiles, HttpStatus.OK);
-    // } catch (Exception e) {
-    // return new ResponseEntity<>(
-    // "The server is down!",
-    // HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // }
-
     @GetMapping("/files")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllFilesWithUser_id(@RequestBody User user) {
+    public ResponseEntity<?> getAllFileWithUser_id(@RequestBody User user) {
         try {
             List<File> _listFiles = repo.getAllFileWithUser_id(user.getUser_id());
             if (_listFiles.isEmpty()) {
@@ -67,7 +50,7 @@ public class FileController {
     @GetMapping("/files/{id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getFileById(@PathVariable("id") int id) {
+    public ResponseEntity<?> getFileByFile_id(@PathVariable("id") int id) {
         File _file = repo.getFileByFile_id(id);
         if (_file != null) {
             return new ResponseEntity<>(_file, HttpStatus.FOUND);
@@ -88,7 +71,7 @@ public class FileController {
         }
     }
 
-    @PostMapping("/files")
+    @PostMapping("/files/create")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> createFile(@RequestBody File file) {
@@ -105,10 +88,10 @@ public class FileController {
         }
     }
 
-    @PutMapping("/files/{id}")
+    @PutMapping("/files/update/{id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> updateRole(@PathVariable("id") int id, @RequestBody File file) {
+    public ResponseEntity<?> updateFile(@PathVariable("id") int id, @RequestBody File file) {
         File _file = repo.getFileByFile_id(id);
         if (_file != null) {
             _file.setFile_name(file.getFile_name());
@@ -123,7 +106,7 @@ public class FileController {
         }
     }
 
-    @DeleteMapping("/files/{id}")
+    @DeleteMapping("/files/delete/{id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> deleteFile(@PathVariable("id") int id) {

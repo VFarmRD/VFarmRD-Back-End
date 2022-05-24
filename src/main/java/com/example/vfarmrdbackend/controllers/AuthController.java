@@ -103,11 +103,9 @@ public class AuthController {
           Role managerRole = roleRepository.getRoleByRole_name("manager");
           roles.add(managerRole);
           break;
-        default:
-          Role userRole = roleRepository.getRoleByRole_name("user");
-          roles.add(userRole);
       }
     });
+    user.setUser_status(true);
     user.listRoles(roles);
     user.setCreated_time(date);
     userRepository.save(user);
