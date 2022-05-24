@@ -46,8 +46,7 @@ public class FileController {
     // }
 
     @GetMapping("/files")
-    @PreAuthorize("hasAuthority('admin')" +
-            "or hasAuthority('staff') " +
+    @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getAllFilesWithUser_id(@RequestBody User user) {
         try {
@@ -66,8 +65,7 @@ public class FileController {
     }
 
     @GetMapping("/files/{id}")
-    @PreAuthorize("hasAuthority('admin')" +
-            "or hasAuthority('staff') " +
+    @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getFileById(@PathVariable("id") int id) {
         File _file = repo.getFileByFile_id(id);
@@ -79,8 +77,7 @@ public class FileController {
     }
 
     @GetMapping("/files/search")
-    @PreAuthorize("hasAuthority('admin')" +
-            "or hasAuthority('staff') " +
+    @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> findFileWithKeyword(@RequestParam("keyword") String keyword) {
         List<File> _listFile = repo.findFileWithKeyword("%" + keyword + "%");
@@ -92,8 +89,7 @@ public class FileController {
     }
 
     @PostMapping("/files")
-    @PreAuthorize("hasAuthority('admin')" +
-            "or hasAuthority('staff') " +
+    @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> createFile(@RequestBody File file) {
         try {
@@ -110,8 +106,7 @@ public class FileController {
     }
 
     @PutMapping("/files/{id}")
-    @PreAuthorize("hasAuthority('admin')" +
-            "or hasAuthority('staff') " +
+    @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> updateRole(@PathVariable("id") int id, @RequestBody File file) {
         File _file = repo.getFileByFile_id(id);
@@ -129,8 +124,7 @@ public class FileController {
     }
 
     @DeleteMapping("/files/{id}")
-    @PreAuthorize("hasAuthority('admin')" +
-            "or hasAuthority('staff') " +
+    @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> deleteFile(@PathVariable("id") int id) {
         try {
