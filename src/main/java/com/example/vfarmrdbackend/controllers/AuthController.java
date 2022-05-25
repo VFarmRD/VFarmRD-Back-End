@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
   @Autowired
   AuthenticationManager authenticationManager;
@@ -52,7 +52,7 @@ public class AuthController {
 
   Date date = new Date();
 
-  @PostMapping("/account/login")
+  @PostMapping("/login")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
     Authentication authentication = authenticationManager.authenticate(
@@ -73,15 +73,15 @@ public class AuthController {
         roles));
   }
 
-  @PostMapping("/account/create")
+  @PostMapping("/create")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     User user = userRepository.getUserByUser_name(signUpRequest.getUser_name());
     if (user != null) {
-      return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+      return new ResponseEntity<>("This username is already registered!", HttpStatus.CONFLICT);
     }
     user = userRepository.getUserByEmail(signUpRequest.getEmail());
     if (user != null) {
-      return new ResponseEntity<>(null, HttpStatus.IM_USED);
+      return new ResponseEntity<>("This email is already registered!", HttpStatus.IM_USED);
     }
     user = new User(signUpRequest.getUser_name(),
         signUpRequest.getEmail(),
