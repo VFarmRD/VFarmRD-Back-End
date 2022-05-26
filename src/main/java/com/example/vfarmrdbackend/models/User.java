@@ -20,6 +20,8 @@ public class User {
     private int user_id;
     private String user_name;
     private String email;
+    private String fullname;
+    private String phone;
     private String password;
     private boolean user_status;
     private Date created_time;
@@ -31,21 +33,26 @@ public class User {
     public User() {
     }
 
-    public User(String user_name, String email, String password) {
+    public User(String user_name, String email, String fullname, String phone, String password) {
         this.user_name = user_name;
         this.email = email;
+        this.fullname = fullname;
+        this.phone = phone;
         this.password = password;
     }
 
-    public User(int user_id, String user_name, String email, String password, boolean user_status, Date created_time,
-            Date modified_time) {
+    public User(int user_id, String user_name, String email, String fullname, String phone, String password,
+            boolean user_status, Date created_time, Date modified_time, List<Role> roles) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.email = email;
+        this.fullname = fullname;
+        this.phone = phone;
         this.password = password;
         this.user_status = user_status;
         this.created_time = created_time;
         this.modified_time = modified_time;
+        this.roles = roles;
     }
 
     public int getUser_id() {
@@ -70,6 +77,22 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getPassword() {
@@ -108,7 +131,8 @@ public class User {
         return roles;
     }
 
-    public void listRoles(List<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
+
 }

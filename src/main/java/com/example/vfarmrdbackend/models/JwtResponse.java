@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.response;
+package com.example.vfarmrdbackend.models;
 
 import java.util.List;
 
