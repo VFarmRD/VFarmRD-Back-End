@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.request;
+package com.example.vfarmrdbackend.models;
 
 import java.util.List;
 
@@ -11,6 +11,12 @@ public class SignupRequest {
   @NotBlank
   @Email
   private String email;
+
+  @NotBlank
+  private String fullname;
+
+  @NotBlank
+  private String phone;
 
   @NotBlank
   private String password;
@@ -33,6 +39,22 @@ public class SignupRequest {
     this.email = email;
   }
 
+  public String getFullname() {
+    return fullname;
+  }
+
+  public void setFullname(String fullname) {
+    this.fullname = fullname;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
   public String getPassword() {
     return password;
   }
@@ -42,10 +64,11 @@ public class SignupRequest {
   }
 
   public List<String> getRole() {
-    return this.role;
+    return role;
   }
 
-  public void listRole(List<String> role) {
+  public void setRole(List<String> role) {
     this.role = role;
   }
+
 }

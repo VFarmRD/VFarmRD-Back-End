@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.example.vfarmrdbackend.models.JwtResponse;
+import com.example.vfarmrdbackend.models.LoginRequest;
 import com.example.vfarmrdbackend.models.Role;
+import com.example.vfarmrdbackend.models.SignupRequest;
 import com.example.vfarmrdbackend.models.User;
-import com.example.vfarmrdbackend.payload.request.LoginRequest;
-import com.example.vfarmrdbackend.payload.request.SignupRequest;
-import com.example.vfarmrdbackend.payload.response.JwtResponse;
 import com.example.vfarmrdbackend.repositories.RoleRepository;
 import com.example.vfarmrdbackend.repositories.UserRepository;
 import com.example.vfarmrdbackend.security.jwt.JwtUtils;
@@ -83,28 +83,32 @@ public class AuthController {
     }
     user = new User(signUpRequest.getUser_name(),
         signUpRequest.getEmail(),
+        signUpRequest.getFullname(),
+        signUpRequest.getPhone(),
         encoder.encode(signUpRequest.getPassword()));
 
     List<String> strRoles = signUpRequest.getRole();
     List<Role> roles = new ArrayList<>();
+    Role adminRole = roleRepository.getRoleByRole_name("admin");
+    Role staffRole = roleRepository.getRoleByRole_name("staff");
+    Role managerRole = roleRepository.getRoleByRole_name("manager");
     strRoles.forEach(role -> {
       switch (role) {
         case "admin":
-          Role adminRole = roleRepository.getRoleByRole_name("admin");
           roles.add(adminRole);
+          roles.add(staffRole);
+          roles.add(managerRole);
           break;
         case "staff":
-          Role staffRole = roleRepository.getRoleByRole_name("staff");
           roles.add(staffRole);
           break;
         case "manager":
-          Role managerRole = roleRepository.getRoleByRole_name("manager");
           roles.add(managerRole);
           break;
       }
     });
     user.setUser_status(true);
-    user.listRoles(roles);
+    user.setRoles(roles);
     user.setCreated_time(date);
     userRepository.save(user);
     return new ResponseEntity<>("Sign up account completed!", HttpStatus.OK);

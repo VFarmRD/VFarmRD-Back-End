@@ -65,6 +65,8 @@ public class UserController {
         User _user = repo.getUserByUser_id(id);
         if (_user != null) {
             _user.setEmail(user.getEmail());
+            _user.setFullname(user.getFullname());
+            _user.setPhone(user.getPhone());
             _user.setPassword(encoder.encode(user.getPassword()));
             _user.setModified_time(date);
             repo.save(_user);
