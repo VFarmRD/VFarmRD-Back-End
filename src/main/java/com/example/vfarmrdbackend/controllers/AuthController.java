@@ -60,6 +60,12 @@ public class AuthController {
     String jwt = jwtUtils.generateJwtToken(authentication);
 
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    User user = userRepository.getUserByUser_name(userDetails.getUsername());
+    if (user.isUser_status() == false) {
+      return new ResponseEntity<>(
+          "Your account is disabled!",
+          HttpStatus.GONE);
+    }
     List<String> roles = userDetails.getAuthorities().stream()
         .map(item -> item.getAuthority())
         .collect(Collectors.toList());
