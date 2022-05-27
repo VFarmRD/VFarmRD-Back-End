@@ -25,8 +25,6 @@ public class VFarmRdBackEndApplication {
                         .allowedOrigins("*");
             }
         };
-
-        // return null;
     }
 
 }
