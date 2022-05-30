@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.example.vfarmrdbackend.models.Formula;
-import com.example.vfarmrdbackend.models.Product;
 import com.example.vfarmrdbackend.repositories.FormulaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +29,8 @@ public class FormulaController {
     @GetMapping("/formulas")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllFormulaByProduct_id(@RequestBody Product product) {
-        List<Formula> _listFormulas = repo.getAllFormulaByProduct_id(product.getProduct_id());
+    public ResponseEntity<?> getAllFormulaByProduct_id(@RequestBody int product_id) {
+        List<Formula> _listFormulas = repo.getAllFormulaByProduct_id(product_id);
         if (_listFormulas != null) {
             return new ResponseEntity<>(_listFormulas, HttpStatus.FOUND);
         } else {
