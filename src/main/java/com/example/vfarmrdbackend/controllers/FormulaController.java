@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.example.vfarmrdbackend.models.Formula;
-import com.example.vfarmrdbackend.models.Product;
 import com.example.vfarmrdbackend.repositories.FormulaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
