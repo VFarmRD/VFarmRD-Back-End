@@ -30,8 +30,8 @@ public class FormulaController {
     @GetMapping("/formulas")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllFormulaByProduct_id(@RequestBody Product product) {
-        List<Formula> _listFormulas = repo.getAllFormulaByProduct_id(product.getProduct_id());
+    public ResponseEntity<?> getAllFormulaByProduct_id(@RequestBody int product_id) {
+        List<Formula> _listFormulas = repo.getAllFormulaByProduct_id(product_id);
         if (_listFormulas != null) {
             return new ResponseEntity<>(_listFormulas, HttpStatus.FOUND);
         } else {
