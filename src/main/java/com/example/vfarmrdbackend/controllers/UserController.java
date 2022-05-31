@@ -60,12 +60,12 @@ public class UserController {
 
     @PutMapping("/users/update/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> updateUser(@PathVariable("id") int id,
+    public ResponseEntity<?> updateUser(@RequestBody() int user_id,
             @RequestBody String email,
             @RequestBody String fullname,
             @RequestBody String phone,
             @RequestBody String password) {
-        User _user = repo.getUserByUser_id(id);
+        User _user = repo.getUserByUser_id(user_id);
         if (_user != null) {
             _user.setEmail(email);
             _user.setFullname(fullname);

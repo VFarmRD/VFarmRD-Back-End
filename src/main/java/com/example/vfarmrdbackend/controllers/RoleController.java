@@ -70,10 +70,10 @@ public class RoleController {
         }
     }
 
-    @PutMapping("/roles/update/{id}")
+    @PutMapping("/roles/update")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> updateRole(@PathVariable("id") int id, @RequestBody String role_name) {
-        Role _role = repo.getRoleByRole_id(id);
+    public ResponseEntity<?> updateRole(@RequestBody() int role_id, @RequestBody String role_name) {
+        Role _role = repo.getRoleByRole_id(role_id);
         if (_role != null) {
             _role.setRole_name(role_name);
             repo.save(_role);
