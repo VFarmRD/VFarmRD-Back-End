@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.vfarmrdbackend.models.User;
 import com.example.vfarmrdbackend.models.UserRole;
 import com.example.vfarmrdbackend.payload.UserRequest;
+import com.example.vfarmrdbackend.repositories.RoleRepository;
 import com.example.vfarmrdbackend.repositories.UserRepository;
 import com.example.vfarmrdbackend.repositories.UserRoleRepository;
 
@@ -29,6 +30,9 @@ public class UserController {
 
     @Autowired
     private UserRoleRepository urrepo;
+
+    @Autowired
+    private RoleRepository rolerepo;
 
     @Autowired
     PasswordEncoder encoder;
@@ -70,7 +74,8 @@ public class UserController {
         User _user = repo.getUserByUser_id(userRequest.getUser_id());
         UserRole _userrole = urrepo.getRoleOfUserByUser_id(userRequest.getUser_id());
         if (_user != null && _userrole != null) {
-            _userrole.setRole_id(userRequest.getRole_id());
+            int role_id = rolerepo.getRoleByRole_name(userRequest.getRole_name()).getRole_id();
+            _userrole.setRole_id(role_id);
             _user.setEmail(userRequest.getEmail());
             _user.setFullname(userRequest.getFullname());
             _user.setPhone(userRequest.getPhone());
