@@ -1,7 +1,7 @@
 package com.example.vfarmrdbackend.controllers;
 
 import com.example.vfarmrdbackend.models.File;
-import com.example.vfarmrdbackend.models.FileResponse;
+import com.example.vfarmrdbackend.payload.FileResponse;
 import com.example.vfarmrdbackend.repositories.FileRepository;
 import com.example.vfarmrdbackend.services.FileService;
 
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,9 +38,9 @@ public class FileController {
     @PostMapping("/files/upload")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
+            @RequestParam("user_id") int user_id) {
         String message = "";
-        int user_id = 1;
         try {
             fileService.store(file, user_id);
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
@@ -53,7 +52,9 @@ public class FileController {
     }
 
     @GetMapping("/files")
-    public ResponseEntity<?> getAllFilesWithUser_id(@RequestBody int user_id) {
+    @PreAuthorize("hasAuthority('staff') " +
+            "or hasAuthority('manager')")
+    public ResponseEntity<?> getAllFilesWithUser_id(@RequestParam("user_id") int user_id) {
         List<FileResponse> files = fileService.getAllFilesWithUser_id(user_id).map(dbFile -> {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
@@ -72,9 +73,7 @@ public class FileController {
     }
 
     @GetMapping("/files/{id}")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
-    public ResponseEntity<byte[]> getFile(@PathVariable int file_id) {
+    public ResponseEntity<byte[]> getFile(@PathVariable("id") int file_id) {
         File _file = repo.getFileByFile_id(file_id);
 
         return ResponseEntity.ok()

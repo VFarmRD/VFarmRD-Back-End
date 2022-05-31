@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.example.vfarmrdbackend.models.Product;
+import com.example.vfarmrdbackend.payload.ProductRequest;
 import com.example.vfarmrdbackend.repositories.ProductRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +27,7 @@ public class ProductController {
     @Autowired
     private ProductRepository repo;
 
-    Date date = new Date();
+    Date date;
 
     @GetMapping("/products")
     @PreAuthorize("hasAuthority('staff') " +
@@ -72,16 +74,14 @@ public class ProductController {
 
     @PostMapping("/products/create")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> createProduct(@RequestBody String product_name,
-            @RequestBody int client_id,
-            @RequestBody int user_id,
-            @RequestBody String product_inquiry) {
+    public ResponseEntity<?> createProduct(@RequestBody ProductRequest productRequest) {
         try {
+            date = new Date();
             Product _product = new Product();
-            _product.setProduct_name(product_name);
-            _product.setClient_id(client_id);
-            _product.setUser_id(user_id);
-            _product.setProduct_inquiry(product_inquiry);
+            _product.setProduct_name(productRequest.getProduct_name());
+            _product.setClient_id(productRequest.getClient_id());
+            _product.setUser_id(productRequest.getUser_id());
+            _product.setProduct_inquiry(productRequest.getProduct_inquiry());
             _product.setCreated_time(date);
             _product.setProduct_status("activated");
             repo.save(_product);
@@ -97,15 +97,13 @@ public class ProductController {
 
     @PutMapping("/products/update")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> updateProduct(@RequestBody int product_id,
-            @RequestBody String product_name,
-            @RequestBody int client_id,
-            @RequestBody String product_inquiry) {
-        Product _product = repo.getProductByProduct_id(product_id);
+    public ResponseEntity<?> updateProduct(@RequestBody ProductRequest productRequest) {
+        Product _product = repo.getProductByProduct_id(productRequest.getProduct_id());
         if (_product != null) {
-            _product.setProduct_name(product_name);
-            _product.setClient_id(client_id);
-            _product.setProduct_inquiry(product_inquiry);
+            date = new Date();
+            _product.setProduct_name(productRequest.getProduct_name());
+            _product.setClient_id(productRequest.getClient_id());
+            _product.setProduct_inquiry(productRequest.getProduct_inquiry());
             _product.setModified_time(date);
             repo.save(_product);
             return new ResponseEntity<>("Update product successfully!", HttpStatus.OK);

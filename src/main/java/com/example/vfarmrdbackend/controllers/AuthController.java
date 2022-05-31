@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.example.vfarmrdbackend.models.JwtResponse;
-import com.example.vfarmrdbackend.models.LoginRequest;
 import com.example.vfarmrdbackend.models.Role;
-import com.example.vfarmrdbackend.models.SignupRequest;
 import com.example.vfarmrdbackend.models.User;
+import com.example.vfarmrdbackend.payload.JwtResponse;
+import com.example.vfarmrdbackend.payload.LoginRequest;
+import com.example.vfarmrdbackend.payload.SignupRequest;
 import com.example.vfarmrdbackend.repositories.RoleRepository;
 import com.example.vfarmrdbackend.repositories.UserRepository;
 import com.example.vfarmrdbackend.security.jwt.JwtUtils;
