@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -55,7 +56,7 @@ public class RoleController {
 
     @PostMapping("/roles/create")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> createRole(@RequestBody String role_name) {
+    public ResponseEntity<?> createRole(@RequestParam("role_name") String role_name) {
         try {
             Role _role = new Role();
             _role.setRole_name(role_name);
@@ -72,10 +73,10 @@ public class RoleController {
 
     @PutMapping("/roles/update")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> updateRole(@RequestBody() int role_id, @RequestBody String role_name) {
-        Role _role = repo.getRoleByRole_id(role_id);
+    public ResponseEntity<?> updateRole(@RequestBody Role role) {
+        Role _role = repo.getRoleByRole_id(role.getRole_id());
         if (_role != null) {
-            _role.setRole_name(role_name);
+            _role.setRole_name(role.getRole_name());
             repo.save(_role);
             return new ResponseEntity<>("Update role successfully!", HttpStatus.OK);
         } else {

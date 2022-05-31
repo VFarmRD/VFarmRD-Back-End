@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.example.vfarmrdbackend.models.User;
+import com.example.vfarmrdbackend.payload.UserRequest;
 import com.example.vfarmrdbackend.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,17 +61,13 @@ public class UserController {
 
     @PutMapping("/users/update/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> updateUser(@RequestBody() int user_id,
-            @RequestBody String email,
-            @RequestBody String fullname,
-            @RequestBody String phone,
-            @RequestBody String password) {
-        User _user = repo.getUserByUser_id(user_id);
+    public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
+        User _user = repo.getUserByUser_id(userRequest.getUser_id());
         if (_user != null) {
-            _user.setEmail(email);
-            _user.setFullname(fullname);
-            _user.setPhone(phone);
-            _user.setPassword(encoder.encode(password));
+            _user.setEmail(userRequest.getEmail());
+            _user.setFullname(userRequest.getFullname());
+            _user.setPhone(userRequest.getPhone());
+            _user.setPassword(encoder.encode(userRequest.getPassword()));
             _user.setModified_time(date);
             repo.save(_user);
             return new ResponseEntity<>("Update user successfully!", HttpStatus.OK);
@@ -87,6 +84,19 @@ public class UserController {
             _user.setUser_status(false);
             repo.save(_user);
             return new ResponseEntity<>("Delete user successfully!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/users/recover/{id}")
+    @PreAuthorize("hasAuthority('admin')")
+    public ResponseEntity<?> recoverUser(@PathVariable("id") int id) {
+        User _user = repo.getUserByUser_id(id);
+        if (_user != null) {
+            _user.setUser_status(true);
+            repo.save(_user);
+            return new ResponseEntity<>("Recover user successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
