@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,7 +31,7 @@ public class FormulaController {
     @GetMapping("/formulas")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllFormulaByProduct_id(@RequestBody int product_id) {
+    public ResponseEntity<?> getAllFormulaByProduct_id(@RequestParam("product_id") int product_id) {
         List<Formula> _listFormulas = repo.getAllFormulaByProduct_id(product_id);
         if (_listFormulas != null) {
             return new ResponseEntity<>(_listFormulas, HttpStatus.FOUND);
@@ -115,7 +116,7 @@ public class FormulaController {
         if (_formula != null) {
             date = new Date();
             String formula_pre_version = _formula.getFormula_version();
-            String splitString[] = formula_pre_version.split(".");
+            String splitString[] = formula_pre_version.split("\\.");
             String formula_now_version = "1." + String.valueOf(Integer.parseInt(splitString[0]) + 1);
             _formula.setFormula_version(formula_now_version);
             _formula.setFormula_name(formulaRequest.getFormula_name());
@@ -135,7 +136,7 @@ public class FormulaController {
         if (_formula != null) {
             date = new Date();
             String formula_pre_version = _formula.getFormula_version();
-            String[] splitString = formula_pre_version.split(".");
+            String[] splitString = formula_pre_version.split("\\.");
             String formula_now_version = String.valueOf(Integer.parseInt(splitString[0]) + 1) + ".0";
             _formula.setFormula_version(formula_now_version);
             _formula.setFormula_name(formulaRequest.getFormula_name());
