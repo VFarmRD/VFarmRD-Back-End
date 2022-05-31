@@ -1,9 +1,12 @@
 package com.example.vfarmrdbackend.controllers;
 
 import com.example.vfarmrdbackend.models.File;
-import com.example.vfarmrdbackend.models.User;
+import com.example.vfarmrdbackend.models.FileResponse;
 import com.example.vfarmrdbackend.repositories.FileRepository;
+import com.example.vfarmrdbackend.services.FileService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,14 +14,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -26,37 +31,56 @@ public class FileController {
     @Autowired
     private FileRepository repo;
 
+    @Autowired
+    private FileService fileService;
+
     Date date = new Date();
 
-    @GetMapping("/files")
+    @PostMapping("/files/upload")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllFileWithUser_id(@RequestBody User user) {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+        String message = "";
+        int user_id = 1;
         try {
-            List<File> _listFiles = repo.getAllFileWithUser_id(user.getUser_id());
-            if (_listFiles.isEmpty()) {
-                return new ResponseEntity<>(
-                        "Can't found any file!",
-                        HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(_listFiles, HttpStatus.OK);
+            fileService.store(file, user_id);
+            message = "Uploaded the file successfully: " + file.getOriginalFilename();
+            return ResponseEntity.status(HttpStatus.OK).body(message);
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "The server is down!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
         }
+    }
+
+    @GetMapping("/files")
+    public ResponseEntity<?> getAllFilesWithUser_id(@RequestBody int user_id) {
+        List<FileResponse> files = fileService.getAllFilesWithUser_id(user_id).map(dbFile -> {
+            String fileDownloadUri = ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path("/api/files/")
+                    .path(String.valueOf(dbFile.getFile_id()))
+                    .toUriString();
+
+            return new FileResponse(
+                    dbFile.getFile_name(),
+                    fileDownloadUri,
+                    dbFile.getFile_type(),
+                    dbFile.getFile_data().length);
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK).body(files);
     }
 
     @GetMapping("/files/{id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getFileByFile_id(@PathVariable("id") int id) {
-        File _file = repo.getFileByFile_id(id);
-        if (_file != null) {
-            return new ResponseEntity<>(_file, HttpStatus.FOUND);
-        } else {
-            return new ResponseEntity<>("File not found!", HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<byte[]> getFile(@PathVariable int file_id) {
+        File _file = repo.getFileByFile_id(file_id);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + _file.getFile_name() + "\"")
+                .body(_file.getFile_data());
     }
 
     @GetMapping("/files/search")
@@ -68,41 +92,6 @@ public class FileController {
             return new ResponseEntity<>(_listFile, HttpStatus.FOUND);
         } else {
             return new ResponseEntity<>("File not found!", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/files/create")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
-    public ResponseEntity<?> createFile(@RequestBody File file) {
-        try {
-            file.setCreated_time(date);
-            repo.save(file);
-            return new ResponseEntity<>(
-                    "Create new file completed!",
-                    HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "The server is down!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PutMapping("/files/update/{id}")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
-    public ResponseEntity<?> updateFile(@PathVariable("id") int id, @RequestBody File file) {
-        File _file = repo.getFileByFile_id(id);
-        if (_file != null) {
-            _file.setFile_name(file.getFile_name());
-            _file.setFile_path(file.getFile_path());
-            _file.setFile_type(file.getFile_type());
-            _file.setModified_time(date);
-            _file.setFile_data(file.isFile_data());
-            repo.save(_file);
-            return new ResponseEntity<>("Update file successfully!", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

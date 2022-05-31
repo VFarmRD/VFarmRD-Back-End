@@ -58,16 +58,19 @@ public class UserController {
         }
     }
 
-    // update user info
     @PutMapping("/users/update/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> updateUser(@PathVariable("id") int id, @RequestBody User user) {
+    public ResponseEntity<?> updateUser(@PathVariable("id") int id,
+            @RequestBody String email,
+            @RequestBody String fullname,
+            @RequestBody String phone,
+            @RequestBody String password) {
         User _user = repo.getUserByUser_id(id);
         if (_user != null) {
-            _user.setEmail(user.getEmail());
-            _user.setFullname(user.getFullname());
-            _user.setPhone(user.getPhone());
-            _user.setPassword(encoder.encode(user.getPassword()));
+            _user.setEmail(email);
+            _user.setFullname(fullname);
+            _user.setPhone(phone);
+            _user.setPassword(encoder.encode(password));
             _user.setModified_time(date);
             repo.save(_user);
             return new ResponseEntity<>("Update user successfully!", HttpStatus.OK);

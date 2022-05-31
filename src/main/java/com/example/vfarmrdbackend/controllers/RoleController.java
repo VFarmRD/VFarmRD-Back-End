@@ -55,9 +55,11 @@ public class RoleController {
 
     @PostMapping("/roles/create")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> createRole(@RequestBody Role role) {
+    public ResponseEntity<?> createRole(@RequestBody String role_name) {
         try {
-            repo.save(role);
+            Role _role = new Role();
+            _role.setRole_name(role_name);
+            repo.save(_role);
             return new ResponseEntity<>(
                     "Create new role completed!",
                     HttpStatus.OK);
@@ -70,10 +72,10 @@ public class RoleController {
 
     @PutMapping("/roles/update/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> updateRole(@PathVariable("id") int id, @RequestBody Role role) {
+    public ResponseEntity<?> updateRole(@PathVariable("id") int id, @RequestBody String role_name) {
         Role _role = repo.getRoleByRole_id(id);
         if (_role != null) {
-            _role.setRole_name(role.getRole_name());
+            _role.setRole_name(role_name);
             repo.save(_role);
             return new ResponseEntity<>("Update role successfully!", HttpStatus.OK);
         } else {

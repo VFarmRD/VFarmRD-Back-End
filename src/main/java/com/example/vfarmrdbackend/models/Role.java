@@ -1,6 +1,5 @@
 package com.example.vfarmrdbackend.models;
 
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,10 +15,6 @@ public class Role {
     private String role_name;
 
     public Role() {
-    }
-
-    public Role(String role_name) {
-        this.role_name = role_name;
     }
 
     public Role(int role_id, String role_name) {

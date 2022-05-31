@@ -2,7 +2,7 @@ package com.example.vfarmrdbackend.security;
 
 import com.example.vfarmrdbackend.security.jwt.AuthEntryPointJwt;
 import com.example.vfarmrdbackend.security.jwt.AuthTokenFilter;
-import com.example.vfarmrdbackend.security.services.UserDetailsServiceImpl;
+import com.example.vfarmrdbackend.services.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

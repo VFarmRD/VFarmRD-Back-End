@@ -15,7 +15,7 @@ import com.example.vfarmrdbackend.models.User;
 import com.example.vfarmrdbackend.repositories.RoleRepository;
 import com.example.vfarmrdbackend.repositories.UserRepository;
 import com.example.vfarmrdbackend.security.jwt.JwtUtils;
-import com.example.vfarmrdbackend.security.services.UserDetailsImpl;
+import com.example.vfarmrdbackend.services.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -87,11 +87,12 @@ public class AuthController {
     if (user != null) {
       return new ResponseEntity<>("This email is already registered!", HttpStatus.IM_USED);
     }
-    user = new User(signUpRequest.getUser_name(),
-        signUpRequest.getEmail(),
-        signUpRequest.getFullname(),
-        signUpRequest.getPhone(),
-        encoder.encode(signUpRequest.getPassword()));
+    user = new User();
+    user.setUser_name(signUpRequest.getUser_name());
+    user.setEmail(signUpRequest.getEmail());
+    user.setFullname(signUpRequest.getFullname());
+    user.setPhone(signUpRequest.getPhone());
+    user.setPassword(encoder.encode(signUpRequest.getPassword()));
 
     List<String> strRoles = signUpRequest.getRole();
     List<Role> roles = new ArrayList<>();
