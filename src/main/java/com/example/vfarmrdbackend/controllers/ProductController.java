@@ -95,13 +95,13 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/products/update/{id}")
+    @PutMapping("/products/update")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> updateProduct(@PathVariable("id") int id,
+    public ResponseEntity<?> updateProduct(@RequestBody int product_id,
             @RequestBody String product_name,
             @RequestBody int client_id,
             @RequestBody String product_inquiry) {
-        Product _product = repo.getProductByProduct_id(id);
+        Product _product = repo.getProductByProduct_id(product_id);
         if (_product != null) {
             _product.setProduct_name(product_name);
             _product.setClient_id(client_id);

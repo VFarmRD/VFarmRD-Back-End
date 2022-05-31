@@ -106,12 +106,12 @@ public class FormulaController {
         }
     }
 
-    @PostMapping("/formulas/update/{id}")
+    @PostMapping("/formulas/update")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updateFormula(@PathVariable("id") int id,
+    public ResponseEntity<?> updateFormula(@RequestBody() int formula_id,
             @RequestBody String formula_name,
             @RequestBody float formula_cost) {
-        Formula _formula = repo.getFormulaByFormula_id(id);
+        Formula _formula = repo.getFormulaByFormula_id(formula_id);
         if (_formula != null) {
             String formula_pre_version = _formula.getFormula_version();
             String[] splitString = formula_pre_version.split(".");
@@ -127,12 +127,12 @@ public class FormulaController {
         }
     }
 
-    @PostMapping("/formulas/upgrade/{id}")
+    @PostMapping("/formulas/upgrade")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> upgradeFormula(@PathVariable("id") int id,
+    public ResponseEntity<?> upgradeFormula(@RequestBody() int formula_id,
             @RequestBody String formula_name,
             @RequestBody float formula_cost) {
-        Formula _formula = repo.getFormulaByFormula_id(id);
+        Formula _formula = repo.getFormulaByFormula_id(formula_id);
         if (_formula != null) {
             String formula_pre_version = _formula.getFormula_version();
             String[] splitString = formula_pre_version.split(".");
