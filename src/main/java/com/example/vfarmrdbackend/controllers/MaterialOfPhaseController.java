@@ -19,7 +19,7 @@ public class MaterialOfPhaseController {
     private MaterialOfPhaseRepository repo;
 
     @GetMapping("/materialofphase")
-    public ResponseEntity<List<MaterialOfPhase>> getAllFiles() {
+    public ResponseEntity<List<MaterialOfPhase>> getAllMaterialOfPhases() {
         try {
             List<MaterialOfPhase> _listMaterialOfPhases = repo.findAll();
             if (_listMaterialOfPhases.isEmpty()) {
@@ -30,5 +30,64 @@ public class MaterialOfPhaseController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // @GetMapping("/phases/{id}")
+    // @PreAuthorize("hasAuthority('staff')")
+    // public ResponseEntity<?> getAllPhaseByFormula_id(@PathVariable("id") int id)
+    // {
+    // try {
+    // List<Phase> _listPhases = repo.getAllPhaseByFormula_id(id);
+    // if (_listPhases.isEmpty()) {
+    // return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    // }
+    // return new ResponseEntity<>(_listPhases, HttpStatus.OK);
+    // } catch (Exception e) {
+    // return new ResponseEntity<>(
+    // "The server is down!",
+    // HttpStatus.INTERNAL_SERVER_ERROR);
+    // }
+    // }
+
+    // @PostMapping("/phases/create")
+    // @PreAuthorize("hasAuthority('staff')")
+    // public ResponseEntity<?> createPhase(@RequestBody Phase phase) {
+    // try {
+    // repo.save(phase);
+    // return new ResponseEntity<>(
+    // "Create new phase completed!",
+    // HttpStatus.OK);
+    // } catch (Exception e) {
+    // return new ResponseEntity<>(
+    // "The server is down!",
+    // HttpStatus.INTERNAL_SERVER_ERROR);
+    // }
+    // }
+
+    // @PutMapping("/phases/update/{id}")
+    // @PreAuthorize("hasAuthority('staff')")
+    // public ResponseEntity<?> updatePhase(@PathVariable("id") int id, @RequestBody
+    // Phase phase) {
+    // Phase _phase = repo.getPhaseByPhase_id(id);
+    // if (_phase != null) {
+
+    // // repo.save(_role);
+    // return new ResponseEntity<>("Update phase successfully!", HttpStatus.OK);
+    // } else {
+    // return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    // }
+    // }
+
+    // @DeleteMapping("/phases/delete/{id}")
+    // @PreAuthorize("hasAuthority('staff')")
+    // public ResponseEntity<?> deletePhase(@PathVariable("id") int id) {
+    // try {
+    // repo.deleteById(id);
+    // return new ResponseEntity<>("Delete phase successfully!", HttpStatus.OK);
+    // } catch (Exception e) {
+    // return new ResponseEntity<>(
+    // "The server is down!",
+    // HttpStatus.INTERNAL_SERVER_ERROR);
+    // }
+    // }
 
 }

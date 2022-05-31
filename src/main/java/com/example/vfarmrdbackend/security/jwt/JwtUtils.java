@@ -2,7 +2,7 @@ package com.example.vfarmrdbackend.security.jwt;
 
 import java.util.Date;
 
-import com.example.vfarmrdbackend.security.services.UserDetailsImpl;
+import com.example.vfarmrdbackend.services.UserDetailsImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

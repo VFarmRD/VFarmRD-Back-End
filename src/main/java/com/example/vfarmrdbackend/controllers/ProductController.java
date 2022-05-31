@@ -72,11 +72,19 @@ public class ProductController {
 
     @PostMapping("/products/create")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> createProduct(@RequestBody Product product) {
+    public ResponseEntity<?> createProduct(@RequestBody String product_name,
+            @RequestBody int client_id,
+            @RequestBody int user_id,
+            @RequestBody String product_inquiry) {
         try {
-            product.setCreated_time(date);
-            product.setProduct_status("activated");
-            repo.save(product);
+            Product _product = new Product();
+            _product.setProduct_name(product_name);
+            _product.setClient_id(client_id);
+            _product.setUser_id(user_id);
+            _product.setProduct_inquiry(product_inquiry);
+            _product.setCreated_time(date);
+            _product.setProduct_status("activated");
+            repo.save(_product);
             return new ResponseEntity<>(
                     "Create new product completed!",
                     HttpStatus.OK);
@@ -89,12 +97,15 @@ public class ProductController {
 
     @PutMapping("/products/update/{id}")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> updateProduct(@PathVariable("id") int id, @RequestBody Product product) {
+    public ResponseEntity<?> updateProduct(@PathVariable("id") int id,
+            @RequestBody String product_name,
+            @RequestBody int client_id,
+            @RequestBody String product_inquiry) {
         Product _product = repo.getProductByProduct_id(id);
         if (_product != null) {
-            _product.setProduct_name(product.getProduct_name());
-            _product.setClient_id(product.getClient_id());
-            _product.setProduct_inquiry(product.getProduct_inquiry());
+            _product.setProduct_name(product_name);
+            _product.setClient_id(client_id);
+            _product.setProduct_inquiry(product_inquiry);
             _product.setModified_time(date);
             repo.save(_product);
             return new ResponseEntity<>("Update product successfully!", HttpStatus.OK);

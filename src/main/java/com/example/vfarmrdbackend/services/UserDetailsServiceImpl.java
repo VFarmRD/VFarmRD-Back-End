@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.security.services;
+package com.example.vfarmrdbackend.services;
 
 import com.example.vfarmrdbackend.models.User;
 import com.example.vfarmrdbackend.repositories.RoleRepository;

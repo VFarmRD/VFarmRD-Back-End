@@ -11,20 +11,20 @@ public class File {
     private int file_id;
     private int user_id;
     private String file_name;
-    private String file_path;
     private String file_type;
     private Date created_time;
     private Date modified_time;
-    private boolean file_data;
+    @Lob
+    private byte[] file_data;
 
     public File() {
     }
 
-    public File(int file_id, int user_id, String file_name, String file_path, String file_type, Date created_time, Date modified_time, boolean file_data) {
+    public File(int file_id, int user_id, String file_name, String file_type, Date created_time,
+            Date modified_time, byte[] file_data) {
         this.file_id = file_id;
         this.user_id = user_id;
         this.file_name = file_name;
-        this.file_path = file_path;
         this.file_type = file_type;
         this.created_time = created_time;
         this.modified_time = modified_time;
@@ -55,14 +55,6 @@ public class File {
         this.file_name = file_name;
     }
 
-    public String getFile_path() {
-        return file_path;
-    }
-
-    public void setFile_path(String file_path) {
-        this.file_path = file_path;
-    }
-
     public String getFile_type() {
         return file_type;
     }
@@ -87,11 +79,12 @@ public class File {
         this.modified_time = modified_time;
     }
 
-    public boolean isFile_data() {
+    public byte[] getFile_data() {
         return file_data;
     }
 
-    public void setFile_data(boolean file_data) {
+    public void setFile_data(byte[] file_data) {
         this.file_data = file_data;
     }
+
 }
