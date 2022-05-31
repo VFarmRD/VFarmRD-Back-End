@@ -94,26 +94,20 @@ public class AuthController {
     user.setPhone(signUpRequest.getPhone());
     user.setPassword(encoder.encode(signUpRequest.getPassword()));
 
-    List<String> strRoles = signUpRequest.getRole();
+    String role_name = signUpRequest.getRole_name();
     List<Role> roles = new ArrayList<>();
     Role adminRole = roleRepository.getRoleByRole_name("admin");
     Role staffRole = roleRepository.getRoleByRole_name("staff");
     Role managerRole = roleRepository.getRoleByRole_name("manager");
-    strRoles.forEach(role -> {
-      switch (role) {
-        case "admin":
-          roles.add(adminRole);
-          roles.add(staffRole);
-          roles.add(managerRole);
-          break;
-        case "staff":
-          roles.add(staffRole);
-          break;
-        case "manager":
-          roles.add(managerRole);
-          break;
-      }
-    });
+    if (role_name.equals("admin")) {
+      roles.add(adminRole);
+      roles.add(staffRole);
+      roles.add(managerRole);
+    } else if (role_name.equals("staff")) {
+      roles.add(staffRole);
+    } else if (role_name.equals("manager")) {
+      roles.add(managerRole);
+    }
     user.setUser_status(true);
     user.setRoles(roles);
     user.setCreated_time(date);
