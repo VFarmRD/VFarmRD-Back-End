@@ -21,7 +21,7 @@ public class SignupRequest {
   @NotBlank
   private String password;
 
-  private List<String> role;
+  private String role_name;
 
   public String getUser_name() {
     return user_name;
@@ -63,12 +63,12 @@ public class SignupRequest {
     this.password = password;
   }
 
-  public List<String> getRole() {
-    return role;
+  public String getRole_name() {
+    return role_name;
   }
 
-  public void setRole(List<String> role) {
-    this.role = role;
+  public void setRole_name(String role_name) {
+    this.role_name = role_name;
   }
 
 }

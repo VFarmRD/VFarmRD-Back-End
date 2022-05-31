@@ -41,11 +41,11 @@ public class UserDetailsImpl implements UserDetails {
 
   }
 
-  public UserDetailsImpl build(User user, List<Role> allRoles) {
+  public UserDetailsImpl build(User user,List<Role> userRole, List<Role> allRoles) {
 
     List<GrantedAuthority> authorities = new ArrayList<>();
     for (Role role : allRoles) {
-      for (Role userrole : user.getRoles()) {
+      for (Role userrole : userRole) {
         if (userrole.equals(role)) {
           authorities.add(new SimpleGrantedAuthority(role.getRole_name()));
         }

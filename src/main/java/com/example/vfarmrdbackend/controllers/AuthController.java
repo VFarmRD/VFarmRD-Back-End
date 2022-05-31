@@ -9,11 +9,13 @@ import javax.validation.Valid;
 
 import com.example.vfarmrdbackend.models.Role;
 import com.example.vfarmrdbackend.models.User;
+import com.example.vfarmrdbackend.models.UserRole;
 import com.example.vfarmrdbackend.payload.JwtResponse;
 import com.example.vfarmrdbackend.payload.LoginRequest;
 import com.example.vfarmrdbackend.payload.SignupRequest;
 import com.example.vfarmrdbackend.repositories.RoleRepository;
 import com.example.vfarmrdbackend.repositories.UserRepository;
+import com.example.vfarmrdbackend.repositories.UserRoleRepository;
 import com.example.vfarmrdbackend.security.jwt.JwtUtils;
 import com.example.vfarmrdbackend.services.UserDetailsImpl;
 
@@ -41,6 +43,9 @@ public class AuthController {
 
   @Autowired
   RoleRepository roleRepository;
+
+  @Autowired
+  UserRoleRepository userroleRepository;
 
   @Autowired
   PasswordEncoder encoder;
@@ -93,31 +98,33 @@ public class AuthController {
     user.setFullname(signUpRequest.getFullname());
     user.setPhone(signUpRequest.getPhone());
     user.setPassword(encoder.encode(signUpRequest.getPassword()));
-
-    List<String> strRoles = signUpRequest.getRole();
-    List<Role> roles = new ArrayList<>();
-    Role adminRole = roleRepository.getRoleByRole_name("admin");
-    Role staffRole = roleRepository.getRoleByRole_name("staff");
-    Role managerRole = roleRepository.getRoleByRole_name("manager");
-    strRoles.forEach(role -> {
-      switch (role) {
-        case "admin":
-          roles.add(adminRole);
-          roles.add(staffRole);
-          roles.add(managerRole);
-          break;
-        case "staff":
-          roles.add(staffRole);
-          break;
-        case "manager":
-          roles.add(managerRole);
-          break;
-      }
-    });
     user.setUser_status(true);
-    user.setRoles(roles);
     user.setCreated_time(date);
     userRepository.save(user);
+    int user_id = userRepository.getUserByUser_name(signUpRequest.getUser_name()).getUser_id();
+    String role_name = signUpRequest.getRole_name();
+    UserRole userrole;
+    if (role_name.equals("admin")) {
+      Role adminRole = roleRepository.getRoleByRole_name("admin");
+      userrole = new UserRole();
+      userrole.setUser_id(user_id);
+      userrole.setRole_id(adminRole.getRole_id());
+      userroleRepository.save(userrole);
+    }
+    if (role_name.equals("staff") || role_name.equals("admin")) {
+      Role staffRole = roleRepository.getRoleByRole_name("staff");
+      userrole = new UserRole();
+      userrole.setUser_id(user_id);
+      userrole.setRole_id(staffRole.getRole_id());
+      userroleRepository.save(userrole);
+    }
+    if (role_name.equals("manager") || role_name.equals("admin")) {
+      Role managerRole = roleRepository.getRoleByRole_name("manager");
+      userrole = new UserRole();
+      userrole.setUser_id(user_id);
+      userrole.setRole_id(managerRole.getRole_id());
+      userroleRepository.save(userrole);
+    }
     return new ResponseEntity<>("Sign up account completed!", HttpStatus.OK);
   }
 }
