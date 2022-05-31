@@ -21,6 +21,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "select * from users u ", nativeQuery = true)
     List<User> getAllUsers();
 
-    @Query(value = "select distinct r.role_name from userrole ur left join roles r  on ur.role_id = r.role_id where ur.user_id = :user_id limit 1 ", nativeQuery = true)
+    @Query(value = "select distinct r.role_name from userrole ur left join roles r  on ur.role_id = r.role_id where ur.user_id = :user_id limit 1 ORDER BY r.role_name ", nativeQuery = true)
     String getHighestRoleWithUser_Id(@Param("user_id") int user_id);
 }
