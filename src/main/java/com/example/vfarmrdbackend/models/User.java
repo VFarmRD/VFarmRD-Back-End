@@ -26,15 +26,12 @@ public class User {
     private boolean user_status;
     private Date created_time;
     private Date modified_time;
-    @ManyToMany
-    @JoinTable(name = "userrole", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles;
 
     public User() {
     }
 
     public User(int user_id, String user_name, String email, String fullname, String phone, String password,
-            boolean user_status, Date created_time, Date modified_time, List<Role> roles) {
+            boolean user_status, Date created_time, Date modified_time) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.email = email;
@@ -44,7 +41,6 @@ public class User {
         this.user_status = user_status;
         this.created_time = created_time;
         this.modified_time = modified_time;
-        this.roles = roles;
     }
 
     public int getUser_id() {
@@ -117,14 +113,6 @@ public class User {
 
     public void setModified_time(Date modified_time) {
         this.modified_time = modified_time;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
     }
 
 }
