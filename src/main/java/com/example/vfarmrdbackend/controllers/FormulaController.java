@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.example.vfarmrdbackend.models.Formula;
+import com.example.vfarmrdbackend.payload.FormulaRequest;
 import com.example.vfarmrdbackend.repositories.FormulaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class FormulaController {
     @Autowired
     private FormulaRepository repo;
 
-    Date date = new Date();
+    Date date;
 
     @GetMapping("/formulas")
     @PreAuthorize("hasAuthority('staff') " +
@@ -56,16 +57,15 @@ public class FormulaController {
 
     @PostMapping("/formulas/create")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createFormula(@RequestBody int product_id,
-            @RequestBody String formula_name,
-            @RequestBody float formula_cost) {
+    public ResponseEntity<?> createFormula(@RequestBody FormulaRequest formulaRequest) {
         try {
+            date = new Date();
             Formula _formula = new Formula();
-            _formula.setProduct_id(product_id);
+            _formula.setProduct_id(formulaRequest.getProduct_id());
             _formula.setFormula_version("1.0");
-            _formula.setFormula_name(formula_name);
+            _formula.setFormula_name(formulaRequest.getFormula_name());
             _formula.setFormula_status("on progress");
-            _formula.setFormula_cost(formula_cost);
+            _formula.setFormula_cost(formulaRequest.getFormula_cost());
             _formula.setCreated_time(date);
             repo.save(_formula);
             return new ResponseEntity<>(
@@ -83,6 +83,7 @@ public class FormulaController {
     public ResponseEntity<?> submitFormula(@PathVariable("id") int id) {
         Formula _formula = repo.getFormulaByFormula_id(id);
         if (_formula != null) {
+            date = new Date();
             _formula.setFormula_status("pending");
             _formula.setModified_time(date);
             repo.save(_formula);
@@ -97,6 +98,7 @@ public class FormulaController {
     public ResponseEntity<?> deleteFormula(@PathVariable("id") int id) {
         Formula _formula = repo.getFormulaByFormula_id(id);
         if (_formula != null) {
+            date = new Date();
             _formula.setFormula_status("deleted");
             _formula.setModified_time(date);
             repo.save(_formula);
@@ -108,17 +110,16 @@ public class FormulaController {
 
     @PostMapping("/formulas/update")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updateFormula(@RequestBody() int formula_id,
-            @RequestBody String formula_name,
-            @RequestBody float formula_cost) {
-        Formula _formula = repo.getFormulaByFormula_id(formula_id);
+    public ResponseEntity<?> updateFormula(@RequestBody FormulaRequest formulaRequest) {
+        Formula _formula = repo.getFormulaByFormula_id(formulaRequest.getFormula_id());
         if (_formula != null) {
+            date = new Date();
             String formula_pre_version = _formula.getFormula_version();
-            String[] splitString = formula_pre_version.split(".");
-            String formula_now_version = "1" + Integer.parseInt(splitString[1] + 1);
+            String splitString[] = formula_pre_version.split(".");
+            String formula_now_version = "1." + String.valueOf(Integer.parseInt(splitString[0]) + 1);
             _formula.setFormula_version(formula_now_version);
-            _formula.setFormula_name(formula_name);
-            _formula.setFormula_cost(formula_cost);
+            _formula.setFormula_name(formulaRequest.getFormula_name());
+            _formula.setFormula_cost(formulaRequest.getFormula_cost());
             _formula.setModified_time(date);
             repo.save(_formula);
             return new ResponseEntity<>("Update formula successfully!", HttpStatus.OK);
@@ -129,17 +130,16 @@ public class FormulaController {
 
     @PostMapping("/formulas/upgrade")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> upgradeFormula(@RequestBody() int formula_id,
-            @RequestBody String formula_name,
-            @RequestBody float formula_cost) {
-        Formula _formula = repo.getFormulaByFormula_id(formula_id);
+    public ResponseEntity<?> upgradeFormula(@RequestBody FormulaRequest formulaRequest) {
+        Formula _formula = repo.getFormulaByFormula_id(formulaRequest.getFormula_id());
         if (_formula != null) {
+            date = new Date();
             String formula_pre_version = _formula.getFormula_version();
             String[] splitString = formula_pre_version.split(".");
-            String formula_now_version = Integer.parseInt(splitString[0] + 1) + ".0";
+            String formula_now_version = String.valueOf(Integer.parseInt(splitString[0]) + 1) + ".0";
             _formula.setFormula_version(formula_now_version);
-            _formula.setFormula_name(formula_name);
-            _formula.setFormula_cost(formula_cost);
+            _formula.setFormula_name(formulaRequest.getFormula_name());
+            _formula.setFormula_cost(formulaRequest.getFormula_cost());
             _formula.setModified_time(date);
             repo.save(_formula);
             return new ResponseEntity<>("Upgrade formula successfully!", HttpStatus.OK);
@@ -148,12 +148,12 @@ public class FormulaController {
         }
     }
 
-    // Approve Formula
     @PutMapping("/formulas/approve/{id}")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> approveFormula(@PathVariable("id") int id) {
         Formula _formula = repo.getFormulaByFormula_id(id);
         if (_formula != null) {
+            date = new Date();
             _formula.setFormula_status("approve");
             _formula.setModified_time(date);
             repo.save(_formula);
@@ -169,6 +169,7 @@ public class FormulaController {
     public ResponseEntity<?> denyFormula(@PathVariable("id") int id) {
         Formula _formula = repo.getFormulaByFormula_id(id);
         if (_formula != null) {
+            date = new Date();
             _formula.setFormula_status("deny");
             _formula.setModified_time(date);
             repo.save(_formula);

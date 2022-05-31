@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.models;
+package com.example.vfarmrdbackend.payload;
 
 import javax.validation.constraints.NotBlank;
 
