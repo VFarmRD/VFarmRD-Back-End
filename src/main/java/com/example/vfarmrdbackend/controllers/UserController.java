@@ -44,6 +44,9 @@ public class UserController {
     public ResponseEntity<?> getAllUsers() {
         try {
             List<User> _listUsers = repo.getAllUsers();
+            for (int i = 0; i < _listUsers.size(); i++) {
+                _listUsers.get(i).setRole_name(repo.getHighestRoleWithUser_Id(_listUsers.get(i).getUser_id()));
+            }
             if (_listUsers.isEmpty()) {
                 return new ResponseEntity<>(
                         "Can't found any user!",
@@ -62,6 +65,7 @@ public class UserController {
     public ResponseEntity<?> getUserByUser_id(@PathVariable("id") int id) {
         User _user = repo.getUserByUser_id(id);
         if (_user != null) {
+            _user.setRole_name(repo.getHighestRoleWithUser_Id(_user.getUser_id()));
             return new ResponseEntity<>(_user, HttpStatus.FOUND);
         } else {
             return new ResponseEntity<>("User not found!", HttpStatus.NOT_FOUND);
