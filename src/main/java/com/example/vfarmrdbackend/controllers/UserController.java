@@ -4,8 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.example.vfarmrdbackend.models.User;
+import com.example.vfarmrdbackend.models.UserRole;
 import com.example.vfarmrdbackend.payload.UserRequest;
 import com.example.vfarmrdbackend.repositories.UserRepository;
+import com.example.vfarmrdbackend.repositories.UserRoleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     @Autowired
     private UserRepository repo;
+
+    @Autowired
+    private UserRoleRepository urrepo;
 
     @Autowired
     PasswordEncoder encoder;
@@ -59,11 +64,13 @@ public class UserController {
         }
     }
 
-    @PutMapping("/users/update/{id}")
+    @PutMapping("/users/update")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
         User _user = repo.getUserByUser_id(userRequest.getUser_id());
-        if (_user != null) {
+        UserRole _userrole = urrepo.getRoleOfUserByUser_id(userRequest.getUser_id());
+        if (_user != null && _userrole != null) {
+            _userrole.setRole_id(userRequest.getRole_id());
             _user.setEmail(userRequest.getEmail());
             _user.setFullname(userRequest.getFullname());
             _user.setPhone(userRequest.getPhone());
