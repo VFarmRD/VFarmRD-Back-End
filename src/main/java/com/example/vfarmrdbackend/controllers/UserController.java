@@ -76,13 +76,14 @@ public class UserController {
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
         User _user = repo.getUserByUser_id(userRequest.getUser_id());
-        UserRole _userrole = urrepo.getOtherUserRoleByUser_id(userRequest.getUser_id());
+        UserRole _userrole = urrepo.getUserRoleByUser_id(userRequest.getUser_id());
         if (_user != null && _userrole != null) {
             int role_id = rolerepo.getRoleByRole_name(userRequest.getRole_name()).getRole_id();
             _userrole.setRole_id(role_id);
             _user.setEmail(userRequest.getEmail());
             _user.setFullname(userRequest.getFullname());
             _user.setPhone(userRequest.getPhone());
+            _user.setRole_name(repo.getHighestRoleWithUser_Id(_user.getUser_id()));
             _user.setPassword(encoder.encode(userRequest.getPassword()));
             _user.setModified_time(date);
             repo.save(_user);
