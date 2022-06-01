@@ -11,7 +11,8 @@ public class Product {
     private int product_id;
     private String product_name;
     private int client_id;
-    private int user_id;
+    private int created_user_id;
+    private int assigned_user_id;
     private String product_inquiry;
     private String product_status;
     private Date created_time;
@@ -20,16 +21,33 @@ public class Product {
     public Product() {
     }
 
-    public Product(int product_id, String product_name, int client_id, int user_id, String product_inquiry,
-            String product_status, Date created_time, Date modified_time) {
+    public Product(int product_id, String product_name, int client_id, int created_user_id, int assigned_user_id,
+            String product_inquiry, String product_status, Date created_time, Date modified_time) {
         this.product_id = product_id;
         this.product_name = product_name;
         this.client_id = client_id;
-        this.user_id = user_id;
+        this.created_user_id = created_user_id;
+        this.assigned_user_id = assigned_user_id;
         this.product_inquiry = product_inquiry;
         this.product_status = product_status;
         this.created_time = created_time;
         this.modified_time = modified_time;
+    }
+
+    public int getCreated_user_id() {
+        return created_user_id;
+    }
+
+    public void setCreated_user_id(int created_user_id) {
+        this.created_user_id = created_user_id;
+    }
+
+    public int getAssigned_user_id() {
+        return assigned_user_id;
+    }
+
+    public void setAssigned_user_id(int assigned_user_id) {
+        this.assigned_user_id = assigned_user_id;
     }
 
     public int getProduct_id() {
@@ -54,14 +72,6 @@ public class Product {
 
     public void setClient_id(int client_id) {
         this.client_id = client_id;
-    }
-
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
     }
 
     public String getProduct_inquiry() {

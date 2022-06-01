@@ -56,7 +56,7 @@ public class PhaseController {
         }
     }
 
-    @PutMapping("/phases/update/{id}")
+    // @PutMapping("/phases/update/{id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> updatePhase(@PathVariable("id") int id, @RequestBody Phase phase) {
         Phase _phase = repo.getPhaseByPhase_id(id);

@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.vfarmrdbackend.models.Product;
 import com.example.vfarmrdbackend.payload.ProductRequest;
 import com.example.vfarmrdbackend.repositories.ProductRepository;
+import com.example.vfarmrdbackend.services.JwtService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.jsonwebtoken.Claims;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -73,13 +77,15 @@ public class ProductController {
 
     @PostMapping("/products/create")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<?> createProduct(@RequestBody ProductRequest productRequest,
+            @RequestHeader("Authorization") String jwtToken) {
         try {
             date = new Date();
             Product _product = new Product();
             _product.setProduct_name(productRequest.getProduct_name());
             _product.setClient_id(productRequest.getClient_id());
-            _product.setUser_id(productRequest.getUser_id());
+            _product.setAssigned_user_id(productRequest.getAssigned_user_id());
+            _product.setCreated_user_id(JwtService.getUser_idFromToken(jwtToken));
             _product.setProduct_inquiry(productRequest.getProduct_inquiry());
             _product.setCreated_time(date);
             _product.setProduct_status("activated");
@@ -89,8 +95,9 @@ public class ProductController {
                     HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
-                    "The server is down!",
+                    e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
+            // "The server is down!"
         }
     }
 
@@ -102,6 +109,7 @@ public class ProductController {
             date = new Date();
             _product.setProduct_name(productRequest.getProduct_name());
             _product.setClient_id(productRequest.getClient_id());
+            _product.setAssigned_user_id(productRequest.getAssigned_user_id());
             _product.setProduct_inquiry(productRequest.getProduct_inquiry());
             _product.setModified_time(date);
             repo.save(_product);
