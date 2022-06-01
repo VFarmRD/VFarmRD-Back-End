@@ -1,7 +1,5 @@
 package com.example.vfarmrdbackend.payload;
 
-import java.util.List;
-
 import javax.validation.constraints.*;
 
 public class SignupRequest {

@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.jsonwebtoken.Claims;
-
 @RestController
 @RequestMapping(path = "/api")
 public class ProductController {
@@ -95,9 +93,8 @@ public class ProductController {
                     HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
-                    e.getMessage(),
+                    "The server is down!",
                     HttpStatus.INTERNAL_SERVER_ERROR);
-            // "The server is down!"
         }
     }
 

@@ -102,28 +102,28 @@ public class AuthController {
     userRepository.save(user);
     int user_id = userRepository.getUserByUser_name(signUpRequest.getUser_name()).getUser_id();
     String role_name = signUpRequest.getRole_name();
-    UserRole userrole;
+    Role adminRole = roleRepository.getRoleByRole_name("admin");
+    Role staffRole = roleRepository.getRoleByRole_name("staff");
+    Role managerRole = roleRepository.getRoleByRole_name("manager");
     if (role_name.equals("admin")) {
-      Role adminRole = roleRepository.getRoleByRole_name("admin");
-      userrole = new UserRole();
-      userrole.setUser_id(user_id);
-      userrole.setRole_id(adminRole.getRole_id());
-      userroleRepository.save(userrole);
-    }
-    if (role_name.equals("staff") || role_name.equals("admin")) {
-      Role staffRole = roleRepository.getRoleByRole_name("staff");
-      userrole = new UserRole();
-      userrole.setUser_id(user_id);
-      userrole.setRole_id(staffRole.getRole_id());
-      userroleRepository.save(userrole);
+      setUser_role(user_id, adminRole.getRole_id());
     }
     if (role_name.equals("manager") || role_name.equals("admin")) {
-      Role managerRole = roleRepository.getRoleByRole_name("manager");
-      userrole = new UserRole();
-      userrole.setUser_id(user_id);
-      userrole.setRole_id(managerRole.getRole_id());
-      userroleRepository.save(userrole);
+      setUser_role(user_id, managerRole.getRole_id());
     }
+    if (role_name.equals("staff") || role_name.equals("admin")) {
+      setUser_role(user_id, staffRole.getRole_id());
+    }
+    User _user = userRepository.getUserByUser_name(signUpRequest.getUser_name());
+    _user.setRole_name(userRepository.getHighestRoleWithUser_Id(_user.getUser_id()));
+    userRepository.save(_user);
     return new ResponseEntity<>("Sign up account completed!", HttpStatus.OK);
+  }
+
+  void setUser_role(int user_id, int role_id) {
+    UserRole userrole = new UserRole();
+    userrole.setUser_id(user_id);
+    userrole.setRole_id(role_id);
+    userroleRepository.save(userrole);
   }
 }

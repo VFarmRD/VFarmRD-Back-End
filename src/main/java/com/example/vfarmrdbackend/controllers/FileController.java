@@ -4,6 +4,7 @@ import com.example.vfarmrdbackend.models.File;
 import com.example.vfarmrdbackend.payload.FileResponse;
 import com.example.vfarmrdbackend.repositories.FileRepository;
 import com.example.vfarmrdbackend.services.FileService;
+import com.example.vfarmrdbackend.services.JwtService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,10 +41,10 @@ public class FileController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
-            @RequestParam("user_id") int user_id) {
+            @RequestHeader("Authorization") String jwtToken) {
         String message = "";
         try {
-            fileService.store(file, user_id);
+            fileService.store(file, JwtService.getUser_idFromToken(jwtToken));
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
             return ResponseEntity.status(HttpStatus.OK).body(message);
         } catch (Exception e) {
@@ -54,20 +56,21 @@ public class FileController {
     @GetMapping("/files")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllFilesWithUser_id(@RequestParam("user_id") int user_id) {
-        List<FileResponse> files = fileService.getAllFilesWithUser_id(user_id).map(dbFile -> {
-            String fileDownloadUri = ServletUriComponentsBuilder
-                    .fromCurrentContextPath()
-                    .path("/api/files/")
-                    .path(String.valueOf(dbFile.getFile_id()))
-                    .toUriString();
+    public ResponseEntity<?> getAllFilesWithUser_id(@RequestHeader("Authorization") String jwtToken) {
+        List<FileResponse> files = fileService.getAllFilesWithUser_id(JwtService.getUser_idFromToken(jwtToken))
+                .map(dbFile -> {
+                    String fileDownloadUri = ServletUriComponentsBuilder
+                            .fromCurrentContextPath()
+                            .path("/api/files/")
+                            .path(String.valueOf(dbFile.getFile_id()))
+                            .toUriString();
 
-            return new FileResponse(
-                    dbFile.getFile_name(),
-                    fileDownloadUri,
-                    dbFile.getFile_type(),
-                    dbFile.getFile_data().length);
-        }).collect(Collectors.toList());
+                    return new FileResponse(
+                            dbFile.getFile_name(),
+                            fileDownloadUri,
+                            dbFile.getFile_type(),
+                            dbFile.getFile_data().length);
+                }).collect(Collectors.toList());
 
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
@@ -97,9 +100,9 @@ public class FileController {
     @DeleteMapping("/files/delete/{id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> deleteFile(@PathVariable("id") int id) {
+    public ResponseEntity<?> deleteFile(@PathVariable("id") int file_id) {
         try {
-            repo.deleteById(id);
+            repo.deleteById(file_id);
             return new ResponseEntity<>("Delete File successfully!", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
