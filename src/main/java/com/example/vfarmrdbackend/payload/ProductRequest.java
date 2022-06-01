@@ -4,17 +4,18 @@ public class ProductRequest {
     private int product_id;
     private String product_name;
     private int client_id;
-    private int user_id;
+    private int assigned_user_id;
     private String product_inquiry;
 
     public ProductRequest() {
     }
 
-    public ProductRequest(int product_id, String product_name, int client_id, int user_id, String product_inquiry) {
+    public ProductRequest(int product_id, String product_name, int client_id, int assigned_user_id,
+            String product_inquiry) {
         this.product_id = product_id;
         this.product_name = product_name;
         this.client_id = client_id;
-        this.user_id = user_id;
+        this.assigned_user_id = assigned_user_id;
         this.product_inquiry = product_inquiry;
     }
 
@@ -42,12 +43,12 @@ public class ProductRequest {
         this.client_id = client_id;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getAssigned_user_id() {
+        return assigned_user_id;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setAssigned_user_id(int assigned_user_id) {
+        this.assigned_user_id = assigned_user_id;
     }
 
     public String getProduct_inquiry() {
