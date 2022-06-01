@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api")
 public class UserRoleController {
     @Autowired
-    private UserRoleRepository repo;
+    private UserRoleRepository userRoleRepository;
 
     @GetMapping("/userrole")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<List<UserRole>> getAllUserRoles() {
         try {
-            List<UserRole> _listUserRoles = repo.findAll();
+            List<UserRole> _listUserRoles = userRoleRepository.findAll();
             if (_listUserRoles.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

@@ -23,13 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api")
 public class RoleController {
     @Autowired
-    private RoleRepository repo;
+    private RoleRepository roleRepository;
 
     @GetMapping("/roles")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> getAllRole() {
         try {
-            List<Role> _listRoles = repo.findAll();
+            List<Role> _listRoles = roleRepository.findAll();
             if (_listRoles.isEmpty()) {
                 return new ResponseEntity<>(
                         "Can't found any role!",
@@ -46,7 +46,7 @@ public class RoleController {
     @GetMapping("/roles/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> getRoleByRole_id(@PathVariable("id") int id) {
-        Role _role = repo.getRoleByRole_id(id);
+        Role _role = roleRepository.getRoleByRole_id(id);
         if (_role != null) {
             return new ResponseEntity<>(_role, HttpStatus.FOUND);
         } else {
@@ -60,7 +60,7 @@ public class RoleController {
         try {
             Role _role = new Role();
             _role.setRole_name(role_name);
-            repo.save(_role);
+            roleRepository.save(_role);
             return new ResponseEntity<>(
                     "Create new role completed!",
                     HttpStatus.OK);
@@ -74,10 +74,10 @@ public class RoleController {
     @PutMapping("/roles/update")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> updateRole(@RequestBody Role role) {
-        Role _role = repo.getRoleByRole_id(role.getRole_id());
+        Role _role = roleRepository.getRoleByRole_id(role.getRole_id());
         if (_role != null) {
             _role.setRole_name(role.getRole_name());
-            repo.save(_role);
+            roleRepository.save(_role);
             return new ResponseEntity<>("Update role successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -88,7 +88,7 @@ public class RoleController {
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> deleteRole(@PathVariable("id") int id) {
         try {
-            repo.deleteById(id);
+            roleRepository.deleteById(id);
             return new ResponseEntity<>("Delete role successfully!", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(

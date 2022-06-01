@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/api")
 public class FileController {
     @Autowired
-    private FileRepository repo;
+    private FileRepository fileRepository;
 
     @Autowired
     private FileService fileService;
@@ -64,7 +64,6 @@ public class FileController {
                             .path("/api/files/")
                             .path(String.valueOf(dbFile.getFile_id()))
                             .toUriString();
-
                     return new FileResponse(
                             dbFile.getFile_name(),
                             fileDownloadUri,
@@ -76,9 +75,9 @@ public class FileController {
     }
 
     @GetMapping("/files/{id}")
-    public ResponseEntity<byte[]> getFile(@PathVariable("id") int file_id) {
-        File _file = repo.getFileByFile_id(file_id);
-
+    public ResponseEntity<byte[]> getFile(@PathVariable("id") int file_id,
+            @RequestHeader("Authorization") String jwtToken) {
+        File _file = fileRepository.getFileByFile_id(file_id, JwtService.getUser_idFromToken(jwtToken));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"" + _file.getFile_name() + "\"")
@@ -88,13 +87,25 @@ public class FileController {
     @GetMapping("/files/search")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> findFileWithKeyword(@RequestParam("keyword") String keyword) {
-        List<File> _listFile = repo.findFileWithKeyword("%" + keyword + "%");
-        if (_listFile != null) {
-            return new ResponseEntity<>(_listFile, HttpStatus.FOUND);
-        } else {
-            return new ResponseEntity<>("File not found!", HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<?> findFileWithKeyword(@RequestParam("keyword") String keyword,
+            @RequestHeader("Authorization") String jwtToken) {
+        List<FileResponse> files = fileService
+                .findFilesWithUser_idAndKeyword("%" + keyword + "%", JwtService.getUser_idFromToken(jwtToken))
+                .map(dbFile -> {
+                    String fileDownloadUri = ServletUriComponentsBuilder
+                            .fromCurrentContextPath()
+                            .path("/api/files/")
+                            .path(String.valueOf(dbFile.getFile_id()))
+                            .toUriString();
+                    return new FileResponse(
+                            dbFile.getFile_name(),
+                            fileDownloadUri,
+                            dbFile.getFile_type(),
+                            dbFile.getFile_data().length);
+                }).collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK).body(files);
+
     }
 
     @DeleteMapping("/files/delete/{id}")
@@ -102,7 +113,7 @@ public class FileController {
             "or hasAuthority('manager')")
     public ResponseEntity<?> deleteFile(@PathVariable("id") int file_id) {
         try {
-            repo.deleteById(file_id);
+            fileRepository.deleteById(file_id);
             return new ResponseEntity<>("Delete File successfully!", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
