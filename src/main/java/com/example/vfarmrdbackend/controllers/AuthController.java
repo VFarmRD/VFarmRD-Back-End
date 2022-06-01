@@ -44,7 +44,7 @@ public class AuthController {
   RoleRepository roleRepository;
 
   @Autowired
-  UserRoleRepository userroleRepository;
+  UserRoleRepository userRoleRepository;
 
   @Autowired
   PasswordEncoder encoder;
@@ -115,7 +115,7 @@ public class AuthController {
       setUser_role(user_id, staffRole.getRole_id());
     }
     User _user = userRepository.getUserByUser_name(signUpRequest.getUser_name());
-    _user.setRole_name(userRepository.getHighestRoleWithUser_Id(_user.getUser_id()));
+    _user.setRole_name(userRoleRepository.getHighestRoleWithUser_Id(_user.getUser_id()));
     userRepository.save(_user);
     return new ResponseEntity<>("Sign up account completed!", HttpStatus.OK);
   }
@@ -124,6 +124,6 @@ public class AuthController {
     UserRole userrole = new UserRole();
     userrole.setUser_id(user_id);
     userrole.setRole_id(role_id);
-    userroleRepository.save(userrole);
+    userRoleRepository.save(userrole);
   }
 }

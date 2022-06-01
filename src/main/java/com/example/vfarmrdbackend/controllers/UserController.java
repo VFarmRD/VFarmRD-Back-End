@@ -3,6 +3,7 @@ package com.example.vfarmrdbackend.controllers;
 import java.util.Date;
 import java.util.List;
 
+import com.example.vfarmrdbackend.models.Role;
 import com.example.vfarmrdbackend.models.User;
 import com.example.vfarmrdbackend.models.UserRole;
 import com.example.vfarmrdbackend.payload.UserRequest;
@@ -26,27 +27,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api")
 public class UserController {
     @Autowired
-    private UserRepository repo;
+    private UserRepository userRepository;
 
     @Autowired
-    private UserRoleRepository urrepo;
+    private UserRoleRepository userRoleRepository;
 
     @Autowired
-    private RoleRepository rolerepo;
+    private RoleRepository roleRepository;
 
     @Autowired
     PasswordEncoder encoder;
 
-    Date date = new Date();
+    Date date;
 
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> getAllUsers() {
         try {
-            List<User> _listUsers = repo.getAllUsers();
-            for (int i = 0; i < _listUsers.size(); i++) {
-                _listUsers.get(i).setRole_name(repo.getHighestRoleWithUser_Id(_listUsers.get(i).getUser_id()));
-            }
+            List<User> _listUsers = userRepository.getAllUsers();
             if (_listUsers.isEmpty()) {
                 return new ResponseEntity<>(
                         "Can't found any user!",
@@ -63,30 +61,60 @@ public class UserController {
     @GetMapping("/users/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> getUserByUser_id(@PathVariable("id") int id) {
-        User _user = repo.getUserByUser_id(id);
+        User _user = userRepository.getUserByUser_id(id);
         if (_user != null) {
-            _user.setRole_name(repo.getHighestRoleWithUser_Id(_user.getUser_id()));
             return new ResponseEntity<>(_user, HttpStatus.FOUND);
         } else {
             return new ResponseEntity<>("User not found!", HttpStatus.NOT_FOUND);
         }
     }
 
+    void upgradeUserRoleToAdmin(int user_id, String role_name) {
+        List<Role> listRole = roleRepository.getAllRoles();
+        for (int i = 0; i < listRole.size(); i++) {
+            if (listRole.get(i).getRole_id() != roleRepository.getRoleByRole_name(role_name)
+                    .getRole_id()) {
+                UserRole newuserrole = new UserRole();
+                newuserrole.setUser_id(user_id);
+                newuserrole.setRole_id(listRole.get(i).getRole_id());
+                userRoleRepository.save(newuserrole);
+            }
+        }
+    }
+
+    void degradeUserRoleFromAdmin(int user_id, String role_name) {
+        List<UserRole> listUserRole = userRoleRepository.getAllRoleOfOneByUser_id(user_id);
+        for (int i = 0; i < listUserRole.size(); i++) {
+            if (listUserRole.get(i).getRole_id() != roleRepository.getRoleByRole_name(role_name)
+                    .getRole_id()) {
+                        userRoleRepository.delete(listUserRole.get(i));
+            }
+        }
+    }
+
     @PutMapping("/users/update")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
-        User _user = repo.getUserByUser_id(userRequest.getUser_id());
-        UserRole _userrole = urrepo.getUserRoleByUser_id(userRequest.getUser_id());
+        date = new Date();
+        User _user = userRepository.getUserByUser_id(userRequest.getUser_id());
+        UserRole _userrole = userRoleRepository.getUserRoleByUser_id(userRequest.getUser_id());
+        int change_role_id = roleRepository.getRoleByRole_name(userRequest.getRole_name()).getRole_id();
         if (_user != null && _userrole != null) {
-            int role_id = rolerepo.getRoleByRole_name(userRequest.getRole_name()).getRole_id();
-            _userrole.setRole_id(role_id);
+            if (_user.getRole_name().equals("admin") && !userRequest.getRole_name().equals("admin")) {
+                degradeUserRoleFromAdmin(userRequest.getUser_id(), userRequest.getRole_name());
+            } else if (!_user.getRole_name().equals("admin") && userRequest.getRole_name().equals("admin")) {
+                upgradeUserRoleToAdmin(userRequest.getUser_id(), userRequest.getRole_name());
+            } else {
+                _userrole.setRole_id(change_role_id);
+                userRoleRepository.save(_userrole);
+            }
             _user.setEmail(userRequest.getEmail());
             _user.setFullname(userRequest.getFullname());
             _user.setPhone(userRequest.getPhone());
-            _user.setRole_name(repo.getHighestRoleWithUser_Id(_user.getUser_id()));
+            _user.setRole_name(userRoleRepository.getHighestRoleWithUser_Id(_user.getUser_id()));
             _user.setPassword(encoder.encode(userRequest.getPassword()));
             _user.setModified_time(date);
-            repo.save(_user);
+            userRepository.save(_user);
             return new ResponseEntity<>("Update user successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -96,10 +124,10 @@ public class UserController {
     @PutMapping("/users/delete/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
-        User _user = repo.getUserByUser_id(id);
+        User _user = userRepository.getUserByUser_id(id);
         if (_user != null) {
             _user.setUser_status(false);
-            repo.save(_user);
+            userRepository.save(_user);
             return new ResponseEntity<>("Delete user successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -109,10 +137,10 @@ public class UserController {
     @PutMapping("/users/recover/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> recoverUser(@PathVariable("id") int id) {
-        User _user = repo.getUserByUser_id(id);
+        User _user = userRepository.getUserByUser_id(id);
         if (_user != null) {
             _user.setUser_status(true);
-            repo.save(_user);
+            userRepository.save(_user);
             return new ResponseEntity<>("Recover user successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

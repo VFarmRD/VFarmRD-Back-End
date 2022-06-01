@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.vfarmrdbackend.models.Formula;
 import com.example.vfarmrdbackend.payload.FormulaRequest;
 import com.example.vfarmrdbackend.repositories.FormulaRepository;
+import com.example.vfarmrdbackend.services.JwtService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api")
 public class FormulaController {
     @Autowired
-    private FormulaRepository repo;
+    private FormulaRepository formulaRepository;
 
     Date date;
 
@@ -32,7 +34,7 @@ public class FormulaController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getAllFormulaByProduct_id(@RequestParam("product_id") int product_id) {
-        List<Formula> _listFormulas = repo.getAllFormulaByProduct_id(product_id);
+        List<Formula> _listFormulas = formulaRepository.getAllFormulaByProduct_id(product_id);
         if (_listFormulas != null) {
             return new ResponseEntity<>(_listFormulas, HttpStatus.FOUND);
         } else {
@@ -46,7 +48,7 @@ public class FormulaController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getFormulaByFormula_id(@PathVariable("id") int id) {
-        Formula _formula = repo.getFormulaByFormula_id(id);
+        Formula _formula = formulaRepository.getFormulaByFormula_id(id);
         if (_formula != null) {
             return new ResponseEntity<>(_formula, HttpStatus.FOUND);
         } else {
@@ -58,17 +60,20 @@ public class FormulaController {
 
     @PostMapping("/formulas/create")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createFormula(@RequestBody FormulaRequest formulaRequest) {
+    public ResponseEntity<?> createFormula(@RequestBody FormulaRequest formulaRequest,
+            @RequestHeader("Authorization") String jwtToken) {
         try {
             date = new Date();
             Formula _formula = new Formula();
             _formula.setProduct_id(formulaRequest.getProduct_id());
+            _formula.setCreated_user_id(JwtService.getUser_idFromToken(jwtToken));
+            _formula.setFormula_pre_version("none");
             _formula.setFormula_version("1.0");
             _formula.setFormula_name(formulaRequest.getFormula_name());
             _formula.setFormula_status("on progress");
             _formula.setFormula_cost(formulaRequest.getFormula_cost());
             _formula.setCreated_time(date);
-            repo.save(_formula);
+            formulaRepository.save(_formula);
             return new ResponseEntity<>(
                     "Create new formula completed!",
                     HttpStatus.OK);
@@ -82,12 +87,10 @@ public class FormulaController {
     @PutMapping("/formulas/submit/{id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> submitFormula(@PathVariable("id") int id) {
-        Formula _formula = repo.getFormulaByFormula_id(id);
+        Formula _formula = formulaRepository.getFormulaByFormula_id(id);
         if (_formula != null) {
-            date = new Date();
             _formula.setFormula_status("pending");
-            _formula.setModified_time(date);
-            repo.save(_formula);
+            formulaRepository.save(_formula);
             return new ResponseEntity<>("Submit formula successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -97,12 +100,12 @@ public class FormulaController {
     @PutMapping("/formulas/delete/{id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> deleteFormula(@PathVariable("id") int id) {
-        Formula _formula = repo.getFormulaByFormula_id(id);
+        Formula _formula = formulaRepository.getFormulaByFormula_id(id);
         if (_formula != null) {
             date = new Date();
             _formula.setFormula_status("deleted");
             _formula.setModified_time(date);
-            repo.save(_formula);
+            formulaRepository.save(_formula);
             return new ResponseEntity<>("Delete formula successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -111,18 +114,25 @@ public class FormulaController {
 
     @PostMapping("/formulas/update")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updateFormula(@RequestBody FormulaRequest formulaRequest) {
-        Formula _formula = repo.getFormulaByFormula_id(formulaRequest.getFormula_id());
+    public ResponseEntity<?> updateFormula(@RequestBody FormulaRequest formulaRequest,
+            @RequestHeader("Authorization") String jwtToken) {
+        Formula _formula = formulaRepository.getFormulaByFormula_id(formulaRequest.getFormula_id());
+        Formula newFormula = new Formula();
+        date = new Date();
         if (_formula != null) {
-            date = new Date();
+            newFormula.setProduct_id(_formula.getProduct_id());
+            newFormula.setCreated_user_id(JwtService.getUser_idFromToken(jwtToken));
             String formula_pre_version = _formula.getFormula_version();
+            newFormula.setFormula_pre_version(formula_pre_version);
             String splitString[] = formula_pre_version.split("\\.");
-            String formula_now_version = "1." + String.valueOf(Integer.parseInt(splitString[0]) + 1);
-            _formula.setFormula_version(formula_now_version);
-            _formula.setFormula_name(formulaRequest.getFormula_name());
-            _formula.setFormula_cost(formulaRequest.getFormula_cost());
-            _formula.setModified_time(date);
-            repo.save(_formula);
+            String formula_now_version = "1." + String.valueOf(Integer.parseInt(splitString[1]) + 1);
+            newFormula.setFormula_version(formula_now_version);
+            newFormula.setFormula_name(formulaRequest.getFormula_name());
+            newFormula.setFormula_cost(formulaRequest.getFormula_cost());
+            newFormula.setFormula_status("on progress");
+            newFormula.setCreated_time(_formula.getCreated_time());
+            newFormula.setModified_time(date);
+            formulaRepository.save(newFormula);
             return new ResponseEntity<>("Update formula successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -131,18 +141,25 @@ public class FormulaController {
 
     @PostMapping("/formulas/upgrade")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> upgradeFormula(@RequestBody FormulaRequest formulaRequest) {
-        Formula _formula = repo.getFormulaByFormula_id(formulaRequest.getFormula_id());
+    public ResponseEntity<?> upgradeFormula(@RequestBody FormulaRequest formulaRequest,
+            @RequestHeader("Authorization") String jwtToken) {
+        Formula _formula = formulaRepository.getFormulaByFormula_id(formulaRequest.getFormula_id());
+        Formula newFormula = new Formula();
+        date = new Date();
         if (_formula != null) {
-            date = new Date();
+            newFormula.setProduct_id(_formula.getProduct_id());
+            newFormula.setCreated_user_id(JwtService.getUser_idFromToken(jwtToken));
             String formula_pre_version = _formula.getFormula_version();
+            newFormula.setFormula_pre_version(formula_pre_version);
             String[] splitString = formula_pre_version.split("\\.");
             String formula_now_version = String.valueOf(Integer.parseInt(splitString[0]) + 1) + ".0";
-            _formula.setFormula_version(formula_now_version);
-            _formula.setFormula_name(formulaRequest.getFormula_name());
-            _formula.setFormula_cost(formulaRequest.getFormula_cost());
-            _formula.setModified_time(date);
-            repo.save(_formula);
+            newFormula.setFormula_version(formula_now_version);
+            newFormula.setFormula_name(formulaRequest.getFormula_name());
+            newFormula.setFormula_cost(formulaRequest.getFormula_cost());
+            newFormula.setFormula_status("on progress");
+            newFormula.setCreated_time(_formula.getCreated_time());
+            newFormula.setModified_time(date);
+            formulaRepository.save(newFormula);
             return new ResponseEntity<>("Upgrade formula successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -152,28 +169,29 @@ public class FormulaController {
     @PutMapping("/formulas/approve/{id}")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> approveFormula(@PathVariable("id") int id) {
-        Formula _formula = repo.getFormulaByFormula_id(id);
+        Formula _formula = formulaRepository.getFormulaByFormula_id(id);
         if (_formula != null) {
-            date = new Date();
-            _formula.setFormula_status("approve");
-            _formula.setModified_time(date);
-            repo.save(_formula);
+            if (!_formula.getFormula_status().equals("pending")) {
+                return new ResponseEntity<>("This formula haven't submit yet!", HttpStatus.NOT_ACCEPTABLE);
+            }
+            _formula.setFormula_status("approved");
+            formulaRepository.save(_formula);
             return new ResponseEntity<>("Approve formula successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // Deny Formula
     @PutMapping("/formulas/deny/{id}")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> denyFormula(@PathVariable("id") int id) {
-        Formula _formula = repo.getFormulaByFormula_id(id);
+        Formula _formula = formulaRepository.getFormulaByFormula_id(id);
         if (_formula != null) {
-            date = new Date();
-            _formula.setFormula_status("deny");
-            _formula.setModified_time(date);
-            repo.save(_formula);
+            if (!_formula.getFormula_status().equals("pending")) {
+                return new ResponseEntity<>("This formula haven't submit yet!", HttpStatus.NOT_ACCEPTABLE);
+            }
+            _formula.setFormula_status("denied");
+            formulaRepository.save(_formula);
             return new ResponseEntity<>("Deny formula successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

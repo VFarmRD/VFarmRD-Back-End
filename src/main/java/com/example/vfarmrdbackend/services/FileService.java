@@ -31,12 +31,16 @@ public class FileService {
         return fileRepository.save(image);
     }
 
-    public File getFile(int id) {
-        return fileRepository.getFileByFile_id(id);
+    public File getFile(int file_id, int user_id) {
+        return fileRepository.getFileByFile_id(file_id, user_id);
     }
 
     public Stream<File> getAllFilesWithUser_id(int user_id) {
         return fileRepository.getAllFileWithUser_id(user_id).stream();
+    }
+
+    public Stream<File> findFilesWithUser_idAndKeyword(String keyword, int user_id) {
+        return fileRepository.findFileWithKeyword(keyword, user_id).stream();
     }
 
 }

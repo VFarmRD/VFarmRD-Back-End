@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api")
 public class MaterialOfPhaseController {
     @Autowired
-    private MaterialOfPhaseRepository repo;
+    private MaterialOfPhaseRepository materialOfPhaseRepository;
 
     @GetMapping("/materialofphase")
     public ResponseEntity<List<MaterialOfPhase>> getAllMaterialOfPhases() {
         try {
-            List<MaterialOfPhase> _listMaterialOfPhases = repo.findAll();
+            List<MaterialOfPhase> _listMaterialOfPhases = materialOfPhaseRepository.findAll();
             if (_listMaterialOfPhases.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

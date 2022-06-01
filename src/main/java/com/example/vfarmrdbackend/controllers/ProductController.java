@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api")
 public class ProductController {
     @Autowired
-    private ProductRepository repo;
+    private ProductRepository productRepository;
 
     Date date;
 
@@ -35,7 +35,7 @@ public class ProductController {
             "or hasAuthority('manager')")
     public ResponseEntity<?> getAllProducts() {
         try {
-            List<Product> _listProducts = repo.findAll();
+            List<Product> _listProducts = productRepository.findAll();
             if (_listProducts.isEmpty()) {
                 return new ResponseEntity<>(
                         "Can't found any product!",
@@ -53,7 +53,7 @@ public class ProductController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getProductById(@PathVariable("id") int id) {
-        Product _product = repo.getProductByProduct_id(id);
+        Product _product = productRepository.getProductByProduct_id(id);
         if (_product != null) {
             return new ResponseEntity<>(_product, HttpStatus.FOUND);
         } else {
@@ -65,7 +65,7 @@ public class ProductController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> findProductWithKeyword(@RequestParam("keyword") String keyword) {
-        List<Product> _listFile = repo.findProductWithKeyword("%" + keyword + "%");
+        List<Product> _listFile = productRepository.findProductWithKeyword("%" + keyword + "%");
         if (_listFile != null) {
             return new ResponseEntity<>(_listFile, HttpStatus.FOUND);
         } else {
@@ -87,7 +87,7 @@ public class ProductController {
             _product.setProduct_inquiry(productRequest.getProduct_inquiry());
             _product.setCreated_time(date);
             _product.setProduct_status("activated");
-            repo.save(_product);
+            productRepository.save(_product);
             return new ResponseEntity<>(
                     "Create new product completed!",
                     HttpStatus.OK);
@@ -101,7 +101,7 @@ public class ProductController {
     @PutMapping("/products/update")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> updateProduct(@RequestBody ProductRequest productRequest) {
-        Product _product = repo.getProductByProduct_id(productRequest.getProduct_id());
+        Product _product = productRepository.getProductByProduct_id(productRequest.getProduct_id());
         if (_product != null) {
             date = new Date();
             _product.setProduct_name(productRequest.getProduct_name());
@@ -109,7 +109,7 @@ public class ProductController {
             _product.setAssigned_user_id(productRequest.getAssigned_user_id());
             _product.setProduct_inquiry(productRequest.getProduct_inquiry());
             _product.setModified_time(date);
-            repo.save(_product);
+            productRepository.save(_product);
             return new ResponseEntity<>("Update product successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -119,11 +119,11 @@ public class ProductController {
     @PutMapping("/products/delete/{id}")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") int id) {
-        Product _product = repo.getProductByProduct_id(id);
+        Product _product = productRepository.getProductByProduct_id(id);
         if (_product != null) {
             _product.setProduct_status("deactivated");
             _product.setModified_time(date);
-            repo.save(_product);
+            productRepository.save(_product);
             return new ResponseEntity<>("Delete product successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
