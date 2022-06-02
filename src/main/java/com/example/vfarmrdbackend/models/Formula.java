@@ -9,7 +9,7 @@ public class Formula {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int formula_id;
-    private int product_id;
+    private String product_id;
     private int created_user_id;
     private String formula_pre_version;
     private String formula_version;
@@ -22,7 +22,7 @@ public class Formula {
     public Formula() {
     }
 
-    public Formula(int formula_id, int product_id, int created_user_id, String formula_pre_version,
+    public Formula(int formula_id, String product_id, int created_user_id, String formula_pre_version,
             String formula_version, String formula_name, String formula_status, float formula_cost, Date created_time,
             Date modified_time) {
         this.formula_id = formula_id;
@@ -61,11 +61,11 @@ public class Formula {
         this.formula_id = formula_id;
     }
 
-    public int getProduct_id() {
+    public String getProduct_id() {
         return product_id;
     }
 
-    public void setProduct_id(int product_id) {
+    public void setProduct_id(String product_id) {
         this.product_id = product_id;
     }
 

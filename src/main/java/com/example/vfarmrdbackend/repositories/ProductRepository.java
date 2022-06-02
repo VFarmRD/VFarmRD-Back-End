@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query(value = "select * from products p where p.product_id = :product_id", nativeQuery = true)
-    Product getProductByProduct_id(@Param("product_id") int product_id);
+    Product getProductByProduct_id(@Param("product_id") String product_id);
 
     @Query(value = "select * from products p where lower(p.product_name) like lower(:keyword)", nativeQuery = true)
     List<Product> findProductWithKeyword(@Param("keyword") String keyword);
