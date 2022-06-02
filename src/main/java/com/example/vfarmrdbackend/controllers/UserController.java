@@ -151,6 +151,8 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
         User _user = userRepository.getUserByUser_id(id);
         if (_user != null) {
+            date = new Date();
+            _user.setModified_time(date);
             _user.setUser_status(false);
             userRepository.save(_user);
             return new ResponseEntity<>("Delete user successfully!", HttpStatus.OK);
@@ -164,6 +166,8 @@ public class UserController {
     public ResponseEntity<?> recoverUser(@PathVariable("id") int id) {
         User _user = userRepository.getUserByUser_id(id);
         if (_user != null) {
+            date = new Date();
+            _user.setModified_time(date);
             _user.setUser_status(true);
             userRepository.save(_user);
             return new ResponseEntity<>("Recover user successfully!", HttpStatus.OK);
