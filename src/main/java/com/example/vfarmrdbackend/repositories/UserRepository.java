@@ -1,11 +1,12 @@
 package com.example.vfarmrdbackend.repositories;
 
-import java.util.List;
-
-import com.example.vfarmrdbackend.models.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import com.example.vfarmrdbackend.models.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
@@ -18,7 +19,22 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "select * from users u where lower(u.email) like lower(:email)", nativeQuery = true)
     User getUserByEmail(@Param("email") String email);
 
-    @Query(value = "select * from users u ", nativeQuery = true)
-    List<User> getAllUsers();
+    @Query(value = "select * from users u " +
+            "where lower(u.user_name) like lower(:user_name) and " +
+            "lower(u.email) like lower(:email) and " +
+            "lower(u.fullname) like lower(:fullname) and " +
+            "lower(u.phone) like lower(:phone) and " +
+            "lower(u.role_name) like lower(:role_name) and " +
+            "u.user_status = :user_status ", nativeQuery = true)
+    Page<User> findUserByFields(@Param("user_name") String user_name,
+            @Param("email") String email,
+            @Param("fullname") String fullname,
+            @Param("phone") String phone,
+            @Param("role_name") String role_name,
+            @Param("user_status") boolean user_status,
+            Pageable pageable);
+
+    @Query(value = "select * from users", nativeQuery = true)
+    Page<User> findAllUsers(Pageable pageable);
 
 }

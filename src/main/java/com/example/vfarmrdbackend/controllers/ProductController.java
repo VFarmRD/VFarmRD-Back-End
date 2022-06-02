@@ -1,7 +1,10 @@
 package com.example.vfarmrdbackend.controllers;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.vfarmrdbackend.models.Product;
 import com.example.vfarmrdbackend.payload.ProductRequest;
@@ -9,6 +12,9 @@ import com.example.vfarmrdbackend.repositories.ProductRepository;
 import com.example.vfarmrdbackend.services.JwtService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,15 +39,33 @@ public class ProductController {
     @GetMapping("/products")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllProducts() {
+    public ResponseEntity<?> getAllProducts(@RequestHeader("Authorization") String jwtToken,
+        @RequestParam(defaultValue = "", required = false) String product_name,
+            @RequestParam(defaultValue = "", required = false) String client_id,
+            @RequestParam(defaultValue = "", required = false) String created_user_id,
+            @RequestParam(defaultValue = "", required = false) String assigned_user_id,
+            @RequestParam(defaultValue = "", required = false) String product_status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1000") int size) {
         try {
-            List<Product> _listProducts = productRepository.findAll();
-            if (_listProducts.isEmpty()) {
-                return new ResponseEntity<>(
-                        "Can't found any product!",
-                        HttpStatus.NO_CONTENT);
+            List<Product> _listProducts = new ArrayList<>();
+            Pageable paging = PageRequest.of(page, size);
+            Page<Product> pageProducts;
+            if (product_name != null || client_id != null || created_user_id != null ||
+                    assigned_user_id != null || product_status != null) {
+                pageProducts = productRepository.findUserByFields("%" + product_name + "%",
+                        "%" + client_id + "%", "%" + created_user_id + "%",
+                        "%" + assigned_user_id + "%", "%" + product_status + "%", paging);
+            } else {
+                pageProducts = productRepository.findAllProduct(paging);
             }
-            return new ResponseEntity<>(_listProducts, HttpStatus.OK);
+            _listProducts = pageProducts.getContent();
+            Map<String, Object> response = new HashMap<>();
+            response.put("products", _listProducts);
+            response.put("currentPage", pageProducts.getNumber());
+            response.put("totalItems", pageProducts.getTotalElements());
+            response.put("totalPages", pageProducts.getTotalPages());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
                     "The server is down!",
@@ -56,18 +80,6 @@ public class ProductController {
         Product _product = productRepository.getProductByProduct_id(id);
         if (_product != null) {
             return new ResponseEntity<>(_product, HttpStatus.FOUND);
-        } else {
-            return new ResponseEntity<>("Product not found!", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/products/search")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
-    public ResponseEntity<?> findProductWithKeyword(@RequestParam("keyword") String keyword) {
-        List<Product> _listFile = productRepository.findProductWithKeyword("%" + keyword + "%");
-        if (_listFile != null) {
-            return new ResponseEntity<>(_listFile, HttpStatus.FOUND);
         } else {
             return new ResponseEntity<>("Product not found!", HttpStatus.NOT_FOUND);
         }
