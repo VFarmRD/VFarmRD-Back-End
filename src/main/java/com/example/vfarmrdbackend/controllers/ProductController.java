@@ -39,8 +39,7 @@ public class ProductController {
     @GetMapping("/products")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllProducts(@RequestHeader("Authorization") String jwtToken,
-        @RequestParam(defaultValue = "", required = false) String product_name,
+    public ResponseEntity<?> getAllProducts(@RequestParam(defaultValue = "", required = false) String product_name,
             @RequestParam(defaultValue = "", required = false) String client_id,
             @RequestParam(defaultValue = "", required = false) String created_user_id,
             @RequestParam(defaultValue = "", required = false) String assigned_user_id,
