@@ -70,12 +70,12 @@ public class UserController {
                 pageUsers = userRepository.findAllUsers(paging);
             }
             _listUsers = pageUsers.getContent();
-            Map<String, Object> response = new HashMap<>();
-            response.put("users", _listUsers);
-            response.put("currentPage", pageUsers.getNumber());
-            response.put("totalItems", pageUsers.getTotalElements());
-            response.put("totalPages", pageUsers.getTotalPages());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            // Map<String, Object> response = new HashMap<>();
+            // response.put("users", _listUsers);
+            // response.put("currentPage", pageUsers.getNumber());
+            // response.put("totalItems", pageUsers.getTotalElements());
+            // response.put("totalPages", pageUsers.getTotalPages());
+            return new ResponseEntity<>(_listUsers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
                     "The server is down!",

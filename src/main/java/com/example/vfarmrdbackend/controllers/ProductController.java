@@ -59,12 +59,12 @@ public class ProductController {
                 pageProducts = productRepository.findAllProduct(paging);
             }
             _listProducts = pageProducts.getContent();
-            Map<String, Object> response = new HashMap<>();
-            response.put("products", _listProducts);
-            response.put("currentPage", pageProducts.getNumber());
-            response.put("totalItems", pageProducts.getTotalElements());
-            response.put("totalPages", pageProducts.getTotalPages());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            // Map<String, Object> response = new HashMap<>();
+            // response.put("products", _listProducts);
+            // response.put("currentPage", pageProducts.getNumber());
+            // response.put("totalItems", pageProducts.getTotalElements());
+            // response.put("totalPages", pageProducts.getTotalPages());
+            return new ResponseEntity<>(_listProducts, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
                     "The server is down!",
