@@ -43,7 +43,7 @@ public class ProductController {
             @RequestParam(defaultValue = "", required = false) String client_id,
             @RequestParam(defaultValue = "", required = false) String created_user_id,
             @RequestParam(defaultValue = "", required = false) String assigned_user_id,
-            @RequestParam(defaultValue = "", required = false) String product_status,
+            @RequestParam(defaultValue = "activated", required = false) String product_status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "1000") int size) {
         try {
@@ -75,8 +75,8 @@ public class ProductController {
     @GetMapping("/products/{id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getProductById(@PathVariable("id") int id) {
-        Product _product = productRepository.getProductByProduct_id(id);
+    public ResponseEntity<?> getProductById(@PathVariable("id") String product_id) {
+        Product _product = productRepository.getProductByProduct_id(product_id);
         if (_product != null) {
             return new ResponseEntity<>(_product, HttpStatus.FOUND);
         } else {
@@ -91,6 +91,7 @@ public class ProductController {
         try {
             date = new Date();
             Product _product = new Product();
+            _product.setProduct_id(productRequest.getProduct_id());
             _product.setProduct_name(productRequest.getProduct_name());
             _product.setClient_id(productRequest.getClient_id());
             _product.setAssigned_user_id(productRequest.getAssigned_user_id());
@@ -129,8 +130,8 @@ public class ProductController {
 
     @PutMapping("/products/delete/{id}")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> deleteProduct(@PathVariable("id") int id) {
-        Product _product = productRepository.getProductByProduct_id(id);
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") String product_id) {
+        Product _product = productRepository.getProductByProduct_id(product_id);
         if (_product != null) {
             _product.setProduct_status("deactivated");
             _product.setModified_time(date);

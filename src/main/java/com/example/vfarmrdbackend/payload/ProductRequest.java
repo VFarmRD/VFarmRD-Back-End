@@ -1,7 +1,7 @@
 package com.example.vfarmrdbackend.payload;
 
 public class ProductRequest {
-    private int product_id;
+    private String product_id;
     private String product_name;
     private int client_id;
     private int assigned_user_id;
@@ -10,7 +10,7 @@ public class ProductRequest {
     public ProductRequest() {
     }
 
-    public ProductRequest(int product_id, String product_name, int client_id, int assigned_user_id,
+    public ProductRequest(String product_id, String product_name, int client_id, int assigned_user_id,
             String product_inquiry) {
         this.product_id = product_id;
         this.product_name = product_name;
@@ -19,11 +19,11 @@ public class ProductRequest {
         this.product_inquiry = product_inquiry;
     }
 
-    public int getProduct_id() {
+    public String getProduct_id() {
         return product_id;
     }
 
-    public void setProduct_id(int product_id) {
+    public void setProduct_id(String product_id) {
         this.product_id = product_id;
     }
 

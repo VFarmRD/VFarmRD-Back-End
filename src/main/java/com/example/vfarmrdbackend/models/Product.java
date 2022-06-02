@@ -7,8 +7,7 @@ import java.util.Date;
 @Table(name = "products")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int product_id;
+    private String product_id;
     private String product_name;
     private int client_id;
     private int created_user_id;
@@ -21,7 +20,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(int product_id, String product_name, int client_id, int created_user_id, int assigned_user_id,
+    public Product(String product_id, String product_name, int client_id, int created_user_id, int assigned_user_id,
             String product_inquiry, String product_status, Date created_time, Date modified_time) {
         this.product_id = product_id;
         this.product_name = product_name;
@@ -32,6 +31,14 @@ public class Product {
         this.product_status = product_status;
         this.created_time = created_time;
         this.modified_time = modified_time;
+    }
+
+    public String getProduct_id() {
+        return product_id;
+    }
+
+    public void setProduct_id(String product_id) {
+        this.product_id = product_id;
     }
 
     public int getCreated_user_id() {
@@ -48,14 +55,6 @@ public class Product {
 
     public void setAssigned_user_id(int assigned_user_id) {
         this.assigned_user_id = assigned_user_id;
-    }
-
-    public int getProduct_id() {
-        return product_id;
-    }
-
-    public void setProduct_id(int product_id) {
-        this.product_id = product_id;
     }
 
     public String getProduct_name() {
