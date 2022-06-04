@@ -25,7 +25,7 @@ public class TestController {
     @Autowired
     private TestRepository repo;
 
-    @GetMapping("/tests/{id}")
+    // @GetMapping("/tests/{id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> getTestById(@PathVariable("id") int id) {
         Test _test = repo.getTestByTest_id(id);
@@ -36,7 +36,7 @@ public class TestController {
         }
     }
 
-    @GetMapping("/tests")
+    // @GetMapping("/tests")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> getTestWithFormula_id(@RequestBody Formula formula) {
         try {
@@ -54,7 +54,7 @@ public class TestController {
         }
     }
 
-    @PostMapping("/tests/create")
+    // @PostMapping("/tests/create")
     @PreAuthorize("hasAuthority('staff')")
 
     public ResponseEntity<?> createTest(@RequestBody Test test) {
@@ -70,7 +70,7 @@ public class TestController {
         }
     }
 
-    @PutMapping("/tests/update/{id}")
+    // @PutMapping("/tests/update/{id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> updateTest(@PathVariable("id") int id, @RequestBody Test test) {
         Test _test = repo.getTestByTest_id(id);
@@ -84,7 +84,7 @@ public class TestController {
         }
     }
 
-    @DeleteMapping("/tests/delete/{id}")
+    // @DeleteMapping("/tests/delete/{id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> deleteTest(@PathVariable("id") int id) {
         try {
