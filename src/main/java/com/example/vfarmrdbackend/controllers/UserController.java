@@ -88,7 +88,7 @@ public class UserController {
     public ResponseEntity<?> getUserByUser_id(@PathVariable("id") int id) {
         User _user = userRepository.getUserByUser_id(id);
         if (_user != null) {
-            return new ResponseEntity<>(_user, HttpStatus.FOUND);
+            return new ResponseEntity<>(_user, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("User not found!", HttpStatus.NOT_FOUND);
         }
