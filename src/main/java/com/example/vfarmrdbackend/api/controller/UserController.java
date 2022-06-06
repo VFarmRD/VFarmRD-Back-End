@@ -6,10 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import com.example.vfarmrdbackend.business.model.Role;
 import com.example.vfarmrdbackend.business.model.User;
 import com.example.vfarmrdbackend.business.model.UserRole;
+import com.example.vfarmrdbackend.business.payload.LoginRequest;
+import com.example.vfarmrdbackend.business.payload.SignupRequest;
 import com.example.vfarmrdbackend.business.payload.UserRequest;
+import com.example.vfarmrdbackend.business.service.UserService;
 import com.example.vfarmrdbackend.data.repository.RoleRepository;
 import com.example.vfarmrdbackend.data.repository.UserRepository;
 import com.example.vfarmrdbackend.data.repository.UserRoleRepository;
@@ -24,6 +29,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,15 +43,39 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
-    private UserRoleRepository userRoleRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     PasswordEncoder encoder;
 
     Date date;
+
+    @Autowired
+    UserService userService;
+
+    @PostMapping("/users/login")
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        if (userService.checkUserIsDisabled(loginRequest.getUser_name())) {
+            return new ResponseEntity<>(
+                    "Your account is disabled!",
+                    HttpStatus.OK);
+        }
+        return new ResponseEntity<>(
+                userService.login(loginRequest),
+                HttpStatus.OK);
+    }
+
+    @PostMapping("/users/create")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+        if (userService.checkUser_nameIsExisted(signUpRequest.getUser_name())) {
+            return new ResponseEntity<>(
+                    "This username is already registered!",
+                    HttpStatus.IM_USED);
+        }
+        if (userService.checkUser_nameIsExisted(signUpRequest.getEmail())) {
+            return new ResponseEntity<>(
+                    "This email is already registered!",
+                    HttpStatus.IM_USED);
+        }
+        return new ResponseEntity<>("Sign up account completed!", HttpStatus.OK);
+    }
 
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('admin')")
@@ -61,14 +91,9 @@ public class UserController {
             List<User> _listUsers = new ArrayList<User>();
             Pageable paging = PageRequest.of(page, size);
             Page<User> pageUsers;
-            if (user_name != null || email != null || fullname != null ||
-                    phone != null || role_name != null) {
-                pageUsers = userRepository.findUserByFields("%" + user_name + "%",
-                        "%" + email + "%", "%" + fullname + "%", "%" + phone + "%",
-                        "%" + role_name + "%", user_status, paging);
-            } else {
-                pageUsers = userRepository.findAllUsers(paging);
-            }
+            pageUsers = userRepository.findUserByFields("%" + user_name + "%",
+                    "%" + email + "%", "%" + fullname + "%", "%" + phone + "%",
+                    "%" + role_name + "%", user_status, paging);
             _listUsers = pageUsers.getContent();
             // Map<String, Object> response = new HashMap<>();
             // response.put("users", _listUsers);
@@ -94,52 +119,10 @@ public class UserController {
         }
     }
 
-    void upgradeUserRoleToAdmin(int user_id, String role_name) {
-        List<Role> listRole = roleRepository.getAllRoles();
-        for (int i = 0; i < listRole.size(); i++) {
-            if (listRole.get(i).getRole_id() != roleRepository.getRoleByRole_name(role_name)
-                    .getRole_id()) {
-                UserRole newuserrole = new UserRole();
-                newuserrole.setUser_id(user_id);
-                newuserrole.setRole_id(listRole.get(i).getRole_id());
-                userRoleRepository.save(newuserrole);
-            }
-        }
-    }
-
-    void degradeUserRoleFromAdmin(int user_id, String role_name) {
-        List<UserRole> listUserRole = userRoleRepository.getAllRoleOfOneByUser_id(user_id);
-        for (int i = 0; i < listUserRole.size(); i++) {
-            if (listUserRole.get(i).getRole_id() != roleRepository.getRoleByRole_name(role_name)
-                    .getRole_id()) {
-                userRoleRepository.delete(listUserRole.get(i));
-            }
-        }
-    }
-
     @PutMapping("/users/update")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
-        date = new Date();
-        User _user = userRepository.getUserByUser_id(userRequest.getUser_id());
-        UserRole _userrole = userRoleRepository.getUserRoleByUser_id(userRequest.getUser_id());
-        int change_role_id = roleRepository.getRoleByRole_name(userRequest.getRole_name()).getRole_id();
-        if (_user != null && _userrole != null) {
-            if (_user.getRole_name().equals("admin") && !userRequest.getRole_name().equals("admin")) {
-                degradeUserRoleFromAdmin(userRequest.getUser_id(), userRequest.getRole_name());
-            } else if (!_user.getRole_name().equals("admin") && userRequest.getRole_name().equals("admin")) {
-                upgradeUserRoleToAdmin(userRequest.getUser_id(), userRequest.getRole_name());
-            } else {
-                _userrole.setRole_id(change_role_id);
-                userRoleRepository.save(_userrole);
-            }
-            _user.setEmail(userRequest.getEmail());
-            _user.setFullname(userRequest.getFullname());
-            _user.setPhone(userRequest.getPhone());
-            _user.setRole_name(userRoleRepository.getHighestRoleWithUser_Id(_user.getUser_id()));
-            _user.setPassword(encoder.encode(userRequest.getPassword()));
-            _user.setModified_time(date);
-            userRepository.save(_user);
+        if (userService.updateUser(userRequest)) {
             return new ResponseEntity<>("Update user successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -149,12 +132,7 @@ public class UserController {
     @PutMapping("/users/delete/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
-        User _user = userRepository.getUserByUser_id(id);
-        if (_user != null) {
-            date = new Date();
-            _user.setModified_time(date);
-            _user.setUser_status(false);
-            userRepository.save(_user);
+        if (userService.deleteUser(id)) {
             return new ResponseEntity<>("Delete user successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -164,15 +142,11 @@ public class UserController {
     @PutMapping("/users/recover/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> recoverUser(@PathVariable("id") int id) {
-        User _user = userRepository.getUserByUser_id(id);
-        if (_user != null) {
-            date = new Date();
-            _user.setModified_time(date);
-            _user.setUser_status(true);
-            userRepository.save(_user);
+        if (userService.recoverUser(id)) {
             return new ResponseEntity<>("Recover user successfully!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 }
