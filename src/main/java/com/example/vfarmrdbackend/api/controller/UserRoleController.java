@@ -5,6 +5,8 @@ import java.util.List;
 import com.example.vfarmrdbackend.business.model.UserRole;
 import com.example.vfarmrdbackend.data.repository.UserRoleRepository;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "User Role", description = "The User Role's API")
 @RestController
 @RequestMapping(path = "/api")
 public class UserRoleController {

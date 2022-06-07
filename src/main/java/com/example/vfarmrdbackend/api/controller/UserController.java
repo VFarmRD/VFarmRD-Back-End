@@ -2,22 +2,21 @@ package com.example.vfarmrdbackend.api.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.example.vfarmrdbackend.business.model.Role;
 import com.example.vfarmrdbackend.business.model.User;
-import com.example.vfarmrdbackend.business.model.UserRole;
 import com.example.vfarmrdbackend.business.payload.LoginRequest;
 import com.example.vfarmrdbackend.business.payload.SignupRequest;
 import com.example.vfarmrdbackend.business.payload.UserRequest;
 import com.example.vfarmrdbackend.business.service.UserService;
-import com.example.vfarmrdbackend.data.repository.RoleRepository;
 import com.example.vfarmrdbackend.data.repository.UserRepository;
-import com.example.vfarmrdbackend.data.repository.UserRoleRepository;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "User", description = "The User's API")
 @RestController
 @RequestMapping(path = "/api")
 public class UserController {
@@ -50,32 +50,48 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping("/users/login")
+    @Operation(summary = "Login to system", description = "")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login successfully!"),
+            @ApiResponse(responseCode = "410", description = "User's account is disabled!"),
+            @ApiResponse(responseCode = "500", description = "The server is down!")
+    })
+    @PostMapping("/auth/login")
     private ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        if (userService.checkUserIsDisabled(loginRequest.getUser_name())) {
-            return new ResponseEntity<>(
-                    "Your account is disabled!",
-                    HttpStatus.OK);
+        try {
+            if (userService.checkUserIsDisabled(loginRequest.getUser_name())) {
+                return ResponseEntity.status(HttpStatus.GONE).body("Your account is disabled!");
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(userService.login(loginRequest));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "The server is down!");
         }
-        return new ResponseEntity<>(
-                userService.login(loginRequest),
-                HttpStatus.OK);
     }
-
-    @PostMapping("/users/create")
+    @Operation(summary = "Create an account", description = "")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Create account successfully!"),
+            @ApiResponse(responseCode = "226", description = "This username is already registered!"),
+            @ApiResponse(responseCode = "226", description = "This email is already registered!"),
+            @ApiResponse(responseCode = "500", description = "The server is down!")
+    })
+    @PostMapping("/auth/create")
     private ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        if (userService.checkUser_nameIsExisted(signUpRequest.getUser_name())) {
-            return new ResponseEntity<>(
-                    "This username is already registered!",
-                    HttpStatus.IM_USED);
+        try {
+            if (userService.checkUser_nameIsExisted(signUpRequest.getUser_name())) {
+                return ResponseEntity.status(HttpStatus.IM_USED).body(
+                        "This username is already registered!");
+            }
+            if (userService.checkUser_nameIsExisted(signUpRequest.getEmail())) {
+                return ResponseEntity.status(HttpStatus.IM_USED).body(
+                        "This email is already registered!");
+            }
+            userService.register(signUpRequest);
+            return ResponseEntity.status(HttpStatus.OK).body("Create account completed!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "The server is down!");
         }
-        if (userService.checkUser_nameIsExisted(signUpRequest.getEmail())) {
-            return new ResponseEntity<>(
-                    "This email is already registered!",
-                    HttpStatus.IM_USED);
-        }
-        userService.signup(signUpRequest);
-        return new ResponseEntity<>("Sign up account completed!", HttpStatus.OK);
     }
 
     @GetMapping("/users")
@@ -110,43 +126,63 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    @PreAuthorize("hasAuthority('admin')")
     private ResponseEntity<?> getUserByUser_id(@PathVariable("id") int id) {
-        User _user = userRepository.getUserByUser_id(id);
-        if (_user != null) {
-            return new ResponseEntity<>(_user, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("User not found!", HttpStatus.NOT_FOUND);
+        try {
+            User _user = userRepository.getUserByUser_id(id);
+            if (_user != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(_user);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "The server is down!");
         }
     }
 
     @PutMapping("/users/update")
     @PreAuthorize("hasAuthority('admin')")
     private ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
-        if (userService.updateUser(userRequest)) {
-            return new ResponseEntity<>("Update user successfully!", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            if (userService.updateUser(userRequest)) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        "Update user successfully!");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "The server is down!");
         }
     }
 
     @PutMapping("/users/delete/{id}")
     @PreAuthorize("hasAuthority('admin')")
     private ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
-        if (userService.deleteUser(id)) {
-            return new ResponseEntity<>("Delete user successfully!", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            if (userService.deleteUser(id)) {
+                return ResponseEntity.status(HttpStatus.OK).body("Delete user successfully!");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "The server is down!");
         }
     }
 
     @PutMapping("/users/recover/{id}")
     @PreAuthorize("hasAuthority('admin')")
     private ResponseEntity<?> recoverUser(@PathVariable("id") int id) {
-        if (userService.recoverUser(id)) {
-            return new ResponseEntity<>("Recover user successfully!", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            if (userService.recoverUser(id)) {
+                return ResponseEntity.status(HttpStatus.OK).body("Recover user successfully!");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "The server is down!");
         }
     }
 

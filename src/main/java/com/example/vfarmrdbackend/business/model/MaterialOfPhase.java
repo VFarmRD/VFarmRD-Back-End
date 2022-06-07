@@ -11,12 +11,13 @@ public class MaterialOfPhase {
     private int phase_id;
     private String material_id;
     private float material_percent;
-    private float delivered_duty_paid;
+    private String delivered_duty_paid;
 
     public MaterialOfPhase() {
     }
 
-    public MaterialOfPhase(int mop_id, int phase_id, String material_id, float material_percent, float delivered_duty_paid) {
+    public MaterialOfPhase(int mop_id, int phase_id, String material_id, float material_percent,
+            String delivered_duty_paid) {
         this.mop_id = mop_id;
         this.phase_id = phase_id;
         this.material_id = material_id;
@@ -56,11 +57,13 @@ public class MaterialOfPhase {
         this.material_percent = material_percent;
     }
 
-    public float getDelivered_duty_paid() {
+    public String getDelivered_duty_paid() {
         return delivered_duty_paid;
     }
 
-    public void setDelivered_duty_paid(float delivered_duty_paid) {
+    public void setDelivered_duty_paid(String delivered_duty_paid) {
         this.delivered_duty_paid = delivered_duty_paid;
     }
+
+    
 }

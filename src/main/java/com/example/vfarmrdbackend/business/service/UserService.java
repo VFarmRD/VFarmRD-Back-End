@@ -92,7 +92,7 @@ public class UserService {
                 roles);
     }
 
-    public void signup(SignupRequest signUpRequest) {
+    public void register(SignupRequest signUpRequest) {
         date = new Date();
         User user = new User(
                 0,

@@ -6,6 +6,8 @@ import com.example.vfarmrdbackend.business.model.Formula;
 import com.example.vfarmrdbackend.business.payload.FormulaRequest;
 import com.example.vfarmrdbackend.business.service.FormulaService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Formula", description = "The Formula's API")
 @RestController
 @RequestMapping(path = "/api")
 public class FormulaController {
@@ -69,10 +72,11 @@ public class FormulaController {
     @PutMapping("/formulas/submit/{id}")
     @PreAuthorize("hasAuthority('staff')")
     private ResponseEntity<?> submitFormula(@PathVariable("id") int id) {
-        if (formulaService.setFormula_status(id, "pending")) {
+        try {
+            formulaService.setFormula_status(id, "pending");
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Submit formula successfully!");
-        } else {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     "Submit formula fail!");
         }
@@ -81,10 +85,11 @@ public class FormulaController {
     @PutMapping("/formulas/delete/{id}")
     @PreAuthorize("hasAuthority('staff')")
     private ResponseEntity<?> deleteFormula(@PathVariable("id") int id) {
-        if (formulaService.setFormula_status(id, "deleted")) {
+        try {
+            formulaService.setFormula_status(id, "deleted");
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Delete formula successfully!");
-        } else {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     "Delete formula fail!");
         }
@@ -121,24 +126,34 @@ public class FormulaController {
     @PutMapping("/formulas/approve/{id}")
     @PreAuthorize("hasAuthority('manager')")
     private ResponseEntity<?> approveFormula(@PathVariable("id") int id) {
-        if (formulaService.setFormula_status(id, "approved")) {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    "Approve formula successfully!");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                    "This formula haven't submit yet!");
+        try {
+            if (formulaService.setFormula_status(id, "approved")) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        "Approve formula successfully!");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                        "This formula haven't submit yet!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "Approve formula fail!");
         }
     }
 
     @PutMapping("/formulas/deny/{id}")
     @PreAuthorize("hasAuthority('manager')")
     private ResponseEntity<?> denyFormula(@PathVariable("id") int id) {
-        if (formulaService.setFormula_status(id, "denied")) {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    "Approve formula successfully!");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                    "This formula haven't submit yet!");
+        try {
+            if (formulaService.setFormula_status(id, "denied")) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        "Deny formula successfully!");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                        "This formula haven't submit yet!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "Deny formula fail!");
         }
     }
 }

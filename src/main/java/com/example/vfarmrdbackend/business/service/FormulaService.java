@@ -18,13 +18,11 @@ public class FormulaService {
     Date date;
 
     public List<Formula> getAllFormulaByProduct_id(int product_id) {
-        List<Formula> _listFormulas = formulaRepository.getAllFormulaByProduct_id(product_id);
-        return _listFormulas;
+        return formulaRepository.getAllFormulaByProduct_id(product_id);
     }
 
     public Formula getFormulaByFormula_id(int formula_id) {
-        Formula _formula = formulaRepository.getFormulaByFormula_id(formula_id);
-        return _formula;
+        return formulaRepository.getFormulaByFormula_id(formula_id);
     }
 
     public void createFormula(FormulaRequest formulaRequest, String jwt) {
