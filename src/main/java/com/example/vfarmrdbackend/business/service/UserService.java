@@ -17,6 +17,7 @@ import com.example.vfarmrdbackend.business.model.UserRole;
 import com.example.vfarmrdbackend.business.payload.JwtResponse;
 import com.example.vfarmrdbackend.business.payload.LoginRequest;
 import com.example.vfarmrdbackend.business.payload.SignupRequest;
+import com.example.vfarmrdbackend.business.payload.UserDetailsImpl;
 import com.example.vfarmrdbackend.business.payload.UserRequest;
 import com.example.vfarmrdbackend.business.service.security.jwt.JwtUtils;
 import com.example.vfarmrdbackend.data.repository.RoleRepository;

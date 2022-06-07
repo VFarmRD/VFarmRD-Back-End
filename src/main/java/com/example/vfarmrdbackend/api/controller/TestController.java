@@ -27,7 +27,7 @@ public class TestController {
 
     // @GetMapping("/tests/{id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> getTestById(@PathVariable("id") int id) {
+    private ResponseEntity<?> getTestById(@PathVariable("id") int id) {
         Test _test = repo.getTestByTest_id(id);
         if (_test != null) {
             return new ResponseEntity<>(_test, HttpStatus.FOUND);
@@ -38,7 +38,7 @@ public class TestController {
 
     // @GetMapping("/tests")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> getTestWithFormula_id(@RequestBody Formula formula) {
+    private ResponseEntity<?> getTestWithFormula_id(@RequestBody Formula formula) {
         try {
             List<Test> _listTests = repo.getTestWithFormula_id(formula.getFormula_id());
             if (_listTests.isEmpty()) {
@@ -57,7 +57,7 @@ public class TestController {
     // @PostMapping("/tests/create")
     @PreAuthorize("hasAuthority('staff')")
 
-    public ResponseEntity<?> createTest(@RequestBody Test test) {
+    private ResponseEntity<?> createTest(@RequestBody Test test) {
         try {
             repo.save(test);
             return new ResponseEntity<>(
@@ -72,7 +72,7 @@ public class TestController {
 
     // @PutMapping("/tests/update/{id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updateTest(@PathVariable("id") int id, @RequestBody Test test) {
+    private ResponseEntity<?> updateTest(@PathVariable("id") int id, @RequestBody Test test) {
         Test _test = repo.getTestByTest_id(id);
         if (_test != null) {
             _test.setFile_id(test.getFile_id());
@@ -86,7 +86,7 @@ public class TestController {
 
     // @DeleteMapping("/tests/delete/{id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> deleteTest(@PathVariable("id") int id) {
+    private ResponseEntity<?> deleteTest(@PathVariable("id") int id) {
         try {
             repo.deleteById(id);
             return new ResponseEntity<>("Delete test successfully!", HttpStatus.OK);

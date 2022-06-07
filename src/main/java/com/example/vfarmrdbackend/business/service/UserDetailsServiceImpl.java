@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.vfarmrdbackend.business.model.Role;
 import com.example.vfarmrdbackend.business.model.User;
 import com.example.vfarmrdbackend.business.model.UserRole;
+import com.example.vfarmrdbackend.business.payload.UserDetailsImpl;
 import com.example.vfarmrdbackend.data.repository.RoleRepository;
 import com.example.vfarmrdbackend.data.repository.UserRepository;
 import com.example.vfarmrdbackend.data.repository.UserRoleRepository;

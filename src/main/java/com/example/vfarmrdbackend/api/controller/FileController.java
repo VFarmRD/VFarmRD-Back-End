@@ -4,7 +4,6 @@ import com.example.vfarmrdbackend.business.model.File;
 import com.example.vfarmrdbackend.business.payload.FileResponse;
 import com.example.vfarmrdbackend.business.service.FileService;
 import com.example.vfarmrdbackend.business.service.JwtService;
-import com.example.vfarmrdbackend.data.repository.FileRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,96 +28,92 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(path = "/api")
 public class FileController {
-    @Autowired
-    private FileRepository fileRepository;
+        @Autowired
+        private FileService fileService;
 
-    @Autowired
-    private FileService fileService;
+        Date date = new Date();
 
-    Date date = new Date();
-
-    @PostMapping("/files/upload")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
-            @RequestHeader("Authorization") String jwtToken) {
-        String message = "";
-        try {
-            fileService.store(file, JwtService.getUser_idFromToken(jwtToken));
-            message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            return ResponseEntity.status(HttpStatus.OK).body(message);
-        } catch (Exception e) {
-            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+        @PostMapping("/files/upload")
+        @PreAuthorize("hasAuthority('staff') " +
+                        "or hasAuthority('manager')")
+        private ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
+                        @RequestHeader("Authorization") String jwt) {
+                try {
+                        fileService.store(file, JwtService.getUser_idFromToken(jwt));
+                        return ResponseEntity.status(HttpStatus.OK).body(
+                                        "Uploaded the file successfully: " + file.getOriginalFilename());
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(
+                                        "Could not upload the file: " + file.getOriginalFilename() + "!");
+                }
         }
-    }
 
-    @GetMapping("/files")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllFilesWithUser_id(@RequestHeader("Authorization") String jwtToken) {
-        List<FileResponse> files = fileService.getAllFilesWithUser_id(JwtService.getUser_idFromToken(jwtToken))
-                .map(dbFile -> {
-                    String fileDownloadUri = ServletUriComponentsBuilder
-                            .fromCurrentContextPath()
-                            .path("/api/files/")
-                            .path(String.valueOf(dbFile.getFile_id()))
-                            .toUriString();
-                    return new FileResponse(
-                            dbFile.getFile_name(),
-                            fileDownloadUri,
-                            dbFile.getFile_type(),
-                            dbFile.getFile_data().length);
-                }).collect(Collectors.toList());
+        @GetMapping("/files")
+        @PreAuthorize("hasAuthority('staff') " +
+                        "or hasAuthority('manager')")
+        private ResponseEntity<?> getAllFilesWithUser_id(@RequestHeader("Authorization") String jwt) {
+                List<FileResponse> files = fileService.getAllFilesWithUser_id(JwtService.getUser_idFromToken(jwt))
+                                .map(dbFile -> {
+                                        String fileDownloadUri = ServletUriComponentsBuilder
+                                                        .fromCurrentContextPath()
+                                                        .path("/api/files/")
+                                                        .path(String.valueOf(dbFile.getFile_id()))
+                                                        .toUriString();
+                                        return new FileResponse(
+                                                        dbFile.getFile_name(),
+                                                        fileDownloadUri,
+                                                        dbFile.getFile_type(),
+                                                        dbFile.getFile_data().length);
+                                }).collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(files);
-    }
-
-    @GetMapping("/files/{id}")
-    public ResponseEntity<byte[]> getFile(@PathVariable("id") int file_id,
-            @RequestHeader("Authorization") String jwtToken) {
-        File _file = fileRepository.getFileByFile_id(file_id, JwtService.getUser_idFromToken(jwtToken));
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + _file.getFile_name() + "\"")
-                .body(_file.getFile_data());
-    }
-
-    @GetMapping("/files/search")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
-    public ResponseEntity<?> findFileWithKeyword(@RequestParam("keyword") String keyword,
-            @RequestHeader("Authorization") String jwtToken) {
-        List<FileResponse> files = fileService
-                .findFilesWithUser_idAndKeyword("%" + keyword + "%", JwtService.getUser_idFromToken(jwtToken))
-                .map(dbFile -> {
-                    String fileDownloadUri = ServletUriComponentsBuilder
-                            .fromCurrentContextPath()
-                            .path("/api/files/")
-                            .path(String.valueOf(dbFile.getFile_id()))
-                            .toUriString();
-                    return new FileResponse(
-                            dbFile.getFile_name(),
-                            fileDownloadUri,
-                            dbFile.getFile_type(),
-                            dbFile.getFile_data().length);
-                }).collect(Collectors.toList());
-
-        return ResponseEntity.status(HttpStatus.OK).body(files);
-
-    }
-
-    @DeleteMapping("/files/delete/{id}")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
-    public ResponseEntity<?> deleteFile(@PathVariable("id") int file_id) {
-        try {
-            fileRepository.deleteById(file_id);
-            return new ResponseEntity<>("Delete File successfully!", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "The server is down!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+                return ResponseEntity.status(HttpStatus.OK).body(files);
         }
-    }
+
+        @GetMapping("/files/{id}")
+        public ResponseEntity<byte[]> getFile(@PathVariable("id") int file_id,
+                        @RequestHeader("Authorization") String jwt) {
+                File _file = fileService.getFile(file_id, JwtService.getUser_idFromToken(jwt));
+                return ResponseEntity.ok()
+                                .header(HttpHeaders.CONTENT_DISPOSITION,
+                                                "attachment; filename=\"" + _file.getFile_name() + "\"")
+                                .body(_file.getFile_data());
+        }
+
+        @GetMapping("/files/search")
+        @PreAuthorize("hasAuthority('staff') " +
+                        "or hasAuthority('manager')")
+        private ResponseEntity<?> findFileWithKeyword(@RequestParam("keyword") String keyword,
+                        @RequestHeader("Authorization") String jwt) {
+                List<FileResponse> files = fileService
+                                .findFilesWithUser_idAndKeyword("%" + keyword + "%",
+                                                JwtService.getUser_idFromToken(jwt))
+                                .map(dbFile -> {
+                                        String fileDownloadUri = ServletUriComponentsBuilder
+                                                        .fromCurrentContextPath()
+                                                        .path("/api/files/")
+                                                        .path(String.valueOf(dbFile.getFile_id()))
+                                                        .toUriString();
+                                        return new FileResponse(
+                                                        dbFile.getFile_name(),
+                                                        fileDownloadUri,
+                                                        dbFile.getFile_type(),
+                                                        dbFile.getFile_data().length);
+                                }).collect(Collectors.toList());
+                return ResponseEntity.status(HttpStatus.OK).body(files);
+        }
+
+        @DeleteMapping("/files/delete/{id}")
+        @PreAuthorize("hasAuthority('staff') " +
+                        "or hasAuthority('manager')")
+        private ResponseEntity<?> deleteFile(@PathVariable("id") int file_id) {
+                try {
+                        fileService.deleteFile(file_id);
+                        return ResponseEntity.status(HttpStatus.OK).body(
+                                        "Delete File successfully!");
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                                        "The server is down!");
+
+                }
+        }
 }

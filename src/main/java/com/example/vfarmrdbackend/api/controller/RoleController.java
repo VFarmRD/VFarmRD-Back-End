@@ -27,7 +27,7 @@ public class RoleController {
 
     @GetMapping("/roles")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> getAllRole() {
+    private ResponseEntity<?> getAllRole() {
         try {
             List<Role> _listRoles = roleRepository.findAll();
             if (_listRoles.isEmpty()) {
@@ -45,7 +45,7 @@ public class RoleController {
 
     @GetMapping("/roles/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> getRoleByRole_id(@PathVariable("id") int id) {
+    private ResponseEntity<?> getRoleByRole_id(@PathVariable("id") int id) {
         Role _role = roleRepository.getRoleByRole_id(id);
         if (_role != null) {
             return new ResponseEntity<>(_role, HttpStatus.FOUND);
@@ -56,7 +56,7 @@ public class RoleController {
 
     @PostMapping("/roles/create")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> createRole(@RequestParam("role_name") String role_name) {
+    private ResponseEntity<?> createRole(@RequestParam("role_name") String role_name) {
         try {
             Role _role = new Role();
             _role.setRole_name(role_name);
@@ -73,7 +73,7 @@ public class RoleController {
 
     @PutMapping("/roles/update")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> updateRole(@RequestBody Role role) {
+    private ResponseEntity<?> updateRole(@RequestBody Role role) {
         Role _role = roleRepository.getRoleByRole_id(role.getRole_id());
         if (_role != null) {
             _role.setRole_name(role.getRole_name());
@@ -86,7 +86,7 @@ public class RoleController {
 
     @DeleteMapping("/roles/delete/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> deleteRole(@PathVariable("id") int id) {
+    private ResponseEntity<?> deleteRole(@PathVariable("id") int id) {
         try {
             roleRepository.deleteById(id);
             return new ResponseEntity<>("Delete role successfully!", HttpStatus.OK);

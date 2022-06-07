@@ -43,4 +43,7 @@ public class FileService {
         return fileRepository.findFileWithKeyword(keyword, user_id).stream();
     }
 
+    public void deleteFile(int file_id){
+        fileRepository.deleteById(file_id);
+    }
 }

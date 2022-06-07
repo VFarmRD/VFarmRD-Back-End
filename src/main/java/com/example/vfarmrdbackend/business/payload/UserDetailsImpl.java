@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.business.service;
+package com.example.vfarmrdbackend.business.payload;
 
 import java.util.ArrayList;
 import java.util.Collection;

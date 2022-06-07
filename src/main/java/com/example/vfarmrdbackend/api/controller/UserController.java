@@ -51,7 +51,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/users/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    private ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         if (userService.checkUserIsDisabled(loginRequest.getUser_name())) {
             return new ResponseEntity<>(
                     "Your account is disabled!",
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PostMapping("/users/create")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    private ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userService.checkUser_nameIsExisted(signUpRequest.getUser_name())) {
             return new ResponseEntity<>(
                     "This username is already registered!",
@@ -74,12 +74,13 @@ public class UserController {
                     "This email is already registered!",
                     HttpStatus.IM_USED);
         }
+        userService.signup(signUpRequest);
         return new ResponseEntity<>("Sign up account completed!", HttpStatus.OK);
     }
 
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> getAllUsers(@RequestParam(defaultValue = "", required = false) String user_name,
+    private ResponseEntity<?> getAllUsers(@RequestParam(defaultValue = "", required = false) String user_name,
             @RequestParam(defaultValue = "", required = false) String email,
             @RequestParam(defaultValue = "", required = false) String fullname,
             @RequestParam(defaultValue = "", required = false) String phone,
@@ -110,7 +111,7 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> getUserByUser_id(@PathVariable("id") int id) {
+    private ResponseEntity<?> getUserByUser_id(@PathVariable("id") int id) {
         User _user = userRepository.getUserByUser_id(id);
         if (_user != null) {
             return new ResponseEntity<>(_user, HttpStatus.OK);
@@ -121,7 +122,7 @@ public class UserController {
 
     @PutMapping("/users/update")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
+    private ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
         if (userService.updateUser(userRequest)) {
             return new ResponseEntity<>("Update user successfully!", HttpStatus.OK);
         } else {
@@ -131,7 +132,7 @@ public class UserController {
 
     @PutMapping("/users/delete/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
+    private ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
         if (userService.deleteUser(id)) {
             return new ResponseEntity<>("Delete user successfully!", HttpStatus.OK);
         } else {
@@ -141,7 +142,7 @@ public class UserController {
 
     @PutMapping("/users/recover/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> recoverUser(@PathVariable("id") int id) {
+    private ResponseEntity<?> recoverUser(@PathVariable("id") int id) {
         if (userService.recoverUser(id)) {
             return new ResponseEntity<>("Recover user successfully!", HttpStatus.OK);
         } else {

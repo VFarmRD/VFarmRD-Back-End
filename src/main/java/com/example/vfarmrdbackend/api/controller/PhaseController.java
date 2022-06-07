@@ -27,7 +27,7 @@ public class PhaseController {
 
     @GetMapping("/phases/{id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> getAllPhaseByFormula_id(@PathVariable("id") int id) {
+    private ResponseEntity<?> getAllPhaseByFormula_id(@PathVariable("id") int id) {
         try {
             List<Phase> _listPhases = repo.getAllPhaseByFormula_id(id);
             if (_listPhases.isEmpty()) {
@@ -43,7 +43,7 @@ public class PhaseController {
 
     @PostMapping("/phases/create")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createPhase(@RequestBody Phase phase) {
+    private ResponseEntity<?> createPhase(@RequestBody Phase phase) {
         try {
             repo.save(phase);
             return new ResponseEntity<>(
@@ -58,7 +58,7 @@ public class PhaseController {
 
     // @PutMapping("/phases/update/{id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updatePhase(@PathVariable("id") int id, @RequestBody Phase phase) {
+    private ResponseEntity<?> updatePhase(@PathVariable("id") int id, @RequestBody Phase phase) {
         Phase _phase = repo.getPhaseByPhase_id(id);
         if (_phase != null) {
 
@@ -71,7 +71,7 @@ public class PhaseController {
 
     @DeleteMapping("/phases/delete/{id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> deletePhase(@PathVariable("id") int id) {
+    private ResponseEntity<?> deletePhase(@PathVariable("id") int id) {
         try {
             repo.deleteById(id);
             return new ResponseEntity<>("Delete phase successfully!", HttpStatus.OK);

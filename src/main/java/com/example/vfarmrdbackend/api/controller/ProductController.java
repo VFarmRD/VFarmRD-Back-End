@@ -39,7 +39,7 @@ public class ProductController {
     @GetMapping("/products")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllProducts(@RequestParam(defaultValue = "", required = false) String product_name,
+    private ResponseEntity<?> getAllProducts(@RequestParam(defaultValue = "", required = false) String product_name,
             @RequestParam(defaultValue = "", required = false) String client_id,
             @RequestParam(defaultValue = "", required = false) String created_user_id,
             @RequestParam(defaultValue = "", required = false) String assigned_user_id,
@@ -75,7 +75,7 @@ public class ProductController {
     @GetMapping("/products/{id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getProductById(@PathVariable("id") String product_id) {
+    private ResponseEntity<?> getProductById(@PathVariable("id") String product_id) {
         Product _product = productRepository.getProductByProduct_id(product_id);
         if (_product != null) {
             return new ResponseEntity<>(_product, HttpStatus.OK);
@@ -86,7 +86,7 @@ public class ProductController {
 
     @PostMapping("/products/create")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> createProduct(@RequestBody ProductRequest productRequest,
+    private ResponseEntity<?> createProduct(@RequestBody ProductRequest productRequest,
             @RequestHeader("Authorization") String jwtToken) {
         try {
             date = new Date();
@@ -112,7 +112,7 @@ public class ProductController {
 
     @PutMapping("/products/update")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> updateProduct(@RequestBody ProductRequest productRequest) {
+    private ResponseEntity<?> updateProduct(@RequestBody ProductRequest productRequest) {
         Product _product = productRepository.getProductByProduct_id(productRequest.getProduct_id());
         if (_product != null) {
             date = new Date();
@@ -130,7 +130,7 @@ public class ProductController {
 
     @PutMapping("/products/delete/{id}")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> deleteProduct(@PathVariable("id") String product_id) {
+    private ResponseEntity<?> deleteProduct(@PathVariable("id") String product_id) {
         Product _product = productRepository.getProductByProduct_id(product_id);
         if (_product != null) {
             _product.setProduct_status("deactivated");
