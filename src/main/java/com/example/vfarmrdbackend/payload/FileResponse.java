@@ -1,6 +1,7 @@
 package com.example.vfarmrdbackend.payload;
 
 public class FileResponse {
+
     private String name;
     private String url;
     private String type;
