@@ -2,9 +2,8 @@ package com.example.vfarmrdbackend.api.controller;
 
 import java.util.List;
 
-import com.example.vfarmrdbackend.business.model.Formula;
 import com.example.vfarmrdbackend.business.model.Test;
-import com.example.vfarmrdbackend.data.repository.TestRepository;
+import com.example.vfarmrdbackend.business.service.TestService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Test", description = "The Test's API")
@@ -26,77 +26,82 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api")
 public class TestController {
     @Autowired
-    private TestRepository repo;
+    TestService testService;
 
-    // @GetMapping("/tests/{id}")
+    @GetMapping("/tests")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> getTestById(@PathVariable("id") int id) {
-        Test _test = repo.getTestByTest_id(id);
-        if (_test != null) {
-            return new ResponseEntity<>(_test, HttpStatus.FOUND);
-        } else {
-            return new ResponseEntity<>("Test not found!", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    // @GetMapping("/tests")
-    @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> getTestWithFormula_id(@RequestBody Formula formula) {
+    private ResponseEntity<?> getAllTestWithFormula_id(@RequestParam("formula_id") int formula_id) {
         try {
-            List<Test> _listTests = repo.getTestWithFormula_id(formula.getFormula_id());
-            if (_listTests.isEmpty()) {
-                return new ResponseEntity<>(
-                        "Can't found any test!",
-                        HttpStatus.NO_CONTENT);
+            List<Test> _listTests = testService.getAllTestWithFormula_id(formula_id);
+            if (_listTests != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(_listTests);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        "Can't found any test!");
             }
-            return new ResponseEntity<>(_listTests, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "The server is down!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "The server is down!");
         }
     }
 
-    // @PostMapping("/tests/create")
+    @GetMapping("/tests/{id}")
     @PreAuthorize("hasAuthority('staff')")
+    private ResponseEntity<?> getTestByTest_id(@PathVariable("id") int test_id) {
+        try {
+            Test _tests = testService.getTestWithTest_id(test_id);
+            if (_tests != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(_tests);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        "Can't found test!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "The server is down!");
+        }
+    }
 
+    @PostMapping("/tests/create")
+    @PreAuthorize("hasAuthority('staff')")
     private ResponseEntity<?> createTest(@RequestBody Test test) {
         try {
-            repo.save(test);
-            return new ResponseEntity<>(
-                    "Create new test completed!",
-                    HttpStatus.OK);
+            testService.createTest(test);
+            return ResponseEntity.status(HttpStatus.OK).body("Create new test completed!");
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "The server is down!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "The server is down!");
         }
     }
 
-    // @PutMapping("/tests/update/{id}")
+    @PutMapping("/tests/update")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> updateTest(@PathVariable("id") int id, @RequestBody Test test) {
-        Test _test = repo.getTestByTest_id(id);
-        if (_test != null) {
-            _test.setFile_id(test.getFile_id());
-            _test.setTest_status(test.isTest_status());
-            repo.save(_test);
-            return new ResponseEntity<>("Update test successfully!", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    // @DeleteMapping("/tests/delete/{id}")
-    @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> deleteTest(@PathVariable("id") int id) {
+    private ResponseEntity<?> updateTest(@RequestBody Test test) {
         try {
-            repo.deleteById(id);
-            return new ResponseEntity<>("Delete test successfully!", HttpStatus.OK);
+            if (testService.updateTest(test)) {
+                return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Test not found!");
+            }
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "The server is down!",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "The server is down!");
         }
     }
+
+    @DeleteMapping("/tests/delete/{id}")
+    @PreAuthorize("hasAuthority('staff')")
+    private ResponseEntity<?> deleteTest(@PathVariable("id") int test_id) {
+        try {
+            if (testService.deleteTest(test_id)) {
+                return ResponseEntity.status(HttpStatus.OK).body("Delete test successfully!");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Test not found!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "The server is down!");
+        }
+    }
+
 }

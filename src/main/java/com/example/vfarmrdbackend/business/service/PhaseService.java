@@ -17,6 +17,10 @@ public class PhaseService {
         return phaseRepository.getAllPhaseByFormula_id(formula_id);
     }
 
+    public Phase getPhaseByPhase_id(int phase_id) {
+        return phaseRepository.getPhaseByPhase_id(phase_id);
+    }
+
     public void createPhase(Phase phase) {
         Phase _phase = new Phase();
         _phase.setFormula_id(phase.getFormula_id());
