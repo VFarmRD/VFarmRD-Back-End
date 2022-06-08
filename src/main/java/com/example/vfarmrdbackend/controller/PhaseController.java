@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Phase", description = "The Phase's API")
@@ -30,7 +30,7 @@ public class PhaseController {
 
     @GetMapping("/phases")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> getAllPhaseByFormula_id(@RequestParam("id") int formula_id) {
+    public ResponseEntity<?> getAllPhaseByFormula_id(@RequestParam("formula_id") int formula_id) {
         try {
             List<Phase> _listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
             if (_listPhases != null) {
@@ -45,9 +45,9 @@ public class PhaseController {
         }
     }
 
-    @GetMapping("/phases/{id}")
+    @GetMapping("/phases/{phase_id}")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> getPhaseByPhase_id(@PathVariable("id") int phase_id) {
+    public ResponseEntity<?> getPhaseByPhase_id(@PathVariable("phase_id") int phase_id) {
         try {
             Phase _phase = phaseService.getPhaseByPhase_id(phase_id);
             if (_phase != null) {
@@ -64,7 +64,7 @@ public class PhaseController {
 
     @PostMapping("/phases/create")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> createPhase(@RequestBody Phase phase) {
+    public ResponseEntity<?> createPhase(@RequestBody Phase phase) {
         try {
             phaseService.createPhase(phase);
             return ResponseEntity.status(HttpStatus.OK).body("Create new phase completed!");
@@ -76,7 +76,7 @@ public class PhaseController {
 
     @PutMapping("/phases/update")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> updatePhase(@RequestBody Phase phase) {
+    public ResponseEntity<?> updatePhase(@RequestBody Phase phase) {
         try {
             if (phaseService.updatePhase(phase)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Update phase successfully!");
@@ -89,13 +89,15 @@ public class PhaseController {
         }
     }
 
-    @DeleteMapping("/phases/delete/{id}")
+    @DeleteMapping("/phases/delete/{phase_id}")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> deletePhase(@PathVariable("id") int phase_id) {
+    public ResponseEntity<?> deletePhase(@PathVariable("phase_id") int phase_id) {
         try {
-            phaseService.deletePhase(phase_id);
-            return ResponseEntity.status(HttpStatus.OK).body("Delete phase successfully!");
-
+            if (phaseService.deletePhase(phase_id)) {
+                return ResponseEntity.status(HttpStatus.OK).body("Delete phase successfully!");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Phase not found!");
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     "The server is down!");

@@ -32,14 +32,14 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/api")
 public class FileController {
         @Autowired
-        private FileService fileService;
+        FileService fileService;
 
         Date date = new Date();
 
         @PostMapping("/files/upload")
         @PreAuthorize("hasAuthority('staff') " +
                         "or hasAuthority('manager')")
-        private ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
+        public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
                         @RequestHeader("Authorization") String jwt) {
                 try {
                         fileService.store(file, JwtService.getUser_idFromToken(jwt));
@@ -54,7 +54,7 @@ public class FileController {
         @GetMapping("/files")
         @PreAuthorize("hasAuthority('staff') " +
                         "or hasAuthority('manager')")
-        private ResponseEntity<?> getAllFilesWithUser_id(@RequestHeader("Authorization") String jwt) {
+        public ResponseEntity<?> getAllFilesWithUser_id(@RequestHeader("Authorization") String jwt) {
                 try {
                         List<FileResponse> files = fileService
                                         .getAllFilesWithUser_id(JwtService.getUser_idFromToken(jwt))
@@ -78,8 +78,8 @@ public class FileController {
                 }
         }
 
-        @GetMapping("/files/{id}")
-        public ResponseEntity<?> getFile(@PathVariable("id") int file_id,
+        @GetMapping("/files/{file_id}")
+        public ResponseEntity<?> getFile(@PathVariable("file_id") int file_id,
                         @RequestHeader("Authorization") String jwt) {
                 try {
                         File _file = fileService.getFile(file_id, JwtService.getUser_idFromToken(jwt));
@@ -96,7 +96,7 @@ public class FileController {
         @GetMapping("/files/search")
         @PreAuthorize("hasAuthority('staff') " +
                         "or hasAuthority('manager')")
-        private ResponseEntity<?> findFileWithKeyword(@RequestParam("keyword") String keyword,
+        public ResponseEntity<?> findFileWithKeyword(@RequestParam("keyword") String keyword,
                         @RequestHeader("Authorization") String jwt) {
                 try {
                         List<FileResponse> files = fileService
@@ -121,10 +121,10 @@ public class FileController {
                 }
         }
 
-        @DeleteMapping("/files/delete/{id}")
+        @DeleteMapping("/files/delete/{file_id}")
         @PreAuthorize("hasAuthority('staff') " +
                         "or hasAuthority('manager')")
-        private ResponseEntity<?> deleteFile(@PathVariable("id") int file_id) {
+        public ResponseEntity<?> deleteFile(@PathVariable("file_id") int file_id) {
                 try {
                         fileService.deleteFile(file_id);
                         return ResponseEntity.status(HttpStatus.OK).body(

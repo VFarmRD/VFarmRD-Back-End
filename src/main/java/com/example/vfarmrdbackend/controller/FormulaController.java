@@ -27,12 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api")
 public class FormulaController {
     @Autowired
-    private FormulaService formulaService;
+    public FormulaService formulaService;
 
     @GetMapping("/formulas")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    private ResponseEntity<?> getAllFormulaByProduct_id(@RequestParam("product_id") int product_id) {
+    public ResponseEntity<?> getAllFormulaByProduct_id(@RequestParam("product_id") String product_id) {
         List<Formula> _listFormulas = formulaService.getAllFormulaByProduct_id(product_id);
         if (_listFormulas != null) {
             return ResponseEntity.status(HttpStatus.OK).body(_listFormulas);
@@ -42,10 +42,10 @@ public class FormulaController {
         }
     }
 
-    @GetMapping("/formulas/{id}")
+    @GetMapping("/formulas/{formula_id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    private ResponseEntity<?> getFormulaByFormula_id(@PathVariable("id") int formula_id) {
+    public ResponseEntity<?> getFormulaByFormula_id(@PathVariable("formula_id") int formula_id) {
         Formula _formula = formulaService.getFormulaByFormula_id(formula_id);
         if (_formula != null) {
             return ResponseEntity.status(HttpStatus.OK).body(_formula);
@@ -57,7 +57,7 @@ public class FormulaController {
 
     @PostMapping("/formulas/create")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> createFormula(@RequestBody FormulaRequest formulaRequest,
+    public ResponseEntity<?> createFormula(@RequestBody FormulaRequest formulaRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
             formulaService.createFormula(formulaRequest, jwt);
@@ -69,11 +69,11 @@ public class FormulaController {
         }
     }
 
-    @PutMapping("/formulas/submit/{id}")
+    @PutMapping("/formulas/submit/{formula_id}")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> submitFormula(@PathVariable("id") int id) {
+    public ResponseEntity<?> submitFormula(@PathVariable("formula_id") int formula_id) {
         try {
-            formulaService.setFormula_status(id, "pending");
+            formulaService.setFormula_status(formula_id, "pending");
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Submit formula successfully!");
         } catch (Exception e) {
@@ -82,11 +82,11 @@ public class FormulaController {
         }
     }
 
-    @PutMapping("/formulas/delete/{id}")
+    @PutMapping("/formulas/delete/{formula_id}")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> deleteFormula(@PathVariable("id") int id) {
+    public ResponseEntity<?> deleteFormula(@PathVariable("formula_id") int formula_id) {
         try {
-            formulaService.setFormula_status(id, "deleted");
+            formulaService.setFormula_status(formula_id, "deleted");
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Delete formula successfully!");
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class FormulaController {
 
     @PostMapping("/formulas/update")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> updateFormula(@RequestBody FormulaRequest formulaRequest,
+    public ResponseEntity<?> updateFormula(@RequestBody FormulaRequest formulaRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
             formulaService.createAnotherFormula_version(formulaRequest, jwt, "update");
@@ -111,7 +111,7 @@ public class FormulaController {
 
     @PostMapping("/formulas/upgrade")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> upgradeFormula(@RequestBody FormulaRequest formulaRequest,
+    public ResponseEntity<?> upgradeFormula(@RequestBody FormulaRequest formulaRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
             formulaService.createAnotherFormula_version(formulaRequest, jwt, "upgrade");
@@ -123,11 +123,11 @@ public class FormulaController {
         }
     }
 
-    @PutMapping("/formulas/approve/{id}")
+    @PutMapping("/formulas/approve/{formula_id}")
     @PreAuthorize("hasAuthority('manager')")
-    private ResponseEntity<?> approveFormula(@PathVariable("id") int id) {
+    public ResponseEntity<?> approveFormula(@PathVariable("formula_id") int formula_id) {
         try {
-            if (formulaService.setFormula_status(id, "approved")) {
+            if (formulaService.setFormula_status(formula_id, "approved")) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         "Approve formula successfully!");
             } else {
@@ -140,11 +140,11 @@ public class FormulaController {
         }
     }
 
-    @PutMapping("/formulas/deny/{id}")
+    @PutMapping("/formulas/deny/{formula_id}")
     @PreAuthorize("hasAuthority('manager')")
-    private ResponseEntity<?> denyFormula(@PathVariable("id") int id) {
+    public ResponseEntity<?> denyFormula(@PathVariable("formula_id") int formula_id) {
         try {
-            if (formulaService.setFormula_status(id, "denied")) {
+            if (formulaService.setFormula_status(formula_id, "denied")) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         "Deny formula successfully!");
             } else {

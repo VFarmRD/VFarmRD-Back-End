@@ -10,10 +10,10 @@ import com.example.vfarmrdbackend.model.MaterialOfPhase;
 
 public interface MaterialOfPhaseRepository extends JpaRepository<MaterialOfPhase,Integer> {
 
-    @Query(value = "select * from phases p where p.phase_id = :phase_id", nativeQuery = true)
+    @Query(value = "select * from materialofphase m where m.phase_id = :phase_id", nativeQuery = true)
     List<MaterialOfPhase> getAllMaterialOfOnePhase(@Param("phase_id") int phase_id);
 
-    @Query(value = "select * from phases p where p.mop_id = :mop_id", nativeQuery = true)
+    @Query(value = "select * from materialofphase m where m.mop_id = :mop_id", nativeQuery = true)
     MaterialOfPhase getOneMaterialOfOnePhase(@Param("mop_id") int mop_id);
     
 }

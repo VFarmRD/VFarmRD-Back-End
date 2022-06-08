@@ -47,7 +47,8 @@ public class UserService {
 
     Date date;
 
-    public UserService() {
+    public UserService userService() {
+        return new UserService();
     }
 
     public boolean checkUserIsDisabled(String user_name) {
@@ -73,7 +74,7 @@ public class UserService {
         return false;
     }
 
-    void setUser_role(int user_id, int role_id) {
+    public void setUser_role(int user_id, int role_id) {
         UserRole userrole = new UserRole();
         userrole.setUser_id(user_id);
         userrole.setRole_id(role_id);

@@ -18,7 +18,6 @@ import com.example.vfarmrdbackend.service.UserDetailsServiceImpl;
 import com.example.vfarmrdbackend.service.security.jwt.AuthEntryPointJwt;
 import com.example.vfarmrdbackend.service.security.jwt.AuthTokenFilter;
 
-@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
     // securedEnabled = true,

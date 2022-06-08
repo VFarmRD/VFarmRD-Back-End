@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api")
 public class UserRoleController {
     @Autowired
-    private UserRoleRepository userRoleRepository;
+    UserRoleRepository userRoleRepository;
 
     @GetMapping("/userrole")
     @PreAuthorize("hasAuthority('admin')")

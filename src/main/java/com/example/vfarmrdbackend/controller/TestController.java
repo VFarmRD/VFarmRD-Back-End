@@ -30,7 +30,7 @@ public class TestController {
 
     @GetMapping("/tests")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> getAllTestWithFormula_id(@RequestParam("formula_id") int formula_id) {
+    public ResponseEntity<?> getAllTestWithFormula_id(@RequestParam("formula_id") int formula_id) {
         try {
             List<Test> _listTests = testService.getAllTestWithFormula_id(formula_id);
             if (_listTests != null) {
@@ -45,9 +45,9 @@ public class TestController {
         }
     }
 
-    @GetMapping("/tests/{id}")
+    @GetMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> getTestByTest_id(@PathVariable("id") int test_id) {
+    public ResponseEntity<?> getTestByTest_id(@PathVariable("test_id") int test_id) {
         try {
             Test _tests = testService.getTestWithTest_id(test_id);
             if (_tests != null) {
@@ -64,7 +64,7 @@ public class TestController {
 
     @PostMapping("/tests/create")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> createTest(@RequestBody Test test) {
+    public ResponseEntity<?> createTest(@RequestBody Test test) {
         try {
             testService.createTest(test);
             return ResponseEntity.status(HttpStatus.OK).body("Create new test completed!");
@@ -76,7 +76,7 @@ public class TestController {
 
     @PutMapping("/tests/update")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> updateTest(@RequestBody Test test) {
+    public ResponseEntity<?> updateTest(@RequestBody Test test) {
         try {
             if (testService.updateTest(test)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
@@ -89,9 +89,9 @@ public class TestController {
         }
     }
 
-    @DeleteMapping("/tests/delete/{id}")
+    @DeleteMapping("/tests/delete/{test_id}")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> deleteTest(@PathVariable("id") int test_id) {
+    public ResponseEntity<?> deleteTest(@PathVariable("test_id") int test_id) {
         try {
             if (testService.deleteTest(test_id)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Delete test successfully!");

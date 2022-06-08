@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api")
 public class RoleController {
     @Autowired
-    private RoleService roleService;
+    public RoleService roleService;
 
     @GetMapping("/roles")
     @PreAuthorize("hasAuthority('admin')")
-    private ResponseEntity<?> getAllRoles() {
+    public ResponseEntity<?> getAllRoles() {
         try {
             List<Role> _listRoles = roleService.getAllRoles();
             if (_listRoles.isEmpty()) {
@@ -40,9 +40,9 @@ public class RoleController {
         }
     }
 
-    @GetMapping("/roles/{id}")
+    @GetMapping("/roles/{role_id}")
     @PreAuthorize("hasAuthority('admin')")
-    private ResponseEntity<?> getRoleByRole_id(@PathVariable("id") int role_id) {
+    public ResponseEntity<?> getRoleByRole_id(@PathVariable("role_id") int role_id) {
         try {
             Role _role = roleService.getRoleByRole_id(role_id);
             if (_role != null) {
@@ -58,7 +58,7 @@ public class RoleController {
 
     // @PostMapping("/roles/create")
     // @PreAuthorize("hasAuthority('admin')")
-    // private ResponseEntity<?> createRole(@RequestParam("role_name") String role_name) {
+    // public ResponseEntity<?> createRole(@RequestParam("role_name") String role_name) {
     //     try {
     //         roleService.createRole(role_name);
     //         return ResponseEntity.status(HttpStatus.OK).body("Create new role completed!");
@@ -71,7 +71,7 @@ public class RoleController {
 
     // @PutMapping("/roles/update")
     // @PreAuthorize("hasAuthority('admin')")
-    // private ResponseEntity<?> updateRole(@RequestBody Role role) {
+    // public ResponseEntity<?> updateRole(@RequestBody Role role) {
     //     Role _role = roleRepository.getRoleByRole_id(role.getRole_id());
     //     if (_role != null) {
     //         _role.setRole_name(role.getRole_name());
@@ -82,11 +82,11 @@ public class RoleController {
     //     }
     // }
 
-    // @DeleteMapping("/roles/delete/{id}")
+    // @DeleteMapping("/roles/delete/{role_id}")
     // @PreAuthorize("hasAuthority('admin')")
-    // private ResponseEntity<?> deleteRole(@PathVariable("id") int id) {
+    // public ResponseEntity<?> deleteRole(@PathVariable("role_id") int role_id) {
     //     try {
-    //         roleRepository.deleteById(id);
+    //         roleRepository.deleteById(role_id);
     //         return new ResponseEntity<>("Delete role successfully!", HttpStatus.OK);
     //     } catch (Exception e) {
     //         return new ResponseEntity<>(

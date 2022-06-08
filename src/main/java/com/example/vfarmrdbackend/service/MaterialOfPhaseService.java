@@ -27,16 +27,17 @@ public class MaterialOfPhaseService {
         _materialOfPhase.setMaterial_id(materialOfPhase.getMaterial_id());
         _materialOfPhase.setMaterial_percent(materialOfPhase.getMaterial_percent());
         _materialOfPhase.setDelivered_duty_paid(materialOfPhase.getDelivered_duty_paid());
+        materialOfPhaseRepository.save(_materialOfPhase);
     }
 
     public boolean updateMaterialOfPhase(MaterialOfPhase materialOfPhase) {
         MaterialOfPhase _materialOfPhase = materialOfPhaseRepository
                 .getOneMaterialOfOnePhase(materialOfPhase.getMop_id());
         if (_materialOfPhase != null) {
-            _materialOfPhase.setPhase_id(materialOfPhase.getPhase_id());
             _materialOfPhase.setMaterial_id(materialOfPhase.getMaterial_id());
             _materialOfPhase.setMaterial_percent(materialOfPhase.getMaterial_percent());
             _materialOfPhase.setDelivered_duty_paid(materialOfPhase.getDelivered_duty_paid());
+            materialOfPhaseRepository.save(_materialOfPhase);
             return true;
         }
         return false;

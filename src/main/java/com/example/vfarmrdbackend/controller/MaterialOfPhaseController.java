@@ -30,7 +30,7 @@ public class MaterialOfPhaseController {
 
     @GetMapping("/materialofphase")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> getAllMOPwithPhase_id(@RequestParam("phase_id") int phase_id) {
+    public ResponseEntity<?> getAllMOPwithPhase_id(@RequestParam("phase_id") int phase_id) {
         try {
             List<MaterialOfPhase> _listMaterialOfPhases = materialOfPhaseService.getAllMaterialOfPhase(phase_id);
             if (_listMaterialOfPhases != null) {
@@ -45,9 +45,9 @@ public class MaterialOfPhaseController {
         }
     }
 
-    @GetMapping("/materialofphase/{id}")
+    @GetMapping("/materialofphase/{mop_id}")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> getTestByTest_id(@PathVariable("id") int mop_id) {
+    public ResponseEntity<?> getMaterialOfPhase(@PathVariable("mop_id") int mop_id) {
         try {
             MaterialOfPhase _materialOfPhase = materialOfPhaseService.getMaterialOfPhase(mop_id);
             if (_materialOfPhase != null) {
@@ -64,7 +64,7 @@ public class MaterialOfPhaseController {
 
     @PostMapping("/materialofphase/create")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> createTest(@RequestBody MaterialOfPhase materialOfPhase) {
+    public ResponseEntity<?> createMaterialOfPhase(@RequestBody MaterialOfPhase materialOfPhase) {
         try {
             materialOfPhaseService.createMaterialOfPhase(materialOfPhase);
             return ResponseEntity.status(HttpStatus.OK).body("Create new Material Of Phase completed!");
@@ -76,7 +76,7 @@ public class MaterialOfPhaseController {
 
     @PutMapping("/materialofphase/update")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> updateMaterialOfPhase(@RequestBody MaterialOfPhase materialOfPhase) {
+    public ResponseEntity<?> updateMaterialOfPhase(@RequestBody MaterialOfPhase materialOfPhase) {
         try {
             if (materialOfPhaseService.updateMaterialOfPhase(materialOfPhase)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -91,9 +91,9 @@ public class MaterialOfPhaseController {
         }
     }
 
-    @DeleteMapping("/materialofphase/delete/{id}")
+    @DeleteMapping("/materialofphase/delete/{mop_id}")
     @PreAuthorize("hasAuthority('staff')")
-    private ResponseEntity<?> deleteMaterialOfPhase(@PathVariable("id") int mop_id) {
+    public ResponseEntity<?> deleteMaterialOfPhase(@PathVariable("mop_id") int mop_id) {
         try {
             if (materialOfPhaseService.deleteMaterialOfPhase(mop_id)) {
                 return ResponseEntity.status(HttpStatus.OK).body(

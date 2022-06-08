@@ -33,8 +33,6 @@ public class PhaseService {
     public boolean updatePhase(Phase phase) {
         Phase _phase = phaseRepository.getPhaseByPhase_id(phase.getPhase_id());
         if (_phase != null) {
-            _phase.setFormula_id(phase.getFormula_id());
-            _phase.setFormula_version(phase.getFormula_version());
             _phase.setFormula_cost(phase.getFormula_cost());
             _phase.setPhase_description(phase.getPhase_description());
             phaseRepository.save(_phase);
@@ -44,8 +42,14 @@ public class PhaseService {
         }
     }
 
-    public void deletePhase(int phase_id) {
+    public boolean deletePhase(int phase_id) {
         Phase _phase = phaseRepository.getPhaseByPhase_id(phase_id);
-        phaseRepository.delete(_phase);
+        if (_phase != null) {
+            phaseRepository.delete(_phase);
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }

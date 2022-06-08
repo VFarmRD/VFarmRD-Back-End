@@ -33,7 +33,7 @@ public class ProductController {
     @GetMapping("/products")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    private ResponseEntity<?> getAllProducts(@RequestParam(defaultValue = "", required = false) String product_name,
+    public ResponseEntity<?> getAllProducts(@RequestParam(defaultValue = "", required = false) String product_name,
             @RequestParam(defaultValue = "", required = false) String client_id,
             @RequestParam(defaultValue = "", required = false) String created_user_id,
             @RequestParam(defaultValue = "", required = false) String assigned_user_id,
@@ -51,10 +51,10 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/products/{product_id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    private ResponseEntity<?> getProductByProduct_id(@PathVariable("id") String product_id) {
+    public ResponseEntity<?> getProductByProduct_id(@PathVariable("product_id") String product_id) {
         Product _product = productService.getProductByProduct_id(product_id);
         if (_product != null) {
             return ResponseEntity.status(HttpStatus.OK).body(_product);
@@ -66,7 +66,7 @@ public class ProductController {
 
     @PostMapping("/products/create")
     @PreAuthorize("hasAuthority('manager')")
-    private ResponseEntity<?> createProduct(@RequestBody ProductRequest productRequest,
+    public ResponseEntity<?> createProduct(@RequestBody ProductRequest productRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
             productService.createProduct(productRequest, jwt);
@@ -80,7 +80,7 @@ public class ProductController {
 
     @PutMapping("/products/update")
     @PreAuthorize("hasAuthority('manager')")
-    private ResponseEntity<?> updateProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<?> updateProduct(@RequestBody ProductRequest productRequest) {
         try {
             productService.updateProduct(productRequest);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -91,9 +91,9 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/products/delete/{id}")
+    @PutMapping("/products/delete/{product_id}")
     @PreAuthorize("hasAuthority('manager')")
-    private ResponseEntity<?> deleteProduct(@PathVariable("id") String product_id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable("product_id") String product_id) {
         try {
             productService.deleteProduct(product_id);
             return ResponseEntity.status(HttpStatus.OK).body(

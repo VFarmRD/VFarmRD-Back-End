@@ -17,7 +17,7 @@ public class FormulaService {
 
     Date date;
 
-    public List<Formula> getAllFormulaByProduct_id(int product_id) {
+    public List<Formula> getAllFormulaByProduct_id(String product_id) {
         return formulaRepository.getAllFormulaByProduct_id(product_id);
     }
 
@@ -57,7 +57,7 @@ public class FormulaService {
         }
     }
 
-    //làm thêm 1 cái check version
+    // làm thêm 1 cái check version
     public boolean createAnotherFormula_version(FormulaRequest formulaRequest, String jwt, String type) {
         Formula _formula = formulaRepository.getFormulaByFormula_id(formulaRequest.getFormula_id());
         Formula newFormula = new Formula();
@@ -67,10 +67,10 @@ public class FormulaService {
             newFormula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
             String formula_pre_version = _formula.getFormula_version();
             newFormula.setFormula_pre_version(formula_pre_version);
-            String splitString[] = formula_pre_version.split("\\.");
-            String formula_now_version = "";
+            String formula_now_version = formulaRepository.getLastestVersionOfProduct(_formula.getProduct_id());
+            String splitString[] = formula_now_version.split("\\.");
             if (type.equals("update")) {
-                formula_now_version = "1." + String.valueOf(Integer.parseInt(splitString[1]) + 1);
+                formula_now_version = splitString[0] + "." + String.valueOf(Integer.parseInt(splitString[1]) + 1);
             } else if (type.equals("upgrade")) {
                 formula_now_version = String.valueOf(Integer.parseInt(splitString[0]) + 1) + ".0";
             }

@@ -40,15 +40,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api")
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @Autowired
     PasswordEncoder encoder;
 
-    Date date;
-
     @Autowired
-    private UserService userService;
+    UserService userService;
+
+    Date date;
 
     @Operation(summary = "Login to system", description = "")
     @ApiResponses(value = {
@@ -57,15 +57,16 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "The server is down!")
     })
     @PostMapping("/auth/login")
-    private ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             if (userService.checkUserIsDisabled(loginRequest.getUser_name())) {
                 return ResponseEntity.status(HttpStatus.GONE).body("Your account is disabled!");
             }
             return ResponseEntity.status(HttpStatus.OK).body(userService.login(loginRequest));
         } catch (Exception e) {
+            System.err.println(e.getLocalizedMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    "The server is down!");
         }
     }
 
@@ -77,7 +78,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "The server is down!")
     })
     @PostMapping("/auth/create")
-    private ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         try {
             if (userService.checkUser_nameIsExisted(signUpRequest.getUser_name())) {
                 return ResponseEntity.status(HttpStatus.IM_USED).body(
@@ -97,7 +98,7 @@ public class UserController {
 
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('admin')")
-    private ResponseEntity<?> getAllUsers(@RequestParam(defaultValue = "", required = false) String user_name,
+    public ResponseEntity<?> getAllUsers(@RequestParam(defaultValue = "", required = false) String user_name,
             @RequestParam(defaultValue = "", required = false) String email,
             @RequestParam(defaultValue = "", required = false) String fullname,
             @RequestParam(defaultValue = "", required = false) String phone,
@@ -126,10 +127,10 @@ public class UserController {
         }
     }
 
-    @GetMapping("/users/{id}")
-    private ResponseEntity<?> getUserByUser_id(@PathVariable("id") int id) {
+    @GetMapping("/users/{user_id}")
+    public ResponseEntity<?> getUserByUser_id(@PathVariable("user_id") int user_id) {
         try {
-            User _user = userRepository.getUserByUser_id(id);
+            User _user = userRepository.getUserByUser_id(user_id);
             if (_user != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(_user);
             } else {
@@ -143,7 +144,7 @@ public class UserController {
 
     @PutMapping("/users/update")
     @PreAuthorize("hasAuthority('admin')")
-    private ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
         try {
             if (userService.updateUser(userRequest)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -157,11 +158,11 @@ public class UserController {
         }
     }
 
-    @PutMapping("/users/delete/{id}")
+    @PutMapping("/users/delete/{user_id}")
     @PreAuthorize("hasAuthority('admin')")
-    private ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
+    public ResponseEntity<?> deleteUser(@PathVariable("user_id") int user_id) {
         try {
-            if (userService.deleteUser(id)) {
+            if (userService.deleteUser(user_id)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Delete user successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
@@ -172,11 +173,11 @@ public class UserController {
         }
     }
 
-    @PutMapping("/users/recover/{id}")
+    @PutMapping("/users/recover/{user_id}")
     @PreAuthorize("hasAuthority('admin')")
-    private ResponseEntity<?> recoverUser(@PathVariable("id") int id) {
+    public ResponseEntity<?> recoverUser(@PathVariable("user_id") int user_id) {
         try {
-            if (userService.recoverUser(id)) {
+            if (userService.recoverUser(user_id)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Recover user successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
