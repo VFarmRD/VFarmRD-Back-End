@@ -26,14 +26,15 @@ public class TestService {
         _test.setFormula_id(test.getFormula_id());
         _test.setTest_status(test.isTest_status());
         _test.setFile_id(test.getFile_id());
+        testRepository.save(_test);
     }
 
     public boolean updateTest(Test test) {
         Test _test = testRepository.getTestByTest_id(test.getTest_id());
         if (_test != null) {
-            _test.setFormula_id(test.getFormula_id());
             _test.setTest_status(test.isTest_status());
             _test.setFile_id(test.getFile_id());
+            testRepository.save(_test);
             return true;
         }
         return false;
