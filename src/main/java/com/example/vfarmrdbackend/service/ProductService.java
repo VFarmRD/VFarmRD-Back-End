@@ -13,7 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Product;
-import com.example.vfarmrdbackend.payload.ProductRequest;
+import com.example.vfarmrdbackend.payload.ProductCreateRequest;
+import com.example.vfarmrdbackend.payload.ProductUpdateRequest;
 import com.example.vfarmrdbackend.repository.ProductRepository;
 
 @Service
@@ -48,28 +49,26 @@ public class ProductService {
         return productRepository.getProductByProduct_id(product_id);
     }
 
-    public void createProduct(ProductRequest productRequest, String jwt) {
+    public void createProduct(ProductCreateRequest productCreateRequest, String jwt) {
         date = new Date();
         Product _product = new Product();
-        _product.setProduct_id(productRequest.getProduct_id());
-        _product.setProduct_name(productRequest.getProduct_name());
-        _product.setClient_id(productRequest.getClient_id());
-        _product.setAssigned_user_id(productRequest.getAssigned_user_id());
+        _product.setProduct_name(productCreateRequest.getProduct_name());
+        _product.setClient_id(productCreateRequest.getClient_id());
+        _product.setAssigned_user_id(productCreateRequest.getAssigned_user_id());
         _product.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
-        _product.setProduct_inquiry(productRequest.getProduct_inquiry());
+        _product.setProduct_inquiry(productCreateRequest.getProduct_inquiry());
         _product.setCreated_time(date);
         _product.setProduct_status("activated");
         productRepository.save(_product);
     }
 
-    public boolean updateProduct(ProductRequest productRequest) {
-        Product _product = productRepository.getProductByProduct_id(productRequest.getProduct_id());
+    public boolean updateProduct(ProductUpdateRequest productUpdateRequest) {
+        Product _product = productRepository.getProductByProduct_id(productUpdateRequest.getProduct_id());
         if (_product != null) {
             date = new Date();
-            _product.setProduct_name(productRequest.getProduct_name());
-            _product.setClient_id(productRequest.getClient_id());
-            _product.setAssigned_user_id(productRequest.getAssigned_user_id());
-            _product.setProduct_inquiry(productRequest.getProduct_inquiry());
+            _product.setProduct_name(productUpdateRequest.getProduct_name());
+            _product.setAssigned_user_id(productUpdateRequest.getAssigned_user_id());
+            _product.setProduct_inquiry(productUpdateRequest.getProduct_inquiry());
             _product.setModified_time(date);
             productRepository.save(_product);
             return true;

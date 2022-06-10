@@ -1,27 +1,19 @@
-package com.example.vfarmrdbackend.model;
+package com.example.vfarmrdbackend.payload;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "materialofphase")
-public class MaterialOfPhase {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class MaterialOfPhaseUpdateRequest {
     private int mop_id;
-    private int phase_id;
     private String material_id;
     private float material_cost;
     private int material_weight;
     private float material_percent;
     private String delivered_duty_paid;
 
-    public MaterialOfPhase() {
+    public MaterialOfPhaseUpdateRequest() {
     }
 
-    public MaterialOfPhase(int mop_id, int phase_id, String material_id, float material_cost, int material_weight,
+    public MaterialOfPhaseUpdateRequest(int mop_id, String material_id, float material_cost, int material_weight,
             float material_percent, String delivered_duty_paid) {
         this.mop_id = mop_id;
-        this.phase_id = phase_id;
         this.material_id = material_id;
         this.material_cost = material_cost;
         this.material_weight = material_weight;
@@ -51,14 +43,6 @@ public class MaterialOfPhase {
 
     public void setMop_id(int mop_id) {
         this.mop_id = mop_id;
-    }
-
-    public int getPhase_id() {
-        return phase_id;
-    }
-
-    public void setPhase_id(int phase_id) {
-        this.phase_id = phase_id;
     }
 
     public String getMaterial_id() {

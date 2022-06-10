@@ -1,20 +1,17 @@
 package com.example.vfarmrdbackend.payload;
 
-public class ProductRequest {
+public class ProductUpdateRequest {
     private String product_id;
     private String product_name;
-    private int client_id;
     private int assigned_user_id;
     private String product_inquiry;
 
-    public ProductRequest() {
+    public ProductUpdateRequest() {
     }
 
-    public ProductRequest(String product_id, String product_name, int client_id, int assigned_user_id,
-            String product_inquiry) {
+    public ProductUpdateRequest(String product_id, String product_name, int assigned_user_id, String product_inquiry) {
         this.product_id = product_id;
         this.product_name = product_name;
-        this.client_id = client_id;
         this.assigned_user_id = assigned_user_id;
         this.product_inquiry = product_inquiry;
     }
@@ -33,14 +30,6 @@ public class ProductRequest {
 
     public void setProduct_name(String product_name) {
         this.product_name = product_name;
-    }
-
-    public int getClient_id() {
-        return client_id;
-    }
-
-    public void setClient_id(int client_id) {
-        this.client_id = client_id;
     }
 
     public int getAssigned_user_id() {

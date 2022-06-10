@@ -3,7 +3,8 @@ package com.example.vfarmrdbackend.controller;
 import java.util.List;
 
 import com.example.vfarmrdbackend.model.Formula;
-import com.example.vfarmrdbackend.payload.FormulaRequest;
+import com.example.vfarmrdbackend.payload.FormulaCreateOtherVersionRequest;
+import com.example.vfarmrdbackend.payload.FormulaCreateRequest;
 import com.example.vfarmrdbackend.service.FormulaService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,10 +58,10 @@ public class FormulaController {
 
     @PostMapping("/formulas/create")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createFormula(@RequestBody FormulaRequest formulaRequest,
+    public ResponseEntity<?> createFormula(@RequestBody FormulaCreateRequest formulaCreateRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
-            formulaService.createFormula(formulaRequest, jwt);
+            formulaService.createFormula(formulaCreateRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Create new formula completed!");
         } catch (Exception e) {
@@ -97,10 +98,11 @@ public class FormulaController {
 
     @PostMapping("/formulas/update")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updateFormula(@RequestBody FormulaRequest formulaRequest,
+    public ResponseEntity<?> updateFormula(
+            @RequestBody FormulaCreateOtherVersionRequest formulaCreateOtherVersionRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
-            formulaService.createAnotherFormula_version(formulaRequest, jwt, "update");
+            formulaService.createAnotherFormula_version(formulaCreateOtherVersionRequest, jwt, "update");
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Update Formula successfully!");
         } catch (Exception e) {
@@ -111,10 +113,11 @@ public class FormulaController {
 
     @PostMapping("/formulas/upgrade")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> upgradeFormula(@RequestBody FormulaRequest formulaRequest,
+    public ResponseEntity<?> upgradeFormula(
+            @RequestBody FormulaCreateOtherVersionRequest formulaCreateOtherVersionRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
-            formulaService.createAnotherFormula_version(formulaRequest, jwt, "upgrade");
+            formulaService.createAnotherFormula_version(formulaCreateOtherVersionRequest, jwt, "upgrade");
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Upgrade Formula successfully!");
         } catch (Exception e) {
