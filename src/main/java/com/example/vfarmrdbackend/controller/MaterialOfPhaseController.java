@@ -3,6 +3,7 @@ package com.example.vfarmrdbackend.controller;
 import java.util.List;
 
 import com.example.vfarmrdbackend.model.MaterialOfPhase;
+import com.example.vfarmrdbackend.payload.MaterialOfPhaseUpdateRequest;
 import com.example.vfarmrdbackend.service.MaterialOfPhaseService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -62,25 +63,12 @@ public class MaterialOfPhaseController {
         }
     }
 
-    // @PostMapping("/materialofphase/create")
-    // @PreAuthorize("hasAuthority('staff')")
-    // public ResponseEntity<?> createMaterialOfPhase(@RequestBody MaterialOfPhase
-    // materialOfPhase) {
-    // try {
-    // materialOfPhaseService.createMaterialOfPhase(materialOfPhase);
-    // return ResponseEntity.status(HttpStatus.OK).body("Create new Material Of
-    // Phase completed!");
-    // } catch (Exception e) {
-    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-    // "The server is down!");
-    // }
-    // }
-
     @PutMapping("/materialofphase/update")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updateMaterialOfPhase(@RequestBody MaterialOfPhase materialOfPhase) {
+    public ResponseEntity<?> updateMaterialOfPhase(
+            @RequestBody MaterialOfPhaseUpdateRequest materialOfPhaseUpdateRequest) {
         try {
-            if (materialOfPhaseService.updateMaterialOfPhase(materialOfPhase)) {
+            if (materialOfPhaseService.updateMaterialOfPhase(materialOfPhaseUpdateRequest)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         "Update Material Of Phase successfully!");
             } else {

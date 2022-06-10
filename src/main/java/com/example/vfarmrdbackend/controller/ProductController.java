@@ -3,7 +3,8 @@ package com.example.vfarmrdbackend.controller;
 import java.util.List;
 
 import com.example.vfarmrdbackend.model.Product;
-import com.example.vfarmrdbackend.payload.ProductRequest;
+import com.example.vfarmrdbackend.payload.ProductCreateRequest;
+import com.example.vfarmrdbackend.payload.ProductUpdateRequest;
 import com.example.vfarmrdbackend.service.ProductService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -66,10 +67,10 @@ public class ProductController {
 
     @PostMapping("/products/create")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> createProduct(@RequestBody ProductRequest productRequest,
+    public ResponseEntity<?> createProduct(@RequestBody ProductCreateRequest productCreateRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
-            productService.createProduct(productRequest, jwt);
+            productService.createProduct(productCreateRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Create new product completed!");
         } catch (Exception e) {
@@ -80,9 +81,9 @@ public class ProductController {
 
     @PutMapping("/products/update")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> updateProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<?> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest) {
         try {
-            productService.updateProduct(productRequest);
+            productService.updateProduct(productUpdateRequest);
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Update product successfully!");
         } catch (Exception e) {

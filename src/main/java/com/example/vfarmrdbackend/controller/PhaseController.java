@@ -3,6 +3,7 @@ package com.example.vfarmrdbackend.controller;
 import java.util.List;
 
 import com.example.vfarmrdbackend.model.Phase;
+import com.example.vfarmrdbackend.payload.PhaseUpdateRequest;
 import com.example.vfarmrdbackend.service.PhaseService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,23 +62,11 @@ public class PhaseController {
         }
     }
 
-    // @PostMapping("/phases/create")
-    // @PreAuthorize("hasAuthority('staff')")
-    // public ResponseEntity<?> createPhase(@RequestBody Phase phase) {
-    //     try {
-    //         phaseService.createPhase(phase);
-    //         return ResponseEntity.status(HttpStatus.OK).body("Create new phase completed!");
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-    //                 "The server is down!");
-    //     }
-    // }
-
     @PutMapping("/phases/update")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updatePhase(@RequestBody Phase phase) {
+    public ResponseEntity<?> updatePhase(@RequestBody PhaseUpdateRequest phaseUpdateRequest) {
         try {
-            if (phaseService.updatePhase(phase)) {
+            if (phaseService.updatePhase(phaseUpdateRequest)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Update phase successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Phase not found!");

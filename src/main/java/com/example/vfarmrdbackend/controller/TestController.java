@@ -3,6 +3,8 @@ package com.example.vfarmrdbackend.controller;
 import java.util.List;
 
 import com.example.vfarmrdbackend.model.Test;
+import com.example.vfarmrdbackend.payload.TestCreateRequest;
+import com.example.vfarmrdbackend.payload.TestUpdateRequest;
 import com.example.vfarmrdbackend.service.TestService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -64,9 +66,9 @@ public class TestController {
 
     @PostMapping("/tests/create")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createTest(@RequestBody Test test) {
+    public ResponseEntity<?> createTest(@RequestBody TestCreateRequest testCreateRequest) {
         try {
-            testService.createTest(test);
+            testService.createTest(testCreateRequest);
             return ResponseEntity.status(HttpStatus.OK).body("Create new test completed!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -76,9 +78,9 @@ public class TestController {
 
     @PutMapping("/tests/update")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updateTest(@RequestBody Test test) {
+    public ResponseEntity<?> updateTest(@RequestBody TestUpdateRequest testUpdateRequest) {
         try {
-            if (testService.updateTest(test)) {
+            if (testService.updateTest(testUpdateRequest)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Test not found!");

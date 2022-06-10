@@ -17,6 +17,9 @@ public interface FormulaRepository extends JpaRepository<Formula, Integer> {
     List<Formula> getAllFormulaByProduct_id(@Param("product_id") String product_id);
 
     @Query(value = "SELECT f.formula_version FROM formulas f WHERE f.product_id = :product_id ORDER BY f.formula_version desc limit 1;", nativeQuery = true)
-    String getLastestVersionOfProduct(@Param("product_id") String product_id);
-    
+    String getLatestVersionOfProduct(@Param("product_id") String product_id);
+
+    @Query(value = "SELECT f.formula_id FROM formulas f order by f.formula_id desc limit 1", nativeQuery = true)
+    int getLatestFormula_id();
+
 }
