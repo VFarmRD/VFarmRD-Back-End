@@ -62,17 +62,19 @@ public class MaterialOfPhaseController {
         }
     }
 
-    @PostMapping("/materialofphase/create")
-    @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createMaterialOfPhase(@RequestBody MaterialOfPhase materialOfPhase) {
-        try {
-            materialOfPhaseService.createMaterialOfPhase(materialOfPhase);
-            return ResponseEntity.status(HttpStatus.OK).body("Create new Material Of Phase completed!");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
-        }
-    }
+    // @PostMapping("/materialofphase/create")
+    // @PreAuthorize("hasAuthority('staff')")
+    // public ResponseEntity<?> createMaterialOfPhase(@RequestBody MaterialOfPhase
+    // materialOfPhase) {
+    // try {
+    // materialOfPhaseService.createMaterialOfPhase(materialOfPhase);
+    // return ResponseEntity.status(HttpStatus.OK).body("Create new Material Of
+    // Phase completed!");
+    // } catch (Exception e) {
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+    // "The server is down!");
+    // }
+    // }
 
     @PutMapping("/materialofphase/update")
     @PreAuthorize("hasAuthority('staff')")

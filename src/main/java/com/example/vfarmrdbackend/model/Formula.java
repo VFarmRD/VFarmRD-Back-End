@@ -2,6 +2,7 @@ package com.example.vfarmrdbackend.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "formulas")
@@ -18,13 +19,16 @@ public class Formula {
     private float formula_cost;
     private Date created_time;
     private Date modified_time;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "formula_id", nullable = false, insertable = false, updatable = false)
+    private List<Phase> phase;
 
     public Formula() {
     }
 
     public Formula(int formula_id, String product_id, int created_user_id, String formula_pre_version,
             String formula_version, String formula_name, String formula_status, float formula_cost, Date created_time,
-            Date modified_time) {
+            Date modified_time, List<Phase> phase) {
         this.formula_id = formula_id;
         this.product_id = product_id;
         this.created_user_id = created_user_id;
@@ -35,6 +39,15 @@ public class Formula {
         this.formula_cost = formula_cost;
         this.created_time = created_time;
         this.modified_time = modified_time;
+        this.phase = phase;
+    }
+
+    public List<Phase> getPhase() {
+        return phase;
+    }
+
+    public void setPhase(List<Phase> phase) {
+        this.phase = phase;
     }
 
     public String getFormula_pre_version() {

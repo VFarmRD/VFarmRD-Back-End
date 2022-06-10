@@ -62,17 +62,17 @@ public class PhaseController {
         }
     }
 
-    @PostMapping("/phases/create")
-    @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createPhase(@RequestBody Phase phase) {
-        try {
-            phaseService.createPhase(phase);
-            return ResponseEntity.status(HttpStatus.OK).body("Create new phase completed!");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
-        }
-    }
+    // @PostMapping("/phases/create")
+    // @PreAuthorize("hasAuthority('staff')")
+    // public ResponseEntity<?> createPhase(@RequestBody Phase phase) {
+    //     try {
+    //         phaseService.createPhase(phase);
+    //         return ResponseEntity.status(HttpStatus.OK).body("Create new phase completed!");
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+    //                 "The server is down!");
+    //     }
+    // }
 
     @PutMapping("/phases/update")
     @PreAuthorize("hasAuthority('staff')")

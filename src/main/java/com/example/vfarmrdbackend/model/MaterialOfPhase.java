@@ -65,5 +65,4 @@ public class MaterialOfPhase {
         this.delivered_duty_paid = delivered_duty_paid;
     }
 
-    
 }
