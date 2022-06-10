@@ -1,5 +1,7 @@
 package com.example.vfarmrdbackend.model;
 
+import java.util.List;
+
 import javax.persistence.*;
 
 @Entity
@@ -12,16 +14,29 @@ public class Phase {
     private String formula_version;
     private float formula_cost;
     private String phase_description;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "phase_id", nullable = false, insertable = false, updatable = false)
+    private List<MaterialOfPhase> materialofphase;
 
     public Phase() {
     }
 
-    public Phase(int phase_id, int formula_id, String formula_version, float formula_cost, String phase_description) {
+    public Phase(int phase_id, int formula_id, String formula_version, float formula_cost, String phase_description,
+            List<MaterialOfPhase> materialofphase) {
         this.phase_id = phase_id;
         this.formula_id = formula_id;
         this.formula_version = formula_version;
         this.formula_cost = formula_cost;
         this.phase_description = phase_description;
+        this.materialofphase = materialofphase;
+    }
+
+    public List<MaterialOfPhase> getMaterialofphase() {
+        return materialofphase;
+    }
+
+    public void setMaterialofphase(List<MaterialOfPhase> materialofphase) {
+        this.materialofphase = materialofphase;
     }
 
     public int getPhase_id() {

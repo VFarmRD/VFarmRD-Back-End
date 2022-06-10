@@ -7,13 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Formula;
+import com.example.vfarmrdbackend.model.MaterialOfPhase;
+import com.example.vfarmrdbackend.model.Phase;
 import com.example.vfarmrdbackend.payload.FormulaRequest;
 import com.example.vfarmrdbackend.repository.FormulaRepository;
+import com.example.vfarmrdbackend.repository.MaterialOfPhaseRepository;
+import com.example.vfarmrdbackend.repository.PhaseRepository;
 
 @Service
 public class FormulaService {
     @Autowired
     private FormulaRepository formulaRepository;
+
+    @Autowired
+    private PhaseRepository phaseRepository;
+
+    @Autowired
+    private MaterialOfPhaseRepository materialOfPhaseRepository;
 
     Date date;
 
@@ -37,6 +47,24 @@ public class FormulaService {
         _formula.setFormula_cost(formulaRequest.getFormula_cost());
         _formula.setCreated_time(date);
         formulaRepository.save(_formula);
+        for (int i = 0; i < formulaRequest.getPhases().size(); i++) {
+            Phase phase_request = formulaRequest.getPhases().get(i);
+            Phase _phase = new Phase();
+            _phase.setFormula_id(phase_request.getFormula_id());
+            _phase.setFormula_version(phase_request.getFormula_version());
+            _phase.setFormula_cost(phase_request.getFormula_cost());
+            _phase.setPhase_description(phase_request.getPhase_description());
+            phaseRepository.save(_phase);
+            for (int j = 0; j < phase_request.getMaterialofphase().size(); j++) {
+                MaterialOfPhase material_of_phase_request = phase_request.getMaterialofphase().get(j);
+                MaterialOfPhase _materialOfPhase = new MaterialOfPhase();
+                _materialOfPhase.setPhase_id(material_of_phase_request.getPhase_id());
+                _materialOfPhase.setMaterial_id(material_of_phase_request.getMaterial_id());
+                _materialOfPhase.setMaterial_percent(material_of_phase_request.getMaterial_percent());
+                _materialOfPhase.setDelivered_duty_paid(material_of_phase_request.getDelivered_duty_paid());
+                materialOfPhaseRepository.save(_materialOfPhase);
+            }
+        }
     }
 
     public boolean setFormula_status(int formula_id, String status) {
@@ -57,7 +85,6 @@ public class FormulaService {
         }
     }
 
-    // làm thêm 1 cái check version
     public boolean createAnotherFormula_version(FormulaRequest formulaRequest, String jwt, String type) {
         Formula _formula = formulaRepository.getFormulaByFormula_id(formulaRequest.getFormula_id());
         Formula newFormula = new Formula();
@@ -81,6 +108,24 @@ public class FormulaService {
             newFormula.setCreated_time(_formula.getCreated_time());
             newFormula.setModified_time(date);
             formulaRepository.save(newFormula);
+            for (int i = 0; i < formulaRequest.getPhases().size(); i++) {
+                Phase phase_request = formulaRequest.getPhases().get(i);
+                Phase _phase = new Phase();
+                _phase.setFormula_id(phase_request.getFormula_id());
+                _phase.setFormula_version(phase_request.getFormula_version());
+                _phase.setFormula_cost(phase_request.getFormula_cost());
+                _phase.setPhase_description(phase_request.getPhase_description());
+                phaseRepository.save(_phase);
+                for (int j = 0; j < phase_request.getMaterialofphase().size(); j++) {
+                    MaterialOfPhase material_of_phase_request = phase_request.getMaterialofphase().get(j);
+                    MaterialOfPhase _materialOfPhase = new MaterialOfPhase();
+                    _materialOfPhase.setPhase_id(material_of_phase_request.getPhase_id());
+                    _materialOfPhase.setMaterial_id(material_of_phase_request.getMaterial_id());
+                    _materialOfPhase.setMaterial_percent(material_of_phase_request.getMaterial_percent());
+                    _materialOfPhase.setDelivered_duty_paid(material_of_phase_request.getDelivered_duty_paid());
+                    materialOfPhaseRepository.save(_materialOfPhase);
+                }
+            }
             return true;
         } else {
             return false;
