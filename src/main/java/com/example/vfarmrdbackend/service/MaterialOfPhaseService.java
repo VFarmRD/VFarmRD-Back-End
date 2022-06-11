@@ -30,7 +30,6 @@ public class MaterialOfPhaseService {
         _materialOfPhase.setMaterial_cost(materialOfPhaseCreateRequest.getMaterial_cost());
         _materialOfPhase.setMaterial_weight(materialOfPhaseCreateRequest.getMaterial_weight());
         _materialOfPhase.setMaterial_percent(materialOfPhaseCreateRequest.getMaterial_percent());
-        _materialOfPhase.setDelivered_duty_paid(materialOfPhaseCreateRequest.getDelivered_duty_paid());
         materialOfPhaseRepository.save(_materialOfPhase);
     }
 
@@ -42,7 +41,6 @@ public class MaterialOfPhaseService {
             _materialOfPhase.setMaterial_cost(materialOfPhaseUpdateRequest.getMaterial_cost());
             _materialOfPhase.setMaterial_weight(materialOfPhaseUpdateRequest.getMaterial_weight());
             _materialOfPhase.setMaterial_percent(materialOfPhaseUpdateRequest.getMaterial_percent());
-            _materialOfPhase.setDelivered_duty_paid(materialOfPhaseUpdateRequest.getDelivered_duty_paid());
             materialOfPhaseRepository.save(_materialOfPhase);
             return true;
         }
