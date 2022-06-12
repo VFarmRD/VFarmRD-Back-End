@@ -29,8 +29,8 @@ public class FormulaService {
 
     Date date;
 
-    public List<Formula> getAllFormulaByProduct_id(String product_id) {
-        return formulaRepository.getAllFormulaByProduct_id(product_id);
+    public List<Formula> getAllFormulaByProduct_id(String product_id, String formula_status) {
+        return formulaRepository.getAllFormulaByProduct_idAndStatus(product_id, formula_status);
     }
 
     public Formula getFormulaByFormula_id(int formula_id) {
