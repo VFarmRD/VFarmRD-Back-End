@@ -46,6 +46,7 @@ public class FormulaService {
         _formula.setFormula_version("1.0");
         _formula.setFormula_status("on progress");
         _formula.setFormula_cost(formulaCreateRequest.getFormula_cost());
+        _formula.setFormula_weight(formulaCreateRequest.getFormula_weight());
         _formula.setCreated_time(date);
         formulaRepository.save(_formula);
         for (int i = 0; i < formulaCreateRequest.getPhaseCreateRequest().size(); i++) {
@@ -97,6 +98,7 @@ public class FormulaService {
             }
             newFormula.setFormula_version(formula_now_version);
             newFormula.setFormula_cost(FormulaCreateOtherVersionRequest.getFormula_cost());
+            newFormula.setFormula_weight(FormulaCreateOtherVersionRequest.getFormula_weight());
             newFormula.setFormula_status("on progress");
             newFormula.setCreated_time(_formula.getCreated_time());
             newFormula.setModified_time(date);
