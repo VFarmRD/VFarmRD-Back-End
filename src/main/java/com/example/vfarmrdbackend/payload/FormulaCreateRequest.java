@@ -5,17 +5,26 @@ import java.util.List;
 public class FormulaCreateRequest {
     private String product_id;
     private float formula_cost;
+    private int formula_weight;
     private List<PhaseCreateRequest> phaseCreateRequest;
 
     public FormulaCreateRequest() {
     }
 
-    public FormulaCreateRequest(String product_id, String formula_name, float formula_cost,
-            List<PhaseCreateRequest> phaseCreateRequest,
-            List<MaterialOfPhaseCreateRequest> materialOfPhaseCreateRequest) {
+    public FormulaCreateRequest(String product_id, float formula_cost, int formula_weight,
+            List<PhaseCreateRequest> phaseCreateRequest) {
         this.product_id = product_id;
         this.formula_cost = formula_cost;
+        this.formula_weight = formula_weight;
         this.phaseCreateRequest = phaseCreateRequest;
+    }
+
+    public int getFormula_weight() {
+        return formula_weight;
+    }
+
+    public void setFormula_weight(int formula_weight) {
+        this.formula_weight = formula_weight;
     }
 
     public String getProduct_id() {

@@ -15,6 +15,7 @@ public class Formula {
     private String formula_version;
     private String formula_status;
     private float formula_cost;
+    private int formula_weight;
     private Date created_time;
     private Date modified_time;
 
@@ -22,7 +23,7 @@ public class Formula {
     }
 
     public Formula(int formula_id, String product_id, int created_user_id, String formula_pre_version,
-            String formula_version, String formula_status, float formula_cost, Date created_time,
+            String formula_version, String formula_status, float formula_cost, int formula_weight, Date created_time,
             Date modified_time) {
         this.formula_id = formula_id;
         this.product_id = product_id;
@@ -31,8 +32,17 @@ public class Formula {
         this.formula_version = formula_version;
         this.formula_status = formula_status;
         this.formula_cost = formula_cost;
+        this.formula_weight = formula_weight;
         this.created_time = created_time;
         this.modified_time = modified_time;
+    }
+
+    public int getFormula_weight() {
+        return formula_weight;
+    }
+
+    public void setFormula_weight(int formula_weight) {
+        this.formula_weight = formula_weight;
     }
 
     public String getFormula_pre_version() {
