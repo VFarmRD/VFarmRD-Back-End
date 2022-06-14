@@ -47,8 +47,9 @@ public class UserService {
 
     Date date;
 
-    public UserService userService() {
-        return new UserService();
+    public User getUserInfo(int user_id){
+        User _user = userRepository.getUserByUser_id(user_id);
+        return _user;
     }
 
     public boolean checkUserIsDisabled(String user_name) {

@@ -1,5 +1,6 @@
 package com.example.vfarmrdbackend.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -7,9 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Formula;
+import com.example.vfarmrdbackend.model.MaterialOfPhase;
+import com.example.vfarmrdbackend.model.Phase;
+import com.example.vfarmrdbackend.model.User;
 import com.example.vfarmrdbackend.payload.FormulaCreateOtherVersionRequest;
 import com.example.vfarmrdbackend.payload.FormulaCreateRequest;
+import com.example.vfarmrdbackend.payload.FormulaGetResponse;
+import com.example.vfarmrdbackend.payload.MaterialOfPhaseGetResponse;
 import com.example.vfarmrdbackend.payload.PhaseCreateRequest;
+import com.example.vfarmrdbackend.payload.PhaseGetResponse;
 import com.example.vfarmrdbackend.repository.FormulaRepository;
 import com.example.vfarmrdbackend.repository.PhaseRepository;
 
@@ -27,14 +34,46 @@ public class FormulaService {
     @Autowired
     MaterialOfPhaseService materialOfPhaseService;
 
+    @Autowired
+    UserService userService;
+
     Date date;
 
     public List<Formula> getAllFormulaByProduct_id(String product_id, String formula_status) {
         return formulaRepository.getAllFormulaByProduct_idAndStatus(product_id, formula_status);
     }
 
-    public Formula getFormulaByFormula_id(int formula_id) {
-        return formulaRepository.getFormulaByFormula_id(formula_id);
+    public FormulaGetResponse getFormulaByFormula_id(int formula_id) {
+        Formula _formula = formulaRepository.getFormulaByFormula_id(formula_id);
+        FormulaGetResponse formulaGetResponse = new FormulaGetResponse();
+        formulaGetResponse.setProduct_id(_formula.getProduct_id());
+        formulaGetResponse.setFormula_weight(_formula.getFormula_weight());
+        formulaGetResponse.setFormula_cost(_formula.getFormula_cost());
+        formulaGetResponse.setUser_id(_formula.getCreated_user_id());
+        User _user = userService.getUserInfo(_formula.getCreated_user_id());
+        formulaGetResponse.setUser_fullname(_user.getFullname());
+        List<Phase> _listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
+        List<PhaseGetResponse> listPhaseGetResponse = new ArrayList<>();
+        for (int i = 0; i < _listPhases.size(); i++) {
+            PhaseGetResponse _phaseGetResponse = new PhaseGetResponse();
+            _phaseGetResponse.setPhase_id(_listPhases.get(i).getPhase_id());
+            _phaseGetResponse.setPhase_description(_listPhases.get(i).getPhase_description());
+            List<MaterialOfPhase> _listMaterialOfPhases = materialOfPhaseService
+                    .getAllMaterialOfPhase(_listPhases.get(i).getPhase_id());
+            List<MaterialOfPhaseGetResponse> _listMaterialOfPhasesResponse = new ArrayList<>();
+            for (int j = 0; j < _listMaterialOfPhases.size(); j++) {
+                MaterialOfPhaseGetResponse materialOfPhaseResponse = new MaterialOfPhaseGetResponse();
+                materialOfPhaseResponse.setMaterial_id(_listMaterialOfPhases.get(j).getMaterial_id());
+                materialOfPhaseResponse.setMaterial_percent(_listMaterialOfPhases.get(j).getMaterial_percent());
+                materialOfPhaseResponse.setMaterial_cost(_listMaterialOfPhases.get(j).getMaterial_cost());
+                materialOfPhaseResponse.setMaterial_weight(_listMaterialOfPhases.get(j).getMaterial_weight());
+                _listMaterialOfPhasesResponse.add(materialOfPhaseResponse);
+            }
+            _phaseGetResponse.setMaterialOfPhaseGetResponse(_listMaterialOfPhasesResponse);
+            listPhaseGetResponse.add(_phaseGetResponse);
+        }
+        formulaGetResponse.setPhaseGetResponse(listPhaseGetResponse);
+        return formulaGetResponse;
     }
 
     public void createFormula(FormulaCreateRequest formulaCreateRequest, String jwt) {
