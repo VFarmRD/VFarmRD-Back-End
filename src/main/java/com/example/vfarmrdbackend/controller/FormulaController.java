@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.vfarmrdbackend.model.Formula;
 import com.example.vfarmrdbackend.payload.FormulaCreateOtherVersionRequest;
 import com.example.vfarmrdbackend.payload.FormulaCreateRequest;
+import com.example.vfarmrdbackend.payload.FormulaGetResponse;
 import com.example.vfarmrdbackend.service.FormulaService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,9 +49,9 @@ public class FormulaController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getFormulaByFormula_id(@PathVariable("formula_id") int formula_id) {
-        Formula _formula = formulaService.getFormulaByFormula_id(formula_id);
-        if (_formula != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(_formula);
+        FormulaGetResponse _formulaGetResponse = formulaService.getFormulaByFormula_id(formula_id);
+        if (_formulaGetResponse != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(_formulaGetResponse);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     "Formula not found!");
