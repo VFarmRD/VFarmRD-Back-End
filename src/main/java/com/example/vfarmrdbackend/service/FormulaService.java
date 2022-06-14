@@ -57,6 +57,7 @@ public class FormulaService {
         for (int i = 0; i < _listPhases.size(); i++) {
             PhaseGetResponse _phaseGetResponse = new PhaseGetResponse();
             _phaseGetResponse.setPhase_id(_listPhases.get(i).getPhase_id());
+            _phaseGetResponse.setPhase_name(String.valueOf(i + 1));
             _phaseGetResponse.setPhase_description(_listPhases.get(i).getPhase_description());
             List<MaterialOfPhase> _listMaterialOfPhases = materialOfPhaseService
                     .getAllMaterialOfPhase(_listPhases.get(i).getPhase_id());

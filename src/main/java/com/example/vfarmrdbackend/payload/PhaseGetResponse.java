@@ -4,17 +4,19 @@ import java.util.List;
 
 public class PhaseGetResponse {
     private int phase_id;
+    private String phase_name;
     private String phase_description;
     private List<MaterialOfPhaseGetResponse> materialOfPhaseGetResponse;
 
     public PhaseGetResponse() {
     }
 
-    public PhaseGetResponse(int phase_id, String phase_description,
-            List<MaterialOfPhaseGetResponse> materialOfPhaseGetResponse) {
-        this.phase_id = phase_id;
-        this.phase_description = phase_description;
-        this.materialOfPhaseGetResponse = materialOfPhaseGetResponse;
+    public String getPhase_name() {
+        return phase_name;
+    }
+
+    public void setPhase_name(String phase_name) {
+        this.phase_name = phase_name;
     }
 
     public int getPhase_id() {
