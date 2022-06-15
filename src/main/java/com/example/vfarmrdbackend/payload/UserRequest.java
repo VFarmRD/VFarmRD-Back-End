@@ -11,15 +11,6 @@ public class UserRequest {
     public UserRequest() {
     }
 
-    public UserRequest(int user_id, String role_name, String email, String fullname, String phone, String password) {
-        this.user_id = user_id;
-        this.role_name = role_name;
-        this.email = email;
-        this.fullname = fullname;
-        this.phone = phone;
-        this.password = password;
-    }
-
     public String getRole_name() {
         return role_name;
     }

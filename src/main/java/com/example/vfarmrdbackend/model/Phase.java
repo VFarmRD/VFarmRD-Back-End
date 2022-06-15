@@ -1,6 +1,10 @@
 package com.example.vfarmrdbackend.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "phases")
@@ -12,12 +16,6 @@ public class Phase {
     private String phase_description;
 
     public Phase() {
-    }
-
-    public Phase(int phase_id, int formula_id, String phase_description) {
-        this.phase_id = phase_id;
-        this.formula_id = formula_id;
-        this.phase_description = phase_description;
     }
 
     public int getPhase_id() {

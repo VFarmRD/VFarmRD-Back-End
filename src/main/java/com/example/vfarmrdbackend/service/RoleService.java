@@ -13,17 +13,17 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
-    public List<Role> getAllRoles(){
+    public List<Role> getAllRoles() {
         return roleRepository.findAll();
     }
 
-    public Role getRoleByRole_id(int role_id){
+    public Role getRoleByRole_id(int role_id) {
         return roleRepository.getRoleByRole_id(role_id);
     }
 
-    public void createRole(String role_name){
-        Role _role = new Role();
-            _role.setRole_name(role_name);
-            roleRepository.save(_role);
+    public void createRole(String role_name) {
+        Role role = new Role();
+        role.setRole_name(role_name);
+        roleRepository.save(role);
     }
 }

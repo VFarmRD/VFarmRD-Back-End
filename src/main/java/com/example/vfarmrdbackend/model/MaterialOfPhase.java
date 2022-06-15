@@ -1,6 +1,10 @@
 package com.example.vfarmrdbackend.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "materialofphase")
@@ -15,16 +19,6 @@ public class MaterialOfPhase {
     private float material_percent;
 
     public MaterialOfPhase() {
-    }
-
-    public MaterialOfPhase(int mop_id, int phase_id, String material_id, float material_cost, int material_weight,
-            float material_percent) {
-        this.mop_id = mop_id;
-        this.phase_id = phase_id;
-        this.material_id = material_id;
-        this.material_cost = material_cost;
-        this.material_weight = material_weight;
-        this.material_percent = material_percent;
     }
 
     public int getMaterial_weight() {

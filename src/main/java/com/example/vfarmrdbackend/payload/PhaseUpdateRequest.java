@@ -10,13 +10,6 @@ public class PhaseUpdateRequest {
     public PhaseUpdateRequest() {
     }
 
-    public PhaseUpdateRequest(int phase_id, String phase_description,
-            List<MaterialOfPhaseCreateRequest> materialOfPhaseCreateRequest) {
-        this.phase_id = phase_id;
-        this.phase_description = phase_description;
-        this.materialOfPhaseCreateRequest = materialOfPhaseCreateRequest;
-    }
-
     public List<MaterialOfPhaseCreateRequest> getMaterialOfPhaseCreateRequest() {
         return materialOfPhaseCreateRequest;
     }

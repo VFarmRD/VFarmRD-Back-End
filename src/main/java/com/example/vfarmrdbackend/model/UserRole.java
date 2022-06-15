@@ -1,6 +1,10 @@
 package com.example.vfarmrdbackend.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "userrole")
@@ -12,12 +16,6 @@ public class UserRole {
     private int role_id;
 
     public UserRole() {
-    }
-
-    public UserRole(int user_role_id, int user_id, int role_id) {
-        this.user_role_id = user_role_id;
-        this.user_id = user_id;
-        this.role_id = role_id;
     }
 
     public int getUser_role_id() {

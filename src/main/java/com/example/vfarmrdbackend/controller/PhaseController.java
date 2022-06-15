@@ -32,9 +32,9 @@ public class PhaseController {
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> getAllPhaseByFormula_id(@RequestParam("formula_id") int formula_id) {
         try {
-            List<Phase> _listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
-            if (_listPhases != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(_listPhases);
+            List<Phase> listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
+            if (listPhases != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(listPhases);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                         "Can't found any Phase!");
@@ -49,9 +49,9 @@ public class PhaseController {
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> getPhaseByPhase_id(@PathVariable("phase_id") int phase_id) {
         try {
-            Phase _phase = phaseService.getPhaseByPhase_id(phase_id);
-            if (_phase != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(_phase);
+            Phase phase = phaseService.getPhaseByPhase_id(phase_id);
+            if (phase != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(phase);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                         "Can't found Phase!");

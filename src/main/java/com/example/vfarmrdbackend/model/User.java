@@ -27,20 +27,6 @@ public class User {
     public User() {
     }
 
-    public User(int user_id, String user_name, String email, String fullname, String phone, String password,
-            boolean user_status, Date created_time, Date modified_time, String role_name) {
-        this.user_id = user_id;
-        this.user_name = user_name;
-        this.email = email;
-        this.fullname = fullname;
-        this.phone = phone;
-        this.password = password;
-        this.user_status = user_status;
-        this.created_time = created_time;
-        this.modified_time = modified_time;
-        this.role_name = role_name;
-    }
-
     public String getRole_name() {
         return role_name;
     }

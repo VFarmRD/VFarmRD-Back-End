@@ -23,29 +23,33 @@ public class TestService {
         return testRepository.getTestByTest_id(test_id);
     }
 
-    public void createTest(TestCreateRequest testCreateRequest) {
-        Test _test = new Test();
-        _test.setFormula_id(testCreateRequest.getFormula_id());
-        _test.setTest_status(testCreateRequest.isTest_status());
-        _test.setFile_id(testCreateRequest.getFile_id());
-        testRepository.save(_test);
+    public void createTest(TestCreateRequest testCreateRequest, int user_id) {
+        Test test = new Test();
+        test.setFormula_id(testCreateRequest.getFormula_id());
+        test.setTest_content(testCreateRequest.getTest_content());
+        test.setUser_id(user_id);
+        test.setTest_expect(testCreateRequest.getTest_expect());
+        test.setTest_result(testCreateRequest.isTest_result());
+        testRepository.save(test);
     }
 
-    public boolean updateTest(TestUpdateRequest testUpdateRequest) {
-        Test _test = testRepository.getTestByTest_id(testUpdateRequest.getTest_id());
-        if (_test != null) {
-            _test.setTest_status(testUpdateRequest.isTest_status());
-            _test.setFile_id(testUpdateRequest.getFile_id());
-            testRepository.save(_test);
+    public boolean updateTest(TestUpdateRequest testUpdateRequest, int test_id) {
+        Test test = testRepository.getTestByTest_id(test_id);
+        if (test != null) {
+            test.setTest_content(testUpdateRequest.getTest_content());
+            test.setFile_id(testUpdateRequest.getFile_id());
+            test.setTest_expect(testUpdateRequest.getTest_expect());
+            test.setTest_result(testUpdateRequest.isTest_result());
+            testRepository.save(test);
             return true;
         }
         return false;
     }
 
     public boolean deleteTest(int test_id) {
-        Test _test = testRepository.getTestByTest_id(test_id);
-        if (_test != null) {
-            testRepository.delete(_test);
+        Test test = testRepository.getTestByTest_id(test_id);
+        if (test != null) {
+            testRepository.delete(test);
             return true;
         }
         return false;

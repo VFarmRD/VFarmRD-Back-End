@@ -10,15 +10,6 @@ public class MaterialOfPhaseUpdateRequest {
     public MaterialOfPhaseUpdateRequest() {
     }
 
-    public MaterialOfPhaseUpdateRequest(int mop_id, String material_id, float material_cost, int material_weight,
-            float material_percent) {
-        this.mop_id = mop_id;
-        this.material_id = material_id;
-        this.material_cost = material_cost;
-        this.material_weight = material_weight;
-        this.material_percent = material_percent;
-    }
-
     public int getMaterial_weight() {
         return material_weight;
     }

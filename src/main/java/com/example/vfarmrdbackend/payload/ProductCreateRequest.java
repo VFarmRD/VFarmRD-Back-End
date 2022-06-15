@@ -9,13 +9,6 @@ public class ProductCreateRequest {
     public ProductCreateRequest() {
     }
 
-    public ProductCreateRequest(String product_name, int client_id, int assigned_user_id, String product_inquiry) {
-        this.product_name = product_name;
-        this.client_id = client_id;
-        this.assigned_user_id = assigned_user_id;
-        this.product_inquiry = product_inquiry;
-    }
-
     public String getProduct_name() {
         return product_name;
     }

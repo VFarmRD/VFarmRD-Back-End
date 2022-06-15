@@ -13,16 +13,6 @@ public class FormulaGetResponse {
     public FormulaGetResponse() {
     }
 
-    public FormulaGetResponse(String product_id, float formula_cost, int formula_weight, int user_id,
-            String user_fullname, List<PhaseGetResponse> phaseGetResponse) {
-        this.product_id = product_id;
-        this.formula_cost = formula_cost;
-        this.formula_weight = formula_weight;
-        this.user_id = user_id;
-        this.user_fullname = user_fullname;
-        this.phaseGetResponse = phaseGetResponse;
-    }
-
     public String getProduct_id() {
         return product_id;
     }
@@ -71,5 +61,4 @@ public class FormulaGetResponse {
         this.phaseGetResponse = phaseGetResponse;
     }
 
-    
 }

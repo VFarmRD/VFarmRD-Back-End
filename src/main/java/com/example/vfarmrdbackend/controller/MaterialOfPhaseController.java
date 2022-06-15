@@ -32,9 +32,9 @@ public class MaterialOfPhaseController {
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> getAllMOPwithPhase_id(@RequestParam("phase_id") int phase_id) {
         try {
-            List<MaterialOfPhase> _listMaterialOfPhases = materialOfPhaseService.getAllMaterialOfPhase(phase_id);
-            if (_listMaterialOfPhases != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(_listMaterialOfPhases);
+            List<MaterialOfPhase>listMaterialOfPhases = materialOfPhaseService.getAllMaterialOfPhase(phase_id);
+            if (listMaterialOfPhases != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(listMaterialOfPhases);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                         "Can't found any material!");
@@ -49,9 +49,9 @@ public class MaterialOfPhaseController {
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> getMaterialOfPhase(@PathVariable("mop_id") int mop_id) {
         try {
-            MaterialOfPhase _materialOfPhase = materialOfPhaseService.getMaterialOfPhase(mop_id);
-            if (_materialOfPhase != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(_materialOfPhase);
+            MaterialOfPhase materialOfPhase = materialOfPhaseService.getMaterialOfPhase(mop_id);
+            if (materialOfPhase != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(materialOfPhase);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                         "Can't found material!");

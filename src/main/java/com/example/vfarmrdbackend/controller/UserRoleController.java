@@ -26,11 +26,11 @@ public class UserRoleController {
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<List<UserRole>> getAllUserRoles() {
         try {
-            List<UserRole> _listUserRoles = userRoleRepository.findAll();
-            if (_listUserRoles.isEmpty()) {
+            List<UserRole>listUserRoles = userRoleRepository.findAll();
+            if (listUserRoles.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(_listUserRoles, HttpStatus.OK);
+            return new ResponseEntity<>(listUserRoles, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

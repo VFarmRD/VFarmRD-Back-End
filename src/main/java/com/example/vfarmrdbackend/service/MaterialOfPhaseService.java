@@ -24,34 +24,34 @@ public class MaterialOfPhaseService {
     }
 
     public void createMaterialOfPhase(int phase_id, MaterialOfPhaseCreateRequest materialOfPhaseCreateRequest) {
-        MaterialOfPhase _materialOfPhase = new MaterialOfPhase();
-        _materialOfPhase.setPhase_id(phase_id);
-        _materialOfPhase.setMaterial_id(materialOfPhaseCreateRequest.getMaterial_id());
-        _materialOfPhase.setMaterial_cost(materialOfPhaseCreateRequest.getMaterial_cost());
-        _materialOfPhase.setMaterial_weight(materialOfPhaseCreateRequest.getMaterial_weight());
-        _materialOfPhase.setMaterial_percent(materialOfPhaseCreateRequest.getMaterial_percent());
-        materialOfPhaseRepository.save(_materialOfPhase);
+        MaterialOfPhase materialOfPhase = new MaterialOfPhase();
+        materialOfPhase.setPhase_id(phase_id);
+        materialOfPhase.setMaterial_id(materialOfPhaseCreateRequest.getMaterial_id());
+        materialOfPhase.setMaterial_cost(materialOfPhaseCreateRequest.getMaterial_cost());
+        materialOfPhase.setMaterial_weight(materialOfPhaseCreateRequest.getMaterial_weight());
+        materialOfPhase.setMaterial_percent(materialOfPhaseCreateRequest.getMaterial_percent());
+        materialOfPhaseRepository.save(materialOfPhase);
     }
 
     public boolean updateMaterialOfPhase(MaterialOfPhaseUpdateRequest materialOfPhaseUpdateRequest) {
-        MaterialOfPhase _materialOfPhase = materialOfPhaseRepository
+        MaterialOfPhase materialOfPhase = materialOfPhaseRepository
                 .getOneMaterialOfOnePhase(materialOfPhaseUpdateRequest.getMop_id());
-        if (_materialOfPhase != null) {
-            _materialOfPhase.setMaterial_id(materialOfPhaseUpdateRequest.getMaterial_id());
-            _materialOfPhase.setMaterial_cost(materialOfPhaseUpdateRequest.getMaterial_cost());
-            _materialOfPhase.setMaterial_weight(materialOfPhaseUpdateRequest.getMaterial_weight());
-            _materialOfPhase.setMaterial_percent(materialOfPhaseUpdateRequest.getMaterial_percent());
-            materialOfPhaseRepository.save(_materialOfPhase);
+        if (materialOfPhase != null) {
+            materialOfPhase.setMaterial_id(materialOfPhaseUpdateRequest.getMaterial_id());
+            materialOfPhase.setMaterial_cost(materialOfPhaseUpdateRequest.getMaterial_cost());
+            materialOfPhase.setMaterial_weight(materialOfPhaseUpdateRequest.getMaterial_weight());
+            materialOfPhase.setMaterial_percent(materialOfPhaseUpdateRequest.getMaterial_percent());
+            materialOfPhaseRepository.save(materialOfPhase);
             return true;
         }
         return false;
     }
 
     public boolean deleteMaterialOfPhase(int mop_id) {
-        MaterialOfPhase _materialOfPhase = materialOfPhaseRepository
+        MaterialOfPhase materialOfPhase = materialOfPhaseRepository
                 .getOneMaterialOfOnePhase(mop_id);
-        if (_materialOfPhase != null) {
-            materialOfPhaseRepository.delete(_materialOfPhase);
+        if (materialOfPhase != null) {
+            materialOfPhaseRepository.delete(materialOfPhase);
             return true;
         }
         return false;

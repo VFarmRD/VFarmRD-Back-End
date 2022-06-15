@@ -9,14 +9,6 @@ public class MaterialOfPhaseGetResponse {
     public MaterialOfPhaseGetResponse() {
     }
 
-    public MaterialOfPhaseGetResponse(String material_id, float material_cost, int material_weight,
-            float material_percent) {
-        this.material_id = material_id;
-        this.material_cost = material_cost;
-        this.material_weight = material_weight;
-        this.material_percent = material_percent;
-    }
-
     public String getMaterial_id() {
         return material_id;
     }

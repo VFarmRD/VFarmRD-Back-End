@@ -1,6 +1,8 @@
 package com.example.vfarmrdbackend.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
@@ -18,19 +20,6 @@ public class Product {
     private Date modified_time;
 
     public Product() {
-    }
-
-    public Product(String product_id, String product_name, int client_id, int created_user_id, int assigned_user_id,
-            String product_inquiry, String product_status, Date created_time, Date modified_time) {
-        this.product_id = product_id;
-        this.product_name = product_name;
-        this.client_id = client_id;
-        this.created_user_id = created_user_id;
-        this.assigned_user_id = assigned_user_id;
-        this.product_inquiry = product_inquiry;
-        this.product_status = product_status;
-        this.created_time = created_time;
-        this.modified_time = modified_time;
     }
 
     public String getProduct_id() {

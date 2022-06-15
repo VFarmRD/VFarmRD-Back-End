@@ -9,29 +9,13 @@ public class MaterialOfPhaseCreateRequest {
     public MaterialOfPhaseCreateRequest() {
     }
 
-    
-
-    public MaterialOfPhaseCreateRequest(String material_id, float material_cost, int material_weight,
-            float material_percent) {
-        this.material_id = material_id;
-        this.material_cost = material_cost;
-        this.material_weight = material_weight;
-        this.material_percent = material_percent;
-    }
-
-
-
     public int getMaterial_weight() {
         return material_weight;
     }
 
-
-
     public void setMaterial_weight(int material_weight) {
         this.material_weight = material_weight;
     }
-
-
 
     public float getMaterial_cost() {
         return material_cost;

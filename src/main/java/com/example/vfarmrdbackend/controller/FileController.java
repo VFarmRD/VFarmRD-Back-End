@@ -82,11 +82,11 @@ public class FileController {
         public ResponseEntity<?> getFile(@PathVariable("file_id") int file_id,
                         @RequestHeader("Authorization") String jwt) {
                 try {
-                        File _file = fileService.getFile(file_id, JwtService.getUser_idFromToken(jwt));
+                        File file = fileService.getFile(file_id, JwtService.getUser_idFromToken(jwt));
                         return ResponseEntity.ok()
                                         .header(HttpHeaders.CONTENT_DISPOSITION,
-                                                        "attachment; filename=\"" + _file.getFile_name() + "\"")
-                                        .body(_file.getFile_data());
+                                                        "attachment; filename=\"" + file.getFile_name() + "\"")
+                                        .body(file.getFile_data());
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                                         "The server is down");

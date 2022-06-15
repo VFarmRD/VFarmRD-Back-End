@@ -107,19 +107,19 @@ public class UserController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "1000") int size) {
         try {
-            List<User> _listUsers = new ArrayList<User>();
+            List<User> listUsers = new ArrayList<User>();
             Pageable paging = PageRequest.of(page, size);
             Page<User> pageUsers;
             pageUsers = userRepository.findUserByFields("%" + user_name + "%",
                     "%" + email + "%", "%" + fullname + "%", "%" + phone + "%",
                     "%" + role_name + "%", user_status, paging);
-            _listUsers = pageUsers.getContent();
+                    listUsers = pageUsers.getContent();
             // Map<String, Object> response = new HashMap<>();
-            // response.put("users", _listUsers);
+            // response.put("users", listUsers);
             // response.put("currentPage", pageUsers.getNumber());
             // response.put("totalItems", pageUsers.getTotalElements());
             // response.put("totalPages", pageUsers.getTotalPages());
-            return new ResponseEntity<>(_listUsers, HttpStatus.OK);
+            return new ResponseEntity<>(listUsers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
                     "The server is down!",
@@ -130,9 +130,9 @@ public class UserController {
     @GetMapping("/users/{user_id}")
     public ResponseEntity<?> getUserByUser_id(@PathVariable("user_id") int user_id) {
         try {
-            User _user = userRepository.getUserByUser_id(user_id);
-            if (_user != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(_user);
+            User user = userRepository.getUserByUser_id(user_id);
+            if (user != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(user);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
             }

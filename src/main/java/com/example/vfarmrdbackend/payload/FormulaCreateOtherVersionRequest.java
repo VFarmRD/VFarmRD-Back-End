@@ -11,14 +11,6 @@ public class FormulaCreateOtherVersionRequest {
     public FormulaCreateOtherVersionRequest() {
     }
 
-    public FormulaCreateOtherVersionRequest(int formula_id, float formula_cost, int formula_weight,
-            List<PhaseCreateRequest> phaseCreateRequest) {
-        this.formula_id = formula_id;
-        this.formula_cost = formula_cost;
-        this.formula_weight = formula_weight;
-        this.phaseCreateRequest = phaseCreateRequest;
-    }
-
     public int getFormula_weight() {
         return formula_weight;
     }
