@@ -27,13 +27,12 @@ public class RoleController {
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> getAllRoles() {
         try {
-            List<Role> _listRoles = roleService.getAllRoles();
-            if (_listRoles.isEmpty()) {
+            List<Role> listRoles = roleService.getAllRoles();
+            if (listRoles.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
                         "Can't found any role!");
             }
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    _listRoles);
+            return ResponseEntity.status(HttpStatus.OK).body(listRoles);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     "The server is down!");
@@ -44,9 +43,9 @@ public class RoleController {
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> getRoleByRole_id(@PathVariable("role_id") int role_id) {
         try {
-            Role _role = roleService.getRoleByRole_id(role_id);
-            if (_role != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(_role);
+            Role role = roleService.getRoleByRole_id(role_id);
+            if (role != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(role);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role not found!");
             }
@@ -58,40 +57,42 @@ public class RoleController {
 
     // @PostMapping("/roles/create")
     // @PreAuthorize("hasAuthority('admin')")
-    // public ResponseEntity<?> createRole(@RequestParam("role_name") String role_name) {
-    //     try {
-    //         roleService.createRole(role_name);
-    //         return ResponseEntity.status(HttpStatus.OK).body("Create new role completed!");
+    // public ResponseEntity<?> createRole(@RequestParam("role_name") String
+    // role_name) {
+    // try {
+    // roleService.createRole(role_name);
+    // return ResponseEntity.status(HttpStatus.OK).body("Create new role
+    // completed!");
 
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-    //                 "The server is down!");
-    //     }
+    // } catch (Exception e) {
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+    // "The server is down!");
+    // }
     // }
 
     // @PutMapping("/roles/update")
     // @PreAuthorize("hasAuthority('admin')")
     // public ResponseEntity<?> updateRole(@RequestBody Role role) {
-    //     Role _role = roleRepository.getRoleByRole_id(role.getRole_id());
-    //     if (_role != null) {
-    //         _role.setRole_name(role.getRole_name());
-    //         roleRepository.save(_role);
-    //         return new ResponseEntity<>("Update role successfully!", HttpStatus.OK);
-    //     } else {
-    //         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    //     }
+    // Role role = roleRepository.getRoleByRole_id(role.getRole_id());
+    // if (role != null) {
+    // role.setRole_name(role.getRole_name());
+    // roleRepository.save(role);
+    // return new ResponseEntity<>("Update role successfully!", HttpStatus.OK);
+    // } else {
+    // return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    // }
     // }
 
     // @DeleteMapping("/roles/delete/{role_id}")
     // @PreAuthorize("hasAuthority('admin')")
     // public ResponseEntity<?> deleteRole(@PathVariable("role_id") int role_id) {
-    //     try {
-    //         roleRepository.deleteById(role_id);
-    //         return new ResponseEntity<>("Delete role successfully!", HttpStatus.OK);
-    //     } catch (Exception e) {
-    //         return new ResponseEntity<>(
-    //                 "The server is down!",
-    //                 HttpStatus.INTERNAL_SERVER_ERROR);
-    //     }
+    // try {
+    // roleRepository.deleteById(role_id);
+    // return new ResponseEntity<>("Delete role successfully!", HttpStatus.OK);
+    // } catch (Exception e) {
+    // return new ResponseEntity<>(
+    // "The server is down!",
+    // HttpStatus.INTERNAL_SERVER_ERROR);
+    // }
     // }
 }

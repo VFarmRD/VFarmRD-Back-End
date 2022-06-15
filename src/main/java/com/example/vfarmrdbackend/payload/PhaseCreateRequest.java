@@ -9,12 +9,6 @@ public class PhaseCreateRequest {
     public PhaseCreateRequest() {
     }
 
-    public PhaseCreateRequest(String phase_description,
-            List<MaterialOfPhaseCreateRequest> materialOfPhaseCreateRequest) {
-        this.phase_description = phase_description;
-        this.materialOfPhaseCreateRequest = materialOfPhaseCreateRequest;
-    }
-
     public List<MaterialOfPhaseCreateRequest> getMaterialOfPhaseCreateRequest() {
         return materialOfPhaseCreateRequest;
     }

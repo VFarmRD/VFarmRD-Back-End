@@ -9,13 +9,6 @@ public class ProductUpdateRequest {
     public ProductUpdateRequest() {
     }
 
-    public ProductUpdateRequest(String product_id, String product_name, int assigned_user_id, String product_inquiry) {
-        this.product_id = product_id;
-        this.product_name = product_name;
-        this.assigned_user_id = assigned_user_id;
-        this.product_inquiry = product_inquiry;
-    }
-
     public String getProduct_id() {
         return product_id;
     }

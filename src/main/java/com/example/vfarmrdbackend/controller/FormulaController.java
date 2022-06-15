@@ -36,9 +36,9 @@ public class FormulaController {
             "or hasAuthority('manager')")
     public ResponseEntity<?> getAllFormulaByProduct_id(@RequestParam("product_id") String product_id,
             @RequestParam(defaultValue = "", required = false) String formula_status) {
-        List<Formula> _listFormulas = formulaService.getAllFormulaByProduct_id(product_id, "%" + formula_status + "%");
-        if (_listFormulas != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(_listFormulas);
+        List<Formula> listFormulas = formulaService.getAllFormulaByProduct_id(product_id, "%" + formula_status + "%");
+        if (listFormulas != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(listFormulas);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     "Can't found any formula!");
@@ -49,9 +49,9 @@ public class FormulaController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getFormulaByFormula_id(@PathVariable("formula_id") int formula_id) {
-        FormulaGetResponse _formulaGetResponse = formulaService.getFormulaByFormula_id(formula_id);
-        if (_formulaGetResponse != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(_formulaGetResponse);
+        FormulaGetResponse formulaGetResponse = formulaService.getFormulaByFormula_id(formula_id);
+        if (formulaGetResponse != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(formulaGetResponse);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     "Formula not found!");

@@ -11,14 +11,6 @@ public class FormulaCreateRequest {
     public FormulaCreateRequest() {
     }
 
-    public FormulaCreateRequest(String product_id, float formula_cost, int formula_weight,
-            List<PhaseCreateRequest> phaseCreateRequest) {
-        this.product_id = product_id;
-        this.formula_cost = formula_cost;
-        this.formula_weight = formula_weight;
-        this.phaseCreateRequest = phaseCreateRequest;
-    }
-
     public int getFormula_weight() {
         return formula_weight;
     }

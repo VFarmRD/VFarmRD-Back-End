@@ -1,43 +1,20 @@
 package com.example.vfarmrdbackend.payload;
 
 public class TestUpdateRequest {
-    private int test_id;
-    private int formula_id;
-    private boolean test_status;
+    private String test_content;
     private int file_id;
+    private String test_expect;
+    private boolean test_result;
 
     public TestUpdateRequest() {
     }
 
-    public TestUpdateRequest(int test_id, int formula_id, boolean test_status, int file_id) {
-        this.test_id = test_id;
-        this.formula_id = formula_id;
-        this.test_status = test_status;
-        this.file_id = file_id;
+    public String getTest_content() {
+        return test_content;
     }
 
-    public int getTest_id() {
-        return test_id;
-    }
-
-    public void setTest_id(int test_id) {
-        this.test_id = test_id;
-    }
-
-    public int getFormula_id() {
-        return formula_id;
-    }
-
-    public void setFormula_id(int formula_id) {
-        this.formula_id = formula_id;
-    }
-
-    public boolean isTest_status() {
-        return test_status;
-    }
-
-    public void setTest_status(boolean test_status) {
-        this.test_status = test_status;
+    public void setTest_content(String test_content) {
+        this.test_content = test_content;
     }
 
     public int getFile_id() {
@@ -46,6 +23,22 @@ public class TestUpdateRequest {
 
     public void setFile_id(int file_id) {
         this.file_id = file_id;
+    }
+
+    public String getTest_expect() {
+        return test_expect;
+    }
+
+    public void setTest_expect(String test_expect) {
+        this.test_expect = test_expect;
+    }
+
+    public boolean isTest_result() {
+        return test_result;
+    }
+
+    public void setTest_result(boolean test_result) {
+        this.test_result = test_result;
     }
 
 }

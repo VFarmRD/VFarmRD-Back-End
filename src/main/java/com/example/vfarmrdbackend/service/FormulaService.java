@@ -44,34 +44,34 @@ public class FormulaService {
     }
 
     public FormulaGetResponse getFormulaByFormula_id(int formula_id) {
-        Formula _formula = formulaRepository.getFormulaByFormula_id(formula_id);
+        Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
         FormulaGetResponse formulaGetResponse = new FormulaGetResponse();
-        formulaGetResponse.setProduct_id(_formula.getProduct_id());
-        formulaGetResponse.setFormula_weight(_formula.getFormula_weight());
-        formulaGetResponse.setFormula_cost(_formula.getFormula_cost());
-        formulaGetResponse.setUser_id(_formula.getCreated_user_id());
-        User _user = userService.getUserInfo(_formula.getCreated_user_id());
-        formulaGetResponse.setUser_fullname(_user.getFullname());
-        List<Phase> _listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
+        formulaGetResponse.setProduct_id(formula.getProduct_id());
+        formulaGetResponse.setFormula_weight(formula.getFormula_weight());
+        formulaGetResponse.setFormula_cost(formula.getFormula_cost());
+        formulaGetResponse.setUser_id(formula.getCreated_user_id());
+        User user = userService.getUserInfo(formula.getCreated_user_id());
+        formulaGetResponse.setUser_fullname(user.getFullname());
+        List<Phase> listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
         List<PhaseGetResponse> listPhaseGetResponse = new ArrayList<>();
-        for (int i = 0; i < _listPhases.size(); i++) {
-            PhaseGetResponse _phaseGetResponse = new PhaseGetResponse();
-            _phaseGetResponse.setPhase_id(_listPhases.get(i).getPhase_id());
-            _phaseGetResponse.setPhase_name(String.valueOf(i + 1));
-            _phaseGetResponse.setPhase_description(_listPhases.get(i).getPhase_description());
-            List<MaterialOfPhase> _listMaterialOfPhases = materialOfPhaseService
-                    .getAllMaterialOfPhase(_listPhases.get(i).getPhase_id());
-            List<MaterialOfPhaseGetResponse> _listMaterialOfPhasesResponse = new ArrayList<>();
-            for (int j = 0; j < _listMaterialOfPhases.size(); j++) {
+        for (int i = 0; i < listPhases.size(); i++) {
+            PhaseGetResponse phaseGetResponse = new PhaseGetResponse();
+            phaseGetResponse.setPhase_id(listPhases.get(i).getPhase_id());
+            phaseGetResponse.setPhase_name(String.valueOf(i + 1));
+            phaseGetResponse.setPhase_description(listPhases.get(i).getPhase_description());
+            List<MaterialOfPhase> listMaterialOfPhases = materialOfPhaseService
+                    .getAllMaterialOfPhase(listPhases.get(i).getPhase_id());
+            List<MaterialOfPhaseGetResponse> listMaterialOfPhasesResponse = new ArrayList<>();
+            for (int j = 0; j < listMaterialOfPhases.size(); j++) {
                 MaterialOfPhaseGetResponse materialOfPhaseResponse = new MaterialOfPhaseGetResponse();
-                materialOfPhaseResponse.setMaterial_id(_listMaterialOfPhases.get(j).getMaterial_id());
-                materialOfPhaseResponse.setMaterial_percent(_listMaterialOfPhases.get(j).getMaterial_percent());
-                materialOfPhaseResponse.setMaterial_cost(_listMaterialOfPhases.get(j).getMaterial_cost());
-                materialOfPhaseResponse.setMaterial_weight(_listMaterialOfPhases.get(j).getMaterial_weight());
-                _listMaterialOfPhasesResponse.add(materialOfPhaseResponse);
+                materialOfPhaseResponse.setMaterial_id(listMaterialOfPhases.get(j).getMaterial_id());
+                materialOfPhaseResponse.setMaterial_percent(listMaterialOfPhases.get(j).getMaterial_percent());
+                materialOfPhaseResponse.setMaterial_cost(listMaterialOfPhases.get(j).getMaterial_cost());
+                materialOfPhaseResponse.setMaterial_weight(listMaterialOfPhases.get(j).getMaterial_weight());
+                listMaterialOfPhasesResponse.add(materialOfPhaseResponse);
             }
-            _phaseGetResponse.setMaterialOfPhaseGetResponse(_listMaterialOfPhasesResponse);
-            listPhaseGetResponse.add(_phaseGetResponse);
+            phaseGetResponse.setMaterialOfPhaseGetResponse(listMaterialOfPhasesResponse);
+            listPhaseGetResponse.add(phaseGetResponse);
         }
         formulaGetResponse.setPhaseGetResponse(listPhaseGetResponse);
         return formulaGetResponse;
@@ -79,16 +79,16 @@ public class FormulaService {
 
     public void createFormula(FormulaCreateRequest formulaCreateRequest, String jwt) {
         date = new Date();
-        Formula _formula = new Formula();
-        _formula.setProduct_id(formulaCreateRequest.getProduct_id());
-        _formula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
-        _formula.setFormula_pre_version("none");
-        _formula.setFormula_version("1.0");
-        _formula.setFormula_status("on progress");
-        _formula.setFormula_cost(formulaCreateRequest.getFormula_cost());
-        _formula.setFormula_weight(formulaCreateRequest.getFormula_weight());
-        _formula.setCreated_time(date);
-        formulaRepository.save(_formula);
+        Formula formula = new Formula();
+        formula.setProduct_id(formulaCreateRequest.getProduct_id());
+        formula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
+        formula.setFormula_pre_version("none");
+        formula.setFormula_version("1.0");
+        formula.setFormula_status("on progress");
+        formula.setFormula_cost(formulaCreateRequest.getFormula_cost());
+        formula.setFormula_weight(formulaCreateRequest.getFormula_weight());
+        formula.setCreated_time(date);
+        formulaRepository.save(formula);
         for (int i = 0; i < formulaCreateRequest.getPhaseCreateRequest().size(); i++) {
             PhaseCreateRequest phaseCreateRequest = formulaCreateRequest.getPhaseCreateRequest().get(i);
             phaseService.createPhase(formulaRepository.getLatestFormula_id(),
@@ -102,17 +102,17 @@ public class FormulaService {
     }
 
     public boolean setFormula_status(int formula_id, String status) {
-        Formula _formula = formulaRepository.getFormulaByFormula_id(formula_id);
-        if (_formula != null) {
+        Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
+        if (formula != null) {
             if (status.equals("approved") || status.equals("denied")) {
-                if (!_formula.getFormula_status().equals("pending")) {
+                if (!formula.getFormula_status().equals("pending")) {
                     return false;
                 }
             }
             date = new Date();
-            _formula.setFormula_status(status);
-            _formula.setModified_time(date);
-            formulaRepository.save(_formula);
+            formula.setFormula_status(status);
+            formula.setModified_time(date);
+            formulaRepository.save(formula);
             return true;
         } else {
             return false;
@@ -121,15 +121,15 @@ public class FormulaService {
 
     public boolean createAnotherFormula_version(FormulaCreateOtherVersionRequest FormulaCreateOtherVersionRequest,
             String jwt, String type) {
-        Formula _formula = formulaRepository.getFormulaByFormula_id(FormulaCreateOtherVersionRequest.getFormula_id());
+        Formula formula = formulaRepository.getFormulaByFormula_id(FormulaCreateOtherVersionRequest.getFormula_id());
         Formula newFormula = new Formula();
         date = new Date();
-        if (_formula != null) {
-            newFormula.setProduct_id(_formula.getProduct_id());
+        if (formula != null) {
+            newFormula.setProduct_id(formula.getProduct_id());
             newFormula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
-            String formula_pre_version = _formula.getFormula_version();
+            String formula_pre_version = formula.getFormula_version();
             newFormula.setFormula_pre_version(formula_pre_version);
-            String formula_now_version = formulaRepository.getLatestVersionOfProduct(_formula.getProduct_id());
+            String formula_now_version = formulaRepository.getLatestVersionOfProduct(formula.getProduct_id());
             String splitString[] = formula_now_version.split("\\.");
             if (type.equals("update")) {
                 formula_now_version = splitString[0] + "." + String.valueOf(Integer.parseInt(splitString[1]) + 1);
@@ -140,7 +140,7 @@ public class FormulaService {
             newFormula.setFormula_cost(FormulaCreateOtherVersionRequest.getFormula_cost());
             newFormula.setFormula_weight(FormulaCreateOtherVersionRequest.getFormula_weight());
             newFormula.setFormula_status("on progress");
-            newFormula.setCreated_time(_formula.getCreated_time());
+            newFormula.setCreated_time(formula.getCreated_time());
             newFormula.setModified_time(date);
             formulaRepository.save(newFormula);
             for (int i = 0; i < FormulaCreateOtherVersionRequest.getPhaseCreateRequest().size(); i++) {

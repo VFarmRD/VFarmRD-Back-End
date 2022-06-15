@@ -31,18 +31,18 @@ public class ProductService {
             String assigned_user_id,
             String product_status,
             int page, int size) {
-        List<Product> _listProducts = new ArrayList<>();
+        List<Product> listProducts = new ArrayList<>();
         Pageable paging = PageRequest.of(page, size);
-        Page<Product> _pageProducts = productRepository.findUserByFields("%" + product_name + "%",
+        Page<Product> pageProducts = productRepository.findUserByFields("%" + product_name + "%",
                 "%" + client_id + "%", "%" + created_user_id + "%",
                 "%" + assigned_user_id + "%", "%" + product_status + "%", paging);
-        _listProducts = _pageProducts.getContent();
+        listProducts = pageProducts.getContent();
         Map<String, Object> response = new HashMap<>();
-        response.put("products", _listProducts);
-        response.put("currentPage", _pageProducts.getNumber());
-        response.put("totalItems", _pageProducts.getTotalElements());
-        response.put("totalPages", _pageProducts.getTotalPages());
-        return _listProducts;
+        response.put("products", listProducts);
+        response.put("currentPage", pageProducts.getNumber());
+        response.put("totalItems", pageProducts.getTotalElements());
+        response.put("totalPages", pageProducts.getTotalPages());
+        return listProducts;
     }
 
     public Product getProductByProduct_id(String product_id) {
@@ -51,26 +51,26 @@ public class ProductService {
 
     public void createProduct(ProductCreateRequest productCreateRequest, String jwt) {
         date = new Date();
-        Product _product = new Product();
-        _product.setProduct_name(productCreateRequest.getProduct_name());
-        _product.setClient_id(productCreateRequest.getClient_id());
-        _product.setAssigned_user_id(productCreateRequest.getAssigned_user_id());
-        _product.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
-        _product.setProduct_inquiry(productCreateRequest.getProduct_inquiry());
-        _product.setCreated_time(date);
-        _product.setProduct_status("activated");
-        productRepository.save(_product);
+        Product product = new Product();
+        product.setProduct_name(productCreateRequest.getProduct_name());
+        product.setClient_id(productCreateRequest.getClient_id());
+        product.setAssigned_user_id(productCreateRequest.getAssigned_user_id());
+        product.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
+        product.setProduct_inquiry(productCreateRequest.getProduct_inquiry());
+        product.setCreated_time(date);
+        product.setProduct_status("activated");
+        productRepository.save(product);
     }
 
     public boolean updateProduct(ProductUpdateRequest productUpdateRequest) {
-        Product _product = productRepository.getProductByProduct_id(productUpdateRequest.getProduct_id());
-        if (_product != null) {
+        Product product = productRepository.getProductByProduct_id(productUpdateRequest.getProduct_id());
+        if (product != null) {
             date = new Date();
-            _product.setProduct_name(productUpdateRequest.getProduct_name());
-            _product.setAssigned_user_id(productUpdateRequest.getAssigned_user_id());
-            _product.setProduct_inquiry(productUpdateRequest.getProduct_inquiry());
-            _product.setModified_time(date);
-            productRepository.save(_product);
+            product.setProduct_name(productUpdateRequest.getProduct_name());
+            product.setAssigned_user_id(productUpdateRequest.getAssigned_user_id());
+            product.setProduct_inquiry(productUpdateRequest.getProduct_inquiry());
+            product.setModified_time(date);
+            productRepository.save(product);
             return true;
         } else {
             return false;
@@ -78,11 +78,11 @@ public class ProductService {
     }
 
     public boolean deleteProduct(String product_id) {
-        Product _product = productRepository.getProductByProduct_id(product_id);
-        if (_product != null) {
-            _product.setProduct_status("deactivated");
-            _product.setModified_time(date);
-            productRepository.save(_product);
+        Product product = productRepository.getProductByProduct_id(product_id);
+        if (product != null) {
+            product.setProduct_status("deactivated");
+            product.setModified_time(date);
+            productRepository.save(product);
             return true;
         } else {
             return false;

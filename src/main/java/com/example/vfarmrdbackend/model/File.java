@@ -1,6 +1,11 @@
 package com.example.vfarmrdbackend.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
@@ -18,17 +23,6 @@ public class File {
     private byte[] file_data;
 
     public File() {
-    }
-
-    public File(int file_id, int user_id, String file_name, String file_type, Date created_time,
-            Date modified_time, byte[] file_data) {
-        this.file_id = file_id;
-        this.user_id = user_id;
-        this.file_name = file_name;
-        this.file_type = file_type;
-        this.created_time = created_time;
-        this.modified_time = modified_time;
-        this.file_data = file_data;
     }
 
     public int getFile_id() {

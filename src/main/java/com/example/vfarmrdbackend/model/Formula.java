@@ -1,6 +1,10 @@
 package com.example.vfarmrdbackend.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
@@ -20,21 +24,6 @@ public class Formula {
     private Date modified_time;
 
     public Formula() {
-    }
-
-    public Formula(int formula_id, String product_id, int created_user_id, String formula_pre_version,
-            String formula_version, String formula_status, float formula_cost, int formula_weight, Date created_time,
-            Date modified_time) {
-        this.formula_id = formula_id;
-        this.product_id = product_id;
-        this.created_user_id = created_user_id;
-        this.formula_pre_version = formula_pre_version;
-        this.formula_version = formula_version;
-        this.formula_status = formula_status;
-        this.formula_cost = formula_cost;
-        this.formula_weight = formula_weight;
-        this.created_time = created_time;
-        this.modified_time = modified_time;
     }
 
     public int getFormula_weight() {

@@ -47,9 +47,9 @@ public class UserService {
 
     Date date;
 
-    public User getUserInfo(int user_id){
-        User _user = userRepository.getUserByUser_id(user_id);
-        return _user;
+    public User getUserInfo(int user_id) {
+        User user = userRepository.getUserByUser_id(user_id);
+        return user;
     }
 
     public boolean checkUserIsDisabled(String user_name) {
@@ -100,17 +100,14 @@ public class UserService {
 
     public void register(SignupRequest signUpRequest) {
         date = new Date();
-        User user = new User(
-                0,
-                signUpRequest.getUser_name(),
-                signUpRequest.getEmail(),
-                signUpRequest.getFullname(),
-                signUpRequest.getPhone(),
-                encoder.encode(signUpRequest.getPassword()),
-                true,
-                date,
-                null,
-                "");
+        User user = new User();
+        user.setUser_name(signUpRequest.getUser_name());
+        user.setEmail(signUpRequest.getEmail());
+        user.setFullname(signUpRequest.getFullname());
+        user.setPhone(signUpRequest.getPhone());
+        user.setPassword(encoder.encode(signUpRequest.getPassword()));
+        user.setUser_status(true);
+        user.setCreated_time(date);
         userRepository.save(user);
         int user_id = userRepository.getUserByUser_name(signUpRequest.getUser_name()).getUser_id();
         String role_name = signUpRequest.getRole_name();
@@ -153,25 +150,25 @@ public class UserService {
 
     public boolean updateUser(UserRequest userRequest) {
         date = new Date();
-        User _user = userRepository.getUserByUser_id(userRequest.getUser_id());
-        UserRole _userrole = userRoleRepository.getUserRoleByUser_id(userRequest.getUser_id());
+        User user = userRepository.getUserByUser_id(userRequest.getUser_id());
+        UserRole userrole = userRoleRepository.getUserRoleByUser_id(userRequest.getUser_id());
         int change_role_id = roleRepository.getRoleByRole_name(userRequest.getRole_name()).getRole_id();
-        if (_user != null && _userrole != null) {
-            if (_user.getRole_name().equals("admin") && !userRequest.getRole_name().equals("admin")) {
+        if (user != null && userrole != null) {
+            if (user.getRole_name().equals("admin") && !userRequest.getRole_name().equals("admin")) {
                 degradeUserRoleFromAdmin(userRequest.getUser_id(), userRequest.getRole_name());
-            } else if (!_user.getRole_name().equals("admin") && userRequest.getRole_name().equals("admin")) {
+            } else if (!user.getRole_name().equals("admin") && userRequest.getRole_name().equals("admin")) {
                 upgradeUserRoleToAdmin(userRequest.getUser_id(), userRequest.getRole_name());
             } else {
-                _userrole.setRole_id(change_role_id);
-                userRoleRepository.save(_userrole);
+                userrole.setRole_id(change_role_id);
+                userRoleRepository.save(userrole);
             }
-            _user.setEmail(userRequest.getEmail());
-            _user.setFullname(userRequest.getFullname());
-            _user.setPhone(userRequest.getPhone());
-            _user.setRole_name(userRoleRepository.getHighestRoleWithUser_Id(_user.getUser_id()));
-            _user.setPassword(encoder.encode(userRequest.getPassword()));
-            _user.setModified_time(date);
-            userRepository.save(_user);
+            user.setEmail(userRequest.getEmail());
+            user.setFullname(userRequest.getFullname());
+            user.setPhone(userRequest.getPhone());
+            user.setRole_name(userRoleRepository.getHighestRoleWithUser_Id(user.getUser_id()));
+            user.setPassword(encoder.encode(userRequest.getPassword()));
+            user.setModified_time(date);
+            userRepository.save(user);
             return true;
         } else {
             return false;
@@ -179,12 +176,12 @@ public class UserService {
     }
 
     public boolean deleteUser(int id) {
-        User _user = userRepository.getUserByUser_id(id);
-        if (_user != null) {
+        User user = userRepository.getUserByUser_id(id);
+        if (user != null) {
             date = new Date();
-            _user.setModified_time(date);
-            _user.setUser_status(false);
-            userRepository.save(_user);
+            user.setModified_time(date);
+            user.setUser_status(false);
+            userRepository.save(user);
             return true;
         } else {
             return false;
@@ -192,12 +189,12 @@ public class UserService {
     }
 
     public boolean recoverUser(int id) {
-        User _user = userRepository.getUserByUser_id(id);
-        if (_user != null) {
+        User user = userRepository.getUserByUser_id(id);
+        if (user != null) {
             date = new Date();
-            _user.setModified_time(date);
-            _user.setUser_status(true);
-            userRepository.save(_user);
+            user.setModified_time(date);
+            user.setUser_status(true);
+            userRepository.save(user);
             return true;
         } else {
             return false;

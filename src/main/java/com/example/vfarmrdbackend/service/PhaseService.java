@@ -24,17 +24,17 @@ public class PhaseService {
     }
 
     public void createPhase(int formula_id, PhaseCreateRequest phaseCreateRequest) {
-        Phase _phase = new Phase();
-        _phase.setFormula_id(formula_id);
-        _phase.setPhase_description(phaseCreateRequest.getPhase_description());
-        phaseRepository.save(_phase);
+        Phase phase = new Phase();
+        phase.setFormula_id(formula_id);
+        phase.setPhase_description(phaseCreateRequest.getPhase_description());
+        phaseRepository.save(phase);
     }
 
     public boolean updatePhase(PhaseUpdateRequest phaseUpdateRequest) {
-        Phase _phase = phaseRepository.getPhaseByPhase_id(phaseUpdateRequest.getPhase_id());
-        if (_phase != null) {
-            _phase.setPhase_description(phaseUpdateRequest.getPhase_description());
-            phaseRepository.save(_phase);
+        Phase phase = phaseRepository.getPhaseByPhase_id(phaseUpdateRequest.getPhase_id());
+        if (phase != null) {
+            phase.setPhase_description(phaseUpdateRequest.getPhase_description());
+            phaseRepository.save(phase);
             return true;
         } else {
             return false;
@@ -42,9 +42,9 @@ public class PhaseService {
     }
 
     public boolean deletePhase(int phase_id) {
-        Phase _phase = phaseRepository.getPhaseByPhase_id(phase_id);
-        if (_phase != null) {
-            phaseRepository.delete(_phase);
+        Phase phase = phaseRepository.getPhaseByPhase_id(phase_id);
+        if (phase != null) {
+            phaseRepository.delete(phase);
             return true;
         } else {
             return false;

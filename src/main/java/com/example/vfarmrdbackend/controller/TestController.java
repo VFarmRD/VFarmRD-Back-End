@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.vfarmrdbackend.model.Test;
 import com.example.vfarmrdbackend.payload.TestCreateRequest;
 import com.example.vfarmrdbackend.payload.TestUpdateRequest;
+import com.example.vfarmrdbackend.service.JwtService;
 import com.example.vfarmrdbackend.service.TestService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,9 +36,9 @@ public class TestController {
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> getAllTestWithFormula_id(@RequestParam("formula_id") int formula_id) {
         try {
-            List<Test> _listTests = testService.getAllTestWithFormula_id(formula_id);
-            if (_listTests != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(_listTests);
+            List<Test> listTests = testService.getAllTestWithFormula_id(formula_id);
+            if (listTests != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(listTests);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                         "Can't found any test!");
@@ -51,9 +53,9 @@ public class TestController {
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> getTestByTest_id(@PathVariable("test_id") int test_id) {
         try {
-            Test _tests = testService.getTestWithTest_id(test_id);
-            if (_tests != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(_tests);
+            Test test = testService.getTestWithTest_id(test_id);
+            if (test != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(test);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                         "Can't found test!");
@@ -64,11 +66,12 @@ public class TestController {
         }
     }
 
-    @PostMapping("/tests/create")
+    @PostMapping("/tests")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createTest(@RequestBody TestCreateRequest testCreateRequest) {
+    public ResponseEntity<?> createTest(@RequestBody TestCreateRequest testCreateRequest,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            testService.createTest(testCreateRequest);
+            testService.createTest(testCreateRequest, JwtService.getUser_idFromToken(jwt));
             return ResponseEntity.status(HttpStatus.OK).body("Create new test completed!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -76,11 +79,12 @@ public class TestController {
         }
     }
 
-    @PutMapping("/tests/update")
+    @PutMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updateTest(@RequestBody TestUpdateRequest testUpdateRequest) {
+    public ResponseEntity<?> updateTest(@PathVariable("test_id") int test_id,
+            @RequestBody TestUpdateRequest testUpdateRequest) {
         try {
-            if (testService.updateTest(testUpdateRequest)) {
+            if (testService.updateTest(testUpdateRequest, test_id)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Test not found!");
@@ -91,7 +95,7 @@ public class TestController {
         }
     }
 
-    @DeleteMapping("/tests/delete/{test_id}")
+    @DeleteMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> deleteTest(@PathVariable("test_id") int test_id) {
         try {

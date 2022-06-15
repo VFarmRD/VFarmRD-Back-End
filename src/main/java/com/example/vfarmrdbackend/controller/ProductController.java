@@ -42,10 +42,10 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "1000") int size) {
         try {
-            List<Product> _listProducts = productService.getAllProducts(product_name,
+            List<Product> listProducts = productService.getAllProducts(product_name,
                     client_id, created_user_id, assigned_user_id,
                     product_status, page, size);
-            return ResponseEntity.status(HttpStatus.OK).body(_listProducts);
+            return ResponseEntity.status(HttpStatus.OK).body(listProducts);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     "The server is down!");
@@ -56,9 +56,9 @@ public class ProductController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getProductByProduct_id(@PathVariable("product_id") String product_id) {
-        Product _product = productService.getProductByProduct_id(product_id);
-        if (_product != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(_product);
+        Product product = productService.getProductByProduct_id(product_id);
+        if (product != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(product);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     "Product not found!");
