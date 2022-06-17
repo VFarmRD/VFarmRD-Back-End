@@ -68,10 +68,10 @@ public class TestController {
 
     @PostMapping("/tests")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createTest(@RequestBody TestCreateRequest testCreateRequest,
+    public ResponseEntity<?> createTest(@RequestBody List<TestCreateRequest> listTestCreateRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
-            testService.createTest(testCreateRequest, JwtService.getUser_idFromToken(jwt));
+            testService.createTest(listTestCreateRequest, JwtService.getUser_idFromToken(jwt));
             return ResponseEntity.status(HttpStatus.OK).body("Create new test completed!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
