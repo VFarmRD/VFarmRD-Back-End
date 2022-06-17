@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.vfarmrdbackend.model.Formula;
 import com.example.vfarmrdbackend.model.MaterialOfPhase;
 import com.example.vfarmrdbackend.model.Phase;
+import com.example.vfarmrdbackend.model.Test;
 import com.example.vfarmrdbackend.model.User;
 import com.example.vfarmrdbackend.payload.FormulaCreateOtherVersionRequest;
 import com.example.vfarmrdbackend.payload.FormulaCreateRequest;
@@ -17,8 +18,10 @@ import com.example.vfarmrdbackend.payload.FormulaGetResponse;
 import com.example.vfarmrdbackend.payload.MaterialOfPhaseGetResponse;
 import com.example.vfarmrdbackend.payload.PhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.PhaseGetResponse;
+import com.example.vfarmrdbackend.payload.TestResponse;
 import com.example.vfarmrdbackend.repository.FormulaRepository;
 import com.example.vfarmrdbackend.repository.PhaseRepository;
+import com.example.vfarmrdbackend.repository.TestRepository;
 
 @Service
 public class FormulaService {
@@ -27,6 +30,9 @@ public class FormulaService {
 
     @Autowired
     private PhaseRepository phaseRepository;
+
+    @Autowired
+    private TestRepository testRepository;
 
     @Autowired
     PhaseService phaseService;
@@ -74,6 +80,28 @@ public class FormulaService {
             listPhaseGetResponse.add(phaseGetResponse);
         }
         formulaGetResponse.setPhaseGetResponse(listPhaseGetResponse);
+        List<TestResponse> listTestResponse = new ArrayList<>();
+        List<Test> listTest = testRepository.getTestWithFormula_id(formula_id);
+        for (int i = 0; i < listTest.size(); i++) {
+            Test test = listTest.get(i);
+            TestResponse newTestResponse = new TestResponse();
+            newTestResponse.setTest_id(test.getTest_id());
+            newTestResponse.setTest_content(test.getTest_content());
+            newTestResponse.setUser_id(test.getUser_id());
+            newTestResponse.setFile_id(test.getFile_id());
+            newTestResponse.setTest_expect(test.getTest_expect());
+            newTestResponse.setTest_result(test.isTest_result());
+            listTestResponse.add(newTestResponse);
+        }
+        formulaGetResponse.setListTestResponse(listTestResponse);
+        String test_status = "Not yet!";
+        if (testRepository.getAllPassTestWithFormula_id(formula_id) != null) {
+            test_status = "Passed!";
+        }
+        if (testRepository.getAllNotPassTestWithFormula_id(formula_id) != null) {
+            test_status = "Failed!";
+        }
+        formulaGetResponse.setTest_status(test_status);
         return formulaGetResponse;
     }
 

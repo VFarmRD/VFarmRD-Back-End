@@ -9,8 +9,26 @@ public class FormulaGetResponse {
     private int user_id;
     private String user_fullname;
     private List<PhaseGetResponse> phaseGetResponse;
+    private String test_status;
+    private List<TestResponse> listTestResponse;
 
     public FormulaGetResponse() {
+    }
+
+    public String getTest_status() {
+        return test_status;
+    }
+
+    public void setTest_status(String test_status) {
+        this.test_status = test_status;
+    }
+
+    public List<TestResponse> getListTestResponse() {
+        return listTestResponse;
+    }
+
+    public void setListTestResponse(List<TestResponse> listTestResponse) {
+        this.listTestResponse = listTestResponse;
     }
 
     public String getProduct_id() {
