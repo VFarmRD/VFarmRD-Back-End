@@ -23,14 +23,16 @@ public class TestService {
         return testRepository.getTestByTest_id(test_id);
     }
 
-    public void createTest(TestCreateRequest testCreateRequest, int user_id) {
-        Test test = new Test();
-        test.setFormula_id(testCreateRequest.getFormula_id());
-        test.setTest_content(testCreateRequest.getTest_content());
-        test.setUser_id(user_id);
-        test.setTest_expect(testCreateRequest.getTest_expect());
-        test.setTest_result(testCreateRequest.isTest_result());
-        testRepository.save(test);
+    public void createTest(List<TestCreateRequest> listTestCreateRequest, int user_id) {
+        for (int i = 0; i < listTestCreateRequest.size(); i++) {
+            Test test = new Test();
+            test.setFormula_id(listTestCreateRequest.get(i).getFormula_id());
+            test.setTest_content(listTestCreateRequest.get(i).getTest_content());
+            test.setUser_id(user_id);
+            test.setTest_expect(listTestCreateRequest.get(i).getTest_expect());
+            test.setTest_result(listTestCreateRequest.get(i).isTest_result());
+            testRepository.save(test);
+        }
     }
 
     public boolean updateTest(TestUpdateRequest testUpdateRequest, int test_id) {
