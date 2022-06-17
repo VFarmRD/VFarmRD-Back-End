@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Test;
 import com.example.vfarmrdbackend.payload.TestCreateRequest;
+import com.example.vfarmrdbackend.payload.TestCreateValue;
 import com.example.vfarmrdbackend.payload.TestUpdateRequest;
 import com.example.vfarmrdbackend.repository.TestRepository;
 
@@ -23,14 +24,15 @@ public class TestService {
         return testRepository.getTestByTest_id(test_id);
     }
 
-    public void createTest(List<TestCreateRequest> listTestCreateRequest, int user_id) {
-        for (int i = 0; i < listTestCreateRequest.size(); i++) {
+    public void createTest(TestCreateRequest testCreateRequest, int user_id) {
+        for (int i = 0; i < testCreateRequest.getListTestCreateValues().size(); i++) {
+            TestCreateValue testCreateValue = testCreateRequest.getListTestCreateValues().get(i);
             Test test = new Test();
-            test.setFormula_id(listTestCreateRequest.get(i).getFormula_id());
-            test.setTest_content(listTestCreateRequest.get(i).getTest_content());
+            test.setFormula_id(testCreateRequest.getFormula_id());
+            test.setTest_content(testCreateValue.getTest_content());
             test.setUser_id(user_id);
-            test.setTest_expect(listTestCreateRequest.get(i).getTest_expect());
-            test.setTest_result(listTestCreateRequest.get(i).isTest_result());
+            test.setTest_expect(testCreateValue.getTest_expect());
+            test.setTest_result(testCreateValue.isTest_result());
             testRepository.save(test);
         }
     }

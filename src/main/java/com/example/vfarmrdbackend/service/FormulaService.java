@@ -95,10 +95,10 @@ public class FormulaService {
         }
         formulaGetResponse.setListTestResponse(listTestResponse);
         String test_status = "Not yet!";
-        if (testRepository.getAllPassTestWithFormula_id(formula_id) != null) {
+        if (testRepository.getAllPassTestWithFormula_id(formula_id).size() != 0) {
             test_status = "Passed!";
         }
-        if (testRepository.getAllNotPassTestWithFormula_id(formula_id) != null) {
+        if (testRepository.getAllNotPassTestWithFormula_id(formula_id).size() != 0) {
             test_status = "Failed!";
         }
         formulaGetResponse.setTest_status(test_status);

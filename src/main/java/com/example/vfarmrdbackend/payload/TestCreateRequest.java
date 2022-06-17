@@ -1,10 +1,10 @@
 package com.example.vfarmrdbackend.payload;
 
+import java.util.List;
+
 public class TestCreateRequest {
     private int formula_id;
-    private String test_content;
-    private String test_expect;
-    private boolean test_result;
+    private List<TestCreateValue> listTestCreateValues;
 
     public TestCreateRequest() {
     }
@@ -17,28 +17,12 @@ public class TestCreateRequest {
         this.formula_id = formula_id;
     }
 
-    public String getTest_content() {
-        return test_content;
+    public List<TestCreateValue> getListTestCreateValues() {
+        return listTestCreateValues;
     }
 
-    public void setTest_content(String test_content) {
-        this.test_content = test_content;
-    }
-
-    public String getTest_expect() {
-        return test_expect;
-    }
-
-    public void setTest_expect(String test_expect) {
-        this.test_expect = test_expect;
-    }
-
-    public boolean isTest_result() {
-        return test_result;
-    }
-
-    public void setTest_result(boolean test_result) {
-        this.test_result = test_result;
+    public void setListTestCreateValues(List<TestCreateValue> listTestCreateValues) {
+        this.listTestCreateValues = listTestCreateValues;
     }
 
 }
