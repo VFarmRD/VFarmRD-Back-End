@@ -2,7 +2,7 @@ package com.example.vfarmrdbackend.payload;
 
 public class ProductCreateRequest {
     private String product_name;
-    private int client_id;
+    private String client_id;
     private int assigned_user_id;
     private String product_inquiry;
 
@@ -17,11 +17,11 @@ public class ProductCreateRequest {
         this.product_name = product_name;
     }
 
-    public int getClient_id() {
+    public String getClient_id() {
         return client_id;
     }
 
-    public void setClient_id(int client_id) {
+    public void setClient_id(String client_id) {
         this.client_id = client_id;
     }
 
