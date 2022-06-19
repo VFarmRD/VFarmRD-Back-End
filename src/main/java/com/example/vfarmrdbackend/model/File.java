@@ -17,6 +17,8 @@ public class File {
     private int user_id;
     private String file_name;
     private String file_type;
+    private String object_type;
+    private String object_id;
     private Date created_time;
     private Date modified_time;
     @Lob
@@ -55,6 +57,22 @@ public class File {
 
     public void setFile_type(String file_type) {
         this.file_type = file_type;
+    }
+
+    public String getObject_type() {
+        return object_type;
+    }
+
+    public void setObject_type(String object_type) {
+        this.object_type = object_type;
+    }
+
+    public String getObject_id() {
+        return object_id;
+    }
+
+    public void setObject_id(String object_id) {
+        this.object_id = object_id;
     }
 
     public Date getCreated_time() {

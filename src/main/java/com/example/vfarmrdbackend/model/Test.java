@@ -15,7 +15,6 @@ public class Test {
     private int formula_id;
     private String test_content;
     private int user_id;
-    private int file_id;
     private String test_expect;
     private boolean test_result;
 
@@ -36,14 +35,6 @@ public class Test {
 
     public void setTest_result(boolean test_result) {
         this.test_result = test_result;
-    }
-
-    public int getFile_id() {
-        return file_id;
-    }
-
-    public void setFile_id(int file_id) {
-        this.file_id = file_id;
     }
 
     public String getTest_content() {

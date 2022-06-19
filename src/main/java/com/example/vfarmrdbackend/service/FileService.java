@@ -2,6 +2,7 @@ package com.example.vfarmrdbackend.service;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Stream;
 
 import com.example.vfarmrdbackend.model.File;
@@ -18,17 +19,23 @@ public class FileService {
     @Autowired
     private FileRepository fileRepository;
 
-    Date date = new Date();
+    Date date;
 
-    public File store(MultipartFile file, int user_id) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        File image = new File();
-        image.setUser_id(user_id);
-        image.setFile_name(fileName);
-        image.setFile_type(file.getContentType());
-        image.setCreated_time(date);
-        image.setFile_data(file.getBytes());
-        return fileRepository.save(image);
+    public List<Integer> store(List<MultipartFile> listFile, int user_id, String object_type, String object_id)
+            throws IOException {
+        for (int i = 0; i < listFile.size(); i++) {
+            date = new Date();
+            File newFile = new File();
+            newFile.setUser_id(user_id);
+            newFile.setFile_name(StringUtils.cleanPath(listFile.get(i).getOriginalFilename()));
+            newFile.setFile_type(listFile.get(i).getContentType());
+            newFile.setObject_type(object_type);
+            newFile.setObject_id(object_id);
+            newFile.setCreated_time(date);
+            newFile.setFile_data(listFile.get(i).getBytes());
+            fileRepository.save(newFile);
+        }
+        return fileRepository.getNewestFile_id(object_type, object_id, listFile.size());
     }
 
     public File getFile(int file_id, int user_id) {
@@ -43,7 +50,11 @@ public class FileService {
         return fileRepository.findFileWithKeyword(keyword, user_id).stream();
     }
 
-    public void deleteFile(int file_id){
+    public void deleteFile(int file_id) {
         fileRepository.deleteById(file_id);
     }
+
+    // public int getNewestFile_id(String object_type, String object_id) {
+    // return fileRepository.getNewestFile_id(object_type, object_id);
+    // }
 }

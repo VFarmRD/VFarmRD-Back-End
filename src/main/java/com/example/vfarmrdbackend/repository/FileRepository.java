@@ -18,4 +18,8 @@ public interface FileRepository extends JpaRepository<File, Integer> {
 
     @Query(value = "select * from files f where lower(f.file_name) like lower(:keyword) and f.user_id = :user_id", nativeQuery = true)
     List<File> findFileWithKeyword(@Param("keyword") String keyword, @Param("user_id") int user_id);
+
+    @Query(value = "select * from files f where f.object_type = :object_type and f.object_id = :object_id order by f.file_id desc limit :limit_size", nativeQuery = true)
+    List<Integer> getNewestFile_id(@Param("object_type") String object_type, @Param("object_id") String object_id,
+            @Param("limit_size") int limit_size);
 }
