@@ -39,15 +39,16 @@ public class FileController {
         @PostMapping("/files/upload")
         @PreAuthorize("hasAuthority('staff') " +
                         "or hasAuthority('manager')")
-        public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
+        public ResponseEntity<?> uploadFile(@RequestParam("file") List<MultipartFile> listFile,
+                        @RequestParam("object_type") String object_type,
+                        @RequestParam("object_id") String object_id,
                         @RequestHeader("Authorization") String jwt) {
                 try {
-                        fileService.store(file, JwtService.getUser_idFromToken(jwt));
                         return ResponseEntity.status(HttpStatus.OK).body(
-                                        "Uploaded the file successfully: " + file.getOriginalFilename());
+                                fileService.store(listFile, JwtService.getUser_idFromToken(jwt), object_type, object_id));
                 } catch (Exception e) {
-                        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(
-                                        "Could not upload the file: " + file.getOriginalFilename() + "!");
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                                        e.getMessage());
                 }
         }
 

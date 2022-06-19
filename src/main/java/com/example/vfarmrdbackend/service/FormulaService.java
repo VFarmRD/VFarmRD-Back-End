@@ -88,7 +88,6 @@ public class FormulaService {
             newTestResponse.setTest_id(test.getTest_id());
             newTestResponse.setTest_content(test.getTest_content());
             newTestResponse.setUser_id(test.getUser_id());
-            newTestResponse.setFile_id(test.getFile_id());
             newTestResponse.setTest_expect(test.getTest_expect());
             newTestResponse.setTest_result(test.isTest_result());
             listTestResponse.add(newTestResponse);

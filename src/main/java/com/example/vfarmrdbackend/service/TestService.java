@@ -41,7 +41,6 @@ public class TestService {
         Test test = testRepository.getTestByTest_id(test_id);
         if (test != null) {
             test.setTest_content(testUpdateRequest.getTest_content());
-            test.setFile_id(testUpdateRequest.getFile_id());
             test.setTest_expect(testUpdateRequest.getTest_expect());
             test.setTest_result(testUpdateRequest.isTest_result());
             testRepository.save(test);
