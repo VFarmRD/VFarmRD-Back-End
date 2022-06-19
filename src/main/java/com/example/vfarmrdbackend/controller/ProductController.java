@@ -48,7 +48,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK).body(listProducts);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ public class ProductController {
                     "Create new product completed!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -88,7 +88,7 @@ public class ProductController {
                     "Update product successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -101,7 +101,7 @@ public class ProductController {
                     "Delete product successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 }

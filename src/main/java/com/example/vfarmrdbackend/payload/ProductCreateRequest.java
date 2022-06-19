@@ -1,12 +1,21 @@
 package com.example.vfarmrdbackend.payload;
 
 public class ProductCreateRequest {
+    private String product_code;
     private String product_name;
     private String client_id;
     private int assigned_user_id;
     private String product_inquiry;
 
     public ProductCreateRequest() {
+    }
+
+    public String getProduct_code() {
+        return product_code;
+    }
+
+    public void setProduct_code(String product_code) {
+        this.product_code = product_code;
     }
 
     public String getProduct_name() {

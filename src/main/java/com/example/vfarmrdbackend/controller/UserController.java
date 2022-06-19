@@ -54,7 +54,6 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Login successfully!"),
             @ApiResponse(responseCode = "410", description = "User's account is disabled!"),
-            @ApiResponse(responseCode = "500", description = "The server is down!")
     })
     @PostMapping("/auth/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -66,7 +65,7 @@ public class UserController {
         } catch (Exception e) {
             System.err.println(e.getLocalizedMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -75,7 +74,6 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Create account successfully!"),
             @ApiResponse(responseCode = "226", description = "This username is already registered!"),
             @ApiResponse(responseCode = "226", description = "This email is already registered!"),
-            @ApiResponse(responseCode = "500", description = "The server is down!")
     })
     @PostMapping("/auth/create")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
@@ -92,7 +90,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body("Create account completed!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -122,7 +120,7 @@ public class UserController {
             return new ResponseEntity<>(listUsers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
-                    "The server is down!",
+                    e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -138,7 +136,7 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -154,7 +152,7 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -169,7 +167,7 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -184,7 +182,7 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
