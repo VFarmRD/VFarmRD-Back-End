@@ -6,6 +6,7 @@ public class TestResponse {
     private int user_id;
     private String test_expect;
     private boolean test_result;
+    private String object_type;
 
     public TestResponse() {
     }
@@ -48,6 +49,14 @@ public class TestResponse {
 
     public void setTest_result(boolean test_result) {
         this.test_result = test_result;
+    }
+
+    public String getObject_type() {
+        return object_type;
+    }
+
+    public void setObject_type(String object_type) {
+        this.object_type = object_type;
     }
 
 }

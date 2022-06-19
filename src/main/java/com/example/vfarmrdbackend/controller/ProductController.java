@@ -70,9 +70,12 @@ public class ProductController {
     public ResponseEntity<?> createProduct(@RequestBody ProductCreateRequest productCreateRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
-            productService.createProduct(productCreateRequest, jwt);
+            if (productService.checkProduct_codeExisted(productCreateRequest.getProduct_code())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                        "This product code has already been created.");
+            }
             return ResponseEntity.status(HttpStatus.OK).body(
-                    "Create new product completed!");
+                    productService.createProduct(productCreateRequest, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     e.getMessage());
