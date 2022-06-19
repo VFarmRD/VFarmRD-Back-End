@@ -68,7 +68,7 @@ public class FormulaController {
                     "Create new formula completed!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -141,7 +141,7 @@ public class FormulaController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "Approve formula fail!");
+                    e.getMessage());
         }
     }
 

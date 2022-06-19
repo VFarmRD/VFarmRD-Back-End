@@ -52,6 +52,7 @@ public class ProductService {
     public void createProduct(ProductCreateRequest productCreateRequest, String jwt) {
         date = new Date();
         Product product = new Product();
+        product.setProduct_id(productCreateRequest.getProduct_id());
         product.setProduct_name(productCreateRequest.getProduct_name());
         product.setClient_id(productCreateRequest.getClient_id());
         product.setAssigned_user_id(productCreateRequest.getAssigned_user_id());

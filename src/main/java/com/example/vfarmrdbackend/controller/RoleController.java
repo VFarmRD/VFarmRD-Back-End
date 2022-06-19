@@ -35,7 +35,7 @@ public class RoleController {
             return ResponseEntity.status(HttpStatus.OK).body(listRoles);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -51,7 +51,7 @@ public class RoleController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -66,7 +66,7 @@ public class RoleController {
 
     // } catch (Exception e) {
     // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-    // "The server is down!");
+    // e.getMessage());
     // }
     // }
 
@@ -91,7 +91,7 @@ public class RoleController {
     // return new ResponseEntity<>("Delete role successfully!", HttpStatus.OK);
     // } catch (Exception e) {
     // return new ResponseEntity<>(
-    // "The server is down!",
+    // e.getMessage(),
     // HttpStatus.INTERNAL_SERVER_ERROR);
     // }
     // }

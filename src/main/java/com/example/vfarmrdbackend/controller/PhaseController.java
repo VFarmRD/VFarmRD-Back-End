@@ -41,7 +41,7 @@ public class PhaseController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -58,7 +58,7 @@ public class PhaseController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -73,7 +73,7 @@ public class PhaseController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 
@@ -88,7 +88,7 @@ public class PhaseController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down!");
+                    e.getMessage());
         }
     }
 }

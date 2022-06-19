@@ -74,7 +74,7 @@ public class FileController {
                         return ResponseEntity.status(HttpStatus.OK).body(files);
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                                        "The server is down");
+                                        e.getMessage());
                 }
         }
 
@@ -89,7 +89,7 @@ public class FileController {
                                         .body(file.getFile_data());
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                                        "The server is down");
+                                        e.getMessage());
                 }
         }
 
@@ -117,7 +117,7 @@ public class FileController {
                         return ResponseEntity.status(HttpStatus.OK).body(files);
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                                        "The server is down");
+                                        e.getMessage());
                 }
         }
 
@@ -131,7 +131,7 @@ public class FileController {
                                         "Delete File successfully!");
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                                        "The server is down!");
+                                        e.getMessage());
 
                 }
         }
