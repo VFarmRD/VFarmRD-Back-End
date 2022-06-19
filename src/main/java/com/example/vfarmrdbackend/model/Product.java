@@ -1,6 +1,8 @@
 package com.example.vfarmrdbackend.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
@@ -9,7 +11,9 @@ import java.util.Date;
 @Table(name = "products")
 public class Product {
     @Id
-    private String product_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int product_id;
+    private String product_code;
     private String product_name;
     private String client_id;
     private int created_user_id;
@@ -22,12 +26,20 @@ public class Product {
     public Product() {
     }
 
-    public String getProduct_id() {
+    public int getProduct_id() {
         return product_id;
     }
 
-    public void setProduct_id(String product_id) {
+    public void setProduct_id(int product_id) {
         this.product_id = product_id;
+    }
+
+    public String getProduct_code() {
+        return product_code;
+    }
+
+    public void setProduct_code(String product_code) {
+        this.product_code = product_code;
     }
 
     public int getCreated_user_id() {
