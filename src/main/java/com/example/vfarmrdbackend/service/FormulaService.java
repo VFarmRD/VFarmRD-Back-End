@@ -90,6 +90,7 @@ public class FormulaService {
             newTestResponse.setUser_id(test.getUser_id());
             newTestResponse.setTest_expect(test.getTest_expect());
             newTestResponse.setTest_result(test.isTest_result());
+            newTestResponse.setObject_type("tests");
             listTestResponse.add(newTestResponse);
         }
         formulaGetResponse.setListTestResponse(listTestResponse);

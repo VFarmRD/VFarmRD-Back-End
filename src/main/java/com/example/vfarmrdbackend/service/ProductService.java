@@ -49,7 +49,7 @@ public class ProductService {
         return productRepository.getProductByProduct_id(product_id);
     }
 
-    public void createProduct(ProductCreateRequest productCreateRequest, String jwt) {
+    public Map<String, String> createProduct(ProductCreateRequest productCreateRequest, String jwt) {
         date = new Date();
         Product product = new Product();
         product.setProduct_code(productCreateRequest.getProduct_code());
@@ -61,6 +61,11 @@ public class ProductService {
         product.setCreated_time(date);
         product.setProduct_status("activated");
         productRepository.save(product);
+        Map<String, String> map = new HashMap<>();
+        map.put("object_type", "products");
+        map.put("object_id",
+                String.valueOf(productRepository.getProduct_idByProduct_code(productCreateRequest.getProduct_code())));
+        return map;
     }
 
     public boolean updateProduct(ProductUpdateRequest productUpdateRequest) {
@@ -84,6 +89,15 @@ public class ProductService {
             product.setProduct_status("deactivated");
             product.setModified_time(date);
             productRepository.save(product);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean checkProduct_codeExisted(String product_code) {
+        Product product = productRepository.getProductByProduct_code(product_code);
+        if (product != null) {
             return true;
         } else {
             return false;
