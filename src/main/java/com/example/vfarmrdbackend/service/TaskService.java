@@ -53,6 +53,7 @@ public class TaskService {
                 newTaskInfo.setTask_status(task.getTask_status());
             }
             newTaskInfo.setDescription(task.getDescription());
+            listTasksResponse.add(newTaskInfo);
         }
         return listTasksResponse;
     }
