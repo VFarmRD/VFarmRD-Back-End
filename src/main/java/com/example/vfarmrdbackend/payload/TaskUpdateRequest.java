@@ -6,7 +6,7 @@ public class TaskUpdateRequest {
     private String task_name;
     private int user_id;
     private Date estimated_date;
-    private boolean task_status;
+    private String task_status;
     private String description;
 
     public TaskUpdateRequest() {
@@ -36,11 +36,11 @@ public class TaskUpdateRequest {
         this.user_id = user_id;
     }
 
-    public boolean isTask_status() {
+    public String getTask_status() {
         return task_status;
     }
 
-    public void setTask_status(boolean task_status) {
+    public void setTask_status(String task_status) {
         this.task_status = task_status;
     }
 

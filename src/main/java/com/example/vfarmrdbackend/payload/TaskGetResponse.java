@@ -1,28 +1,20 @@
-package com.example.vfarmrdbackend.model;
+package com.example.vfarmrdbackend.payload;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "tasks")
-public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TaskGetResponse {
     private int task_id;
     private String task_name;
     private int user_id;
+    private String user_name;
+    private String user_role;
     private int product_id;
     private Date created_date;
     private Date estimated_date;
     private String task_status;
     private String description;
 
-    public Task() {
+    public TaskGetResponse() {
     }
 
     public int getTask_id() {
@@ -47,6 +39,22 @@ public class Task {
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getUser_role() {
+        return user_role;
+    }
+
+    public void setUser_role(String user_role) {
+        this.user_role = user_role;
     }
 
     public int getProduct_id() {
