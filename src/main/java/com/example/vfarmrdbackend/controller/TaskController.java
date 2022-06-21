@@ -33,7 +33,7 @@ public class TaskController {
     public TaskService taskService;
 
     @GetMapping("/tasks")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllTasks(@RequestHeader("Authorization") String jwt) {
         try {
             List<TaskGetResponse> listTasks = taskService.getAllTasks(JwtService.getUser_idFromToken(jwt));
