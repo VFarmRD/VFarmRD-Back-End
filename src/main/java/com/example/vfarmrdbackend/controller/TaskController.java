@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.vfarmrdbackend.model.Task;
 import com.example.vfarmrdbackend.payload.TaskCreateRequest;
+import com.example.vfarmrdbackend.payload.TaskGetResponse;
 import com.example.vfarmrdbackend.payload.TaskUpdateRequest;
+import com.example.vfarmrdbackend.service.JwtService;
 import com.example.vfarmrdbackend.service.TaskService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,9 +34,9 @@ public class TaskController {
 
     @GetMapping("/tasks")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> getAllTasks() {
+    public ResponseEntity<?> getAllTasks(@RequestHeader("Authorization") String jwt) {
         try {
-            List<Task> listTasks = taskService.getAllTasks();
+            List<TaskGetResponse> listTasks = taskService.getAllTasks(JwtService.getUser_idFromToken(jwt));
             if (listTasks != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(listTasks);
             } else {
