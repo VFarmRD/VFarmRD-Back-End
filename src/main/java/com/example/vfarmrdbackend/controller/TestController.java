@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.vfarmrdbackend.model.Test;
 import com.example.vfarmrdbackend.payload.TestCreateRequest;
+import com.example.vfarmrdbackend.payload.TestGetResponse;
 import com.example.vfarmrdbackend.payload.TestUpdateRequest;
 import com.example.vfarmrdbackend.service.JwtService;
 import com.example.vfarmrdbackend.service.TestService;
@@ -53,7 +54,7 @@ public class TestController {
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> getTestByTest_id(@PathVariable("test_id") int test_id) {
         try {
-            Test test = testService.getTestWithTest_id(test_id);
+            TestGetResponse test = testService.getTestWithTest_id(test_id);
             if (test != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(test);
             } else {
