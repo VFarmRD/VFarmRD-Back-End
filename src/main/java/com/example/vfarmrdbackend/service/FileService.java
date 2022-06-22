@@ -25,11 +25,19 @@ public class FileService {
 
     Date date;
 
+    public void deleteOldFile(String object_type, String object_id) {
+        File oldFile = fileRepository.getFileByObjTypeAndId(object_type, String.valueOf(object_id));
+        if (oldFile != null) {
+            fileRepository.delete(oldFile);
+        }
+    }
+
     public Map<String, List<Integer>> store(List<MultipartFile> listFile, int user_id, String object_type,
             String object_id)
             throws IOException {
         for (int i = 0; i < listFile.size(); i++) {
             date = new Date();
+            deleteOldFile(object_type, object_id);
             File newFile = new File();
             newFile.setUser_id(user_id);
             newFile.setFile_name(StringUtils.cleanPath(listFile.get(i).getOriginalFilename()));
@@ -59,7 +67,7 @@ public class FileService {
                 file.getFile_data().length);
     }
 
-    public File getFileDownload(int file_id){
+    public File getFileDownload(int file_id) {
         return fileRepository.getFileToDownload(file_id);
     }
 

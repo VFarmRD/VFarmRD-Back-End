@@ -110,7 +110,8 @@ public class FormulaService {
         formula.setProduct_id(formulaCreateRequest.getProduct_id());
         formula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
         formula.setFormula_pre_version("none");
-        formula.setFormula_version("v1");
+        formula.setFormula_version(
+                String.valueOf(formulaRepository.getTotalFormulaOfProduct(formula.getProduct_id()) + 1));
         formula.setFormula_status("on progress");
         formula.setFormula_cost(formulaCreateRequest.getFormula_cost());
         formula.setFormula_weight(formulaCreateRequest.getFormula_weight());
@@ -130,7 +131,7 @@ public class FormulaService {
 
     public boolean updateFormula(int formula_id, FormulaUpdateRequest formulaUpdateRequest) {
         Formula updateFormula = formulaRepository.getFormulaByFormula_id(formula_id);
-        if (updateFormula != null) {
+        if (updateFormula != null && updateFormula.getFormula_status().equals("approved")) {
             updateFormula.setFormula_cost(formulaUpdateRequest.getFormula_cost());
             updateFormula.setFormula_weight(formulaUpdateRequest.getFormula_weight());
             List<PhaseUpdateRequest> listPhase = formulaUpdateRequest.getPhaseUpdateRequest();
@@ -146,11 +147,11 @@ public class FormulaService {
     public boolean setFormula_status(int formula_id, String status) {
         Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
         if (formula != null) {
-            if (!status.equals("approved") || !status.equals("denied")
-                    || !status.equals("pending") || !status.equals("deleted")) {
+            if (!status.equals("on process") || !status.equals("approved")
+                    || !status.equals("pending") || !status.equals("canceled")) {
                 return false;
             }
-            if (status.equals("approved") || status.equals("denied")) {
+            if (status.equals("approved") || status.equals("on process")) {
                 if (!formula.getFormula_status().equals("pending")) {
                     return false;
                 }
@@ -169,12 +170,13 @@ public class FormulaService {
         Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
         Formula newFormula = new Formula();
         date = new Date();
-        if (formula != null && formula.getFormula_status().equals("approved")) {
+        if (formula != null) {
             newFormula.setProduct_id(formula.getProduct_id());
             newFormula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
             newFormula.setFormula_pre_version(formula.getFormula_version());
-            newFormula.setFormula_version(
-                    "v" + String.valueOf(formulaRepository.getTotalFormulaOfProduct(formula.getProduct_id())));
+            newFormula.setFormula_version(formula.getFormula_version() + "." + String
+                    .valueOf(formulaRepository.totalFormulaHaveMatchPreVersion(formula.getProduct_id(),
+                            formula.getFormula_version()) + 1));
             newFormula.setFormula_cost(formulaUpgradeRequest.getFormula_cost());
             newFormula.setFormula_weight(formulaUpgradeRequest.getFormula_weight());
             newFormula.setFormula_status("on progress");
