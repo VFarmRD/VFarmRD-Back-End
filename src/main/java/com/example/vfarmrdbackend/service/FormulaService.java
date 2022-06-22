@@ -72,6 +72,7 @@ public class FormulaService {
             List<MaterialOfPhaseGetResponse> listMaterialOfPhasesResponse = new ArrayList<>();
             for (int j = 0; j < listMaterialOfPhases.size(); j++) {
                 MaterialOfPhaseGetResponse materialOfPhaseResponse = new MaterialOfPhaseGetResponse();
+                materialOfPhaseResponse.setMop_id(listMaterialOfPhases.get(j).getMop_id());
                 materialOfPhaseResponse.setMaterial_id(listMaterialOfPhases.get(j).getMaterial_id());
                 materialOfPhaseResponse.setMaterial_percent(listMaterialOfPhases.get(j).getMaterial_percent());
                 materialOfPhaseResponse.setMaterial_cost(listMaterialOfPhases.get(j).getMaterial_cost());
@@ -140,6 +141,7 @@ public class FormulaService {
             for (int i = 0; i < listPhase.size(); i++) {
                 phaseService.updatePhase(listPhase.get(i));
             }
+            formulaRepository.save(updateFormula);
             return true;
         }
         return false;

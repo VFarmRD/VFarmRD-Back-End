@@ -1,12 +1,21 @@
 package com.example.vfarmrdbackend.payload;
 
 public class MaterialOfPhaseGetResponse {
+    private int mop_id;
     private String material_id;
     private float material_cost;
     private int material_weight;
     private float material_percent;
 
     public MaterialOfPhaseGetResponse() {
+    }
+
+    public int getMop_id() {
+        return mop_id;
+    }
+
+    public void setMop_id(int mop_id) {
+        this.mop_id = mop_id;
     }
 
     public String getMaterial_id() {
