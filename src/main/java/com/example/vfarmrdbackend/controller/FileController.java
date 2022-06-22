@@ -1,5 +1,6 @@
 package com.example.vfarmrdbackend.controller;
 
+import com.example.vfarmrdbackend.model.File;
 import com.example.vfarmrdbackend.payload.FileResponse;
 import com.example.vfarmrdbackend.service.FileService;
 import com.example.vfarmrdbackend.service.JwtService;
@@ -7,6 +8,7 @@ import com.example.vfarmrdbackend.service.JwtService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,7 +63,7 @@ public class FileController {
                                         .map(dbFile -> {
                                                 String fileDownloadUri = ServletUriComponentsBuilder
                                                                 .fromCurrentContextPath()
-                                                                .path("/api/files/")
+                                                                .path("/api/files/download/")
                                                                 .path(String.valueOf(dbFile.getFile_id()))
                                                                 .toUriString();
                                                 return new FileResponse(
@@ -70,7 +72,6 @@ public class FileController {
                                                                 dbFile.getFile_type(),
                                                                 dbFile.getFile_data().length);
                                         }).collect(Collectors.toList());
-
                         return ResponseEntity.status(HttpStatus.OK).body(files);
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -83,9 +84,8 @@ public class FileController {
                         @RequestHeader("Authorization") String jwt) {
                 try {
                         FileResponse response = fileService.getFile(file_id, JwtService.getUser_idFromToken(jwt));
-                        if(response != null){
+                        if (response != null) {
                                 return ResponseEntity.status(HttpStatus.OK).body(response);
-                                
                         }
                         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File không tồn tại!");
                 } catch (Exception e) {
@@ -106,7 +106,7 @@ public class FileController {
                                         .map(dbFile -> {
                                                 String fileDownloadUri = ServletUriComponentsBuilder
                                                                 .fromCurrentContextPath()
-                                                                .path("/api/files/")
+                                                                .path("/api/files/download/")
                                                                 .path(String.valueOf(dbFile.getFile_id()))
                                                                 .toUriString();
                                                 return new FileResponse(
@@ -130,6 +130,21 @@ public class FileController {
                         fileService.deleteFile(file_id);
                         return ResponseEntity.status(HttpStatus.OK).body(
                                         "Delete File successfully!");
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                                        e.getMessage());
+
+                }
+        }
+
+        @GetMapping("/files/download/{file_id}")
+        public ResponseEntity<?> downloadFile(@PathVariable("file_id") int file_id) {
+                try {
+                        File file = fileService.getFileDownload(file_id);
+                        return ResponseEntity.ok()
+                                        .header(HttpHeaders.CONTENT_DISPOSITION,
+                                                        "attachment; filename=\"" + file.getFile_name() + "\"")
+                                        .body(file.getFile_data());
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                                         e.getMessage());

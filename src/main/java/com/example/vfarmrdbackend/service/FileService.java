@@ -49,7 +49,7 @@ public class FileService {
         File file = fileRepository.getFileByFile_id(file_id, user_id);
         String fileDownloadUri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/api/files/")
+                .path("/api/files/download/")
                 .path(String.valueOf(file.getFile_id()))
                 .toUriString();
         return new FileResponse(
@@ -57,6 +57,10 @@ public class FileService {
                 fileDownloadUri,
                 file.getFile_type(),
                 file.getFile_data().length);
+    }
+
+    public File getFileDownload(int file_id){
+        return fileRepository.getFileToDownload(file_id);
     }
 
     public Stream<File> getAllFilesWithUser_id(int user_id) {
