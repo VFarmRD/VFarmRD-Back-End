@@ -20,6 +20,12 @@ public class Product {
     private int assigned_user_id;
     private String product_inquiry;
     private String product_status;
+    private String brand_name;
+    private int volume;
+    private int capacity;
+    private float d;
+    private float tolerance;
+    private int material_norm_loss;
     private Date created_time;
     private Date modified_time;
 
@@ -88,6 +94,54 @@ public class Product {
 
     public void setProduct_status(String product_status) {
         this.product_status = product_status;
+    }
+
+    public String getBrand_name() {
+        return brand_name;
+    }
+
+    public void setBrand_name(String brand_name) {
+        this.brand_name = brand_name;
+    }
+
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public float getD() {
+        return d;
+    }
+
+    public void setD(float d) {
+        this.d = d;
+    }
+
+    public float getTolerance() {
+        return tolerance;
+    }
+
+    public void setTolerance(float tolerance) {
+        this.tolerance = tolerance;
+    }
+
+    public int getMaterial_norm_loss() {
+        return material_norm_loss;
+    }
+
+    public void setMaterial_norm_loss(int material_norm_loss) {
+        this.material_norm_loss = material_norm_loss;
     }
 
     public Date getCreated_time() {
