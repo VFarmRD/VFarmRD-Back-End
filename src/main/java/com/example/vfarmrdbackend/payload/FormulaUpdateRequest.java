@@ -5,7 +5,7 @@ import java.util.List;
 public class FormulaUpdateRequest {
     private float formula_cost;
     private int formula_weight;
-    private List<PhaseUpdateRequest> phaseCreateRequest;
+    private List<PhaseUpdateRequest> phaseUpdateRequest;
 
     public FormulaUpdateRequest() {
     }
@@ -26,12 +26,12 @@ public class FormulaUpdateRequest {
         this.formula_weight = formula_weight;
     }
 
-    public List<PhaseUpdateRequest> getPhaseCreateRequest() {
-        return phaseCreateRequest;
+    public List<PhaseUpdateRequest> getPhaseUpdateRequest() {
+        return phaseUpdateRequest;
     }
 
-    public void setPhaseCreateRequest(List<PhaseUpdateRequest> phaseCreateRequest) {
-        this.phaseCreateRequest = phaseCreateRequest;
+    public void setPhaseUpdateRequest(List<PhaseUpdateRequest> phaseUpdateRequest) {
+        this.phaseUpdateRequest = phaseUpdateRequest;
     }
 
 }

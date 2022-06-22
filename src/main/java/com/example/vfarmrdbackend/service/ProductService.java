@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,22 +50,46 @@ public class ProductService {
         return productRepository.getProductByProduct_id(product_id);
     }
 
+    public String generateProductCode() {
+        while (true) {
+            StringBuilder sb = new StringBuilder();
+            Random random = new Random();
+            String product_code = "";
+            int length = 13;
+            for (int i = 0; i < length; i++) {
+                int random_number = random.nextInt(10);
+                sb.append(random_number);
+            }
+            product_code = sb.toString();
+            if (productRepository.getProductByProduct_code(product_code) == null) {
+                return product_code;
+            }
+        }
+    }
+
     public Map<String, String> createProduct(ProductCreateRequest productCreateRequest, String jwt) {
         date = new Date();
         Product product = new Product();
-        product.setProduct_code(productCreateRequest.getProduct_code());
+        String product_code = generateProductCode();
+        product.setProduct_code(product_code);
         product.setProduct_name(productCreateRequest.getProduct_name());
         product.setClient_id(productCreateRequest.getClient_id());
         product.setAssigned_user_id(productCreateRequest.getAssigned_user_id());
         product.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
         product.setProduct_inquiry(productCreateRequest.getProduct_inquiry());
+        product.setBrand_name(productCreateRequest.getBrand_name());
+        product.setVolume(productCreateRequest.getVolume());
+        product.setCapacity(productCreateRequest.getCapacity());
+        product.setD(productCreateRequest.getD());
+        product.setTolerance(productCreateRequest.getTolerance());
+        product.setMaterial_norm_loss(productCreateRequest.getMaterial_norm_loss());
         product.setCreated_time(date);
         product.setProduct_status("activated");
         productRepository.save(product);
         Map<String, String> map = new HashMap<>();
         map.put("object_type", "products");
         map.put("object_id",
-                String.valueOf(productRepository.getProduct_idByProduct_code(productCreateRequest.getProduct_code())));
+                String.valueOf(productRepository.getProduct_idByProduct_code(product_code)));
         return map;
     }
 
