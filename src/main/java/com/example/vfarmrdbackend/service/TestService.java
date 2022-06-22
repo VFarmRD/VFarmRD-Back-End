@@ -76,7 +76,9 @@ public class TestService {
 
     public boolean updateTest(TestUpdateRequest testUpdateRequest, int test_id) {
         File oldFile = fileRepository.getFileByObjTypeAndId("tests", String.valueOf(test_id));
-        fileRepository.delete(oldFile);
+        if (oldFile != null) {
+            fileRepository.delete(oldFile);
+        }
         Test test = testRepository.getTestByTest_id(test_id);
         if (test != null) {
             test.setTest_content(testUpdateRequest.getTest_content());
