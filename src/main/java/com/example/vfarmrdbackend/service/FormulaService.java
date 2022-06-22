@@ -20,7 +20,7 @@ import com.example.vfarmrdbackend.payload.MaterialOfPhaseGetResponse;
 import com.example.vfarmrdbackend.payload.PhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.PhaseGetResponse;
 import com.example.vfarmrdbackend.payload.PhaseUpdateRequest;
-import com.example.vfarmrdbackend.payload.TestResponse;
+import com.example.vfarmrdbackend.payload.TestGetResponse;
 import com.example.vfarmrdbackend.repository.FormulaRepository;
 import com.example.vfarmrdbackend.repository.PhaseRepository;
 import com.example.vfarmrdbackend.repository.TestRepository;
@@ -44,6 +44,9 @@ public class FormulaService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    TestService testService;
 
     Date date;
 
@@ -83,18 +86,11 @@ public class FormulaService {
             listPhaseGetResponse.add(phaseGetResponse);
         }
         formulaGetResponse.setPhaseGetResponse(listPhaseGetResponse);
-        List<TestResponse> listTestResponse = new ArrayList<>();
+        List<TestGetResponse> listTestResponse = new ArrayList<>();
         List<Test> listTest = testRepository.getTestWithFormula_id(formula_id);
         for (int i = 0; i < listTest.size(); i++) {
             Test test = listTest.get(i);
-            TestResponse newTestResponse = new TestResponse();
-            newTestResponse.setTest_id(test.getTest_id());
-            newTestResponse.setTest_content(test.getTest_content());
-            newTestResponse.setUser_id(test.getUser_id());
-            newTestResponse.setTest_expect(test.getTest_expect());
-            newTestResponse.setTest_result(test.isTest_result());
-            newTestResponse.setObject_type("tests");
-            listTestResponse.add(newTestResponse);
+            listTestResponse.add(testService.getTestWithTest_id(test.getTest_id()));
         }
         formulaGetResponse.setListTestResponse(listTestResponse);
         String test_status = "Not yet!";

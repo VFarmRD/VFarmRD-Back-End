@@ -10,7 +10,7 @@ public class FormulaGetResponse {
     private String user_fullname;
     private List<PhaseGetResponse> phaseGetResponse;
     private String test_status;
-    private List<TestResponse> listTestResponse;
+    private List<TestGetResponse> listTestResponse;
 
     public FormulaGetResponse() {
     }
@@ -23,11 +23,11 @@ public class FormulaGetResponse {
         this.test_status = test_status;
     }
 
-    public List<TestResponse> getListTestResponse() {
+    public List<TestGetResponse> getListTestResponse() {
         return listTestResponse;
     }
 
-    public void setListTestResponse(List<TestResponse> listTestResponse) {
+    public void setListTestResponse(List<TestGetResponse> listTestResponse) {
         this.listTestResponse = listTestResponse;
     }
 
