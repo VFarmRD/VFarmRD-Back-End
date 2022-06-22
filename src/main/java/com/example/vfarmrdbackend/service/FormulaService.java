@@ -12,12 +12,14 @@ import com.example.vfarmrdbackend.model.MaterialOfPhase;
 import com.example.vfarmrdbackend.model.Phase;
 import com.example.vfarmrdbackend.model.Test;
 import com.example.vfarmrdbackend.model.User;
-import com.example.vfarmrdbackend.payload.FormulaCreateOtherVersionRequest;
+import com.example.vfarmrdbackend.payload.FormulaUpgradeRequest;
 import com.example.vfarmrdbackend.payload.FormulaCreateRequest;
 import com.example.vfarmrdbackend.payload.FormulaGetResponse;
+import com.example.vfarmrdbackend.payload.FormulaUpdateRequest;
 import com.example.vfarmrdbackend.payload.MaterialOfPhaseGetResponse;
 import com.example.vfarmrdbackend.payload.PhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.PhaseGetResponse;
+import com.example.vfarmrdbackend.payload.PhaseUpdateRequest;
 import com.example.vfarmrdbackend.payload.TestResponse;
 import com.example.vfarmrdbackend.repository.FormulaRepository;
 import com.example.vfarmrdbackend.repository.PhaseRepository;
@@ -111,7 +113,7 @@ public class FormulaService {
         formula.setProduct_id(formulaCreateRequest.getProduct_id());
         formula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
         formula.setFormula_pre_version("none");
-        formula.setFormula_version("1.0");
+        formula.setFormula_version("v1");
         formula.setFormula_status("on progress");
         formula.setFormula_cost(formulaCreateRequest.getFormula_cost());
         formula.setFormula_weight(formulaCreateRequest.getFormula_weight());
@@ -129,9 +131,27 @@ public class FormulaService {
         }
     }
 
+    public boolean updateFormula(int formula_id, FormulaUpdateRequest formulaUpdateRequest) {
+        Formula updateFormula = formulaRepository.getFormulaByFormula_id(formula_id);
+        if (updateFormula != null) {
+            updateFormula.setFormula_cost(formulaUpdateRequest.getFormula_cost());
+            updateFormula.setFormula_weight(formulaUpdateRequest.getFormula_weight());
+            List<PhaseUpdateRequest> listPhase = formulaUpdateRequest.getPhaseCreateRequest();
+            for (int i = 0; i < listPhase.size(); i++) {
+                phaseService.updatePhase(listPhase.get(i));
+            }
+            return true;
+        }
+        return false;
+    }
+
     public boolean setFormula_status(int formula_id, String status) {
         Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
         if (formula != null) {
+            if (status.equals("approved") || status.equals("denied")
+                    || status.equals("pending") || status.equals("deleted")) {
+                return false;
+            }
             if (status.equals("approved") || status.equals("denied")) {
                 if (!formula.getFormula_status().equals("pending")) {
                     return false;
@@ -147,32 +167,24 @@ public class FormulaService {
         }
     }
 
-    public boolean createAnotherFormula_version(FormulaCreateOtherVersionRequest FormulaCreateOtherVersionRequest,
-            String jwt, String type) {
-        Formula formula = formulaRepository.getFormulaByFormula_id(FormulaCreateOtherVersionRequest.getFormula_id());
+    public boolean upgradeFormula(int formula_id, FormulaUpgradeRequest formulaUpgradeRequest, String jwt) {
+        Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
         Formula newFormula = new Formula();
         date = new Date();
-        if (formula != null) {
+        if (formula != null && formula.getFormula_status().equals("approved")) {
             newFormula.setProduct_id(formula.getProduct_id());
             newFormula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
-            String formula_pre_version = formula.getFormula_version();
-            newFormula.setFormula_pre_version(formula_pre_version);
-            String formula_now_version = formulaRepository.getLatestVersionOfProduct(formula.getProduct_id());
-            String splitString[] = formula_now_version.split("\\.");
-            if (type.equals("update")) {
-                formula_now_version = splitString[0] + "." + String.valueOf(Integer.parseInt(splitString[1]) + 1);
-            } else if (type.equals("upgrade")) {
-                formula_now_version = String.valueOf(Integer.parseInt(splitString[0]) + 1) + ".0";
-            }
-            newFormula.setFormula_version(formula_now_version);
-            newFormula.setFormula_cost(FormulaCreateOtherVersionRequest.getFormula_cost());
-            newFormula.setFormula_weight(FormulaCreateOtherVersionRequest.getFormula_weight());
+            newFormula.setFormula_pre_version(formula.getFormula_version());
+            newFormula.setFormula_version(
+                    "v" + String.valueOf(formulaRepository.getTotalFormulaOfProduct(formula.getProduct_id())));
+            newFormula.setFormula_cost(formulaUpgradeRequest.getFormula_cost());
+            newFormula.setFormula_weight(formulaUpgradeRequest.getFormula_weight());
             newFormula.setFormula_status("on progress");
             newFormula.setCreated_time(formula.getCreated_time());
             newFormula.setModified_time(date);
             formulaRepository.save(newFormula);
-            for (int i = 0; i < FormulaCreateOtherVersionRequest.getPhaseCreateRequest().size(); i++) {
-                PhaseCreateRequest phaseCreateRequest = FormulaCreateOtherVersionRequest.getPhaseCreateRequest().get(i);
+            for (int i = 0; i < formulaUpgradeRequest.getPhaseCreateRequest().size(); i++) {
+                PhaseCreateRequest phaseCreateRequest = formulaUpgradeRequest.getPhaseCreateRequest().get(i);
                 phaseService.createPhase(formulaRepository.getLatestFormula_id(), phaseCreateRequest);
                 for (int j = 0; j < phaseCreateRequest.getMaterialOfPhaseCreateRequest().size(); j++) {
                     materialOfPhaseService.createMaterialOfPhase(phaseRepository.getLatestPhase_id(),

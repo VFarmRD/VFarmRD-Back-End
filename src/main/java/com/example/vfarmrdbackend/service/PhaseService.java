@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Phase;
+import com.example.vfarmrdbackend.payload.MaterialOfPhaseUpdateRequest;
 import com.example.vfarmrdbackend.payload.PhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.PhaseUpdateRequest;
 import com.example.vfarmrdbackend.repository.PhaseRepository;
@@ -14,6 +15,9 @@ import com.example.vfarmrdbackend.repository.PhaseRepository;
 public class PhaseService {
     @Autowired
     private PhaseRepository phaseRepository;
+
+    @Autowired
+    MaterialOfPhaseService materialOfPhaseService;
 
     public List<Phase> getAllPhaseByFormula_id(int formula_id) {
         return phaseRepository.getAllPhaseByFormula_id(formula_id);
@@ -34,6 +38,10 @@ public class PhaseService {
         Phase phase = phaseRepository.getPhaseByPhase_id(phaseUpdateRequest.getPhase_id());
         if (phase != null) {
             phase.setPhase_description(phaseUpdateRequest.getPhase_description());
+            List<MaterialOfPhaseUpdateRequest> listMaterial = phaseUpdateRequest.getMaterialOfPhaseUpdateRequest();
+            for (int i = 0; i < listMaterial.size(); i++) {
+                materialOfPhaseService.updateMaterialOfPhase(listMaterial.get(i));
+            }
             phaseRepository.save(phase);
             return true;
         } else {

@@ -5,17 +5,17 @@ import java.util.List;
 public class PhaseUpdateRequest {
     private int phase_id;
     private String phase_description;
-    private List<MaterialOfPhaseCreateRequest> materialOfPhaseCreateRequest;
+    private List<MaterialOfPhaseUpdateRequest> materialOfPhaseUpdateRequest;
 
     public PhaseUpdateRequest() {
     }
 
-    public List<MaterialOfPhaseCreateRequest> getMaterialOfPhaseCreateRequest() {
-        return materialOfPhaseCreateRequest;
+    public List<MaterialOfPhaseUpdateRequest> getMaterialOfPhaseUpdateRequest() {
+        return materialOfPhaseUpdateRequest;
     }
 
-    public void setMaterialOfPhaseCreateRequest(List<MaterialOfPhaseCreateRequest> materialOfPhaseCreateRequest) {
-        this.materialOfPhaseCreateRequest = materialOfPhaseCreateRequest;
+    public void setMaterialOfPhaseUpdateRequest(List<MaterialOfPhaseUpdateRequest> materialOfPhaseUpdateRequest) {
+        this.materialOfPhaseUpdateRequest = materialOfPhaseUpdateRequest;
     }
 
     public int getPhase_id() {
