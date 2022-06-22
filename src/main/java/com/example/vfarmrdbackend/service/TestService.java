@@ -49,7 +49,7 @@ public class TestService {
         if (file != null) {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path("/api/files/")
+                    .path("/api/files/download/")
                     .path(String.valueOf(file.getFile_id()))
                     .toUriString();
             response.setFileResponse(new FileResponse(
