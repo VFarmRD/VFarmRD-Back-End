@@ -90,7 +90,7 @@ public class FormulaController {
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> deleteFormula(@PathVariable("formula_id") int formula_id) {
         try {
-            if (formulaService.setFormula_status(formula_id, "deleted")) {
+            if (formulaService.setFormula_status(formula_id, "canceled")) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse("Thành công", "Công thức đã bị xóa!"));
             } else {
