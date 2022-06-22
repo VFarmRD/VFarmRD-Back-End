@@ -137,7 +137,7 @@ public class FormulaService {
         if (updateFormula != null) {
             updateFormula.setFormula_cost(formulaUpdateRequest.getFormula_cost());
             updateFormula.setFormula_weight(formulaUpdateRequest.getFormula_weight());
-            List<PhaseUpdateRequest> listPhase = formulaUpdateRequest.getPhaseCreateRequest();
+            List<PhaseUpdateRequest> listPhase = formulaUpdateRequest.getPhaseUpdateRequest();
             for (int i = 0; i < listPhase.size(); i++) {
                 phaseService.updatePhase(listPhase.get(i));
             }
