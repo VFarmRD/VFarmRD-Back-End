@@ -8,12 +8,14 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import com.example.vfarmrdbackend.model.File;
+import com.example.vfarmrdbackend.payload.FileResponse;
 import com.example.vfarmrdbackend.repository.FileRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
 public class FileService {
@@ -43,8 +45,18 @@ public class FileService {
         return listFile_id;
     }
 
-    public File getFile(int file_id, int user_id) {
-        return fileRepository.getFileByFile_id(file_id, user_id);
+    public FileResponse getFile(int file_id, int user_id) {
+        File file = fileRepository.getFileByFile_id(file_id, user_id);
+        String fileDownloadUri = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/api/files/")
+                .path(String.valueOf(file.getFile_id()))
+                .toUriString();
+        return new FileResponse(
+                file.getFile_name(),
+                fileDownloadUri,
+                file.getFile_type(),
+                file.getFile_data().length);
     }
 
     public Stream<File> getAllFilesWithUser_id(int user_id) {
