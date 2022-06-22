@@ -5,16 +5,21 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.vfarmrdbackend.model.File;
 import com.example.vfarmrdbackend.model.Test;
 import com.example.vfarmrdbackend.payload.TestCreateRequest;
 import com.example.vfarmrdbackend.payload.TestCreateValue;
 import com.example.vfarmrdbackend.payload.TestUpdateRequest;
+import com.example.vfarmrdbackend.repository.FileRepository;
 import com.example.vfarmrdbackend.repository.TestRepository;
 
 @Service
 public class TestService {
     @Autowired
     private TestRepository testRepository;
+
+    @Autowired
+    private FileRepository fileRepository;
 
     public List<Test> getAllTestWithFormula_id(int formula_id) {
         return testRepository.getTestWithFormula_id(formula_id);
@@ -38,6 +43,8 @@ public class TestService {
     }
 
     public boolean updateTest(TestUpdateRequest testUpdateRequest, int test_id) {
+        File oldFile = fileRepository.getFileByObjTypeAndId("tests", String.valueOf(test_id));
+        fileRepository.delete(oldFile);
         Test test = testRepository.getTestByTest_id(test_id);
         if (test != null) {
             test.setTest_content(testUpdateRequest.getTest_content());

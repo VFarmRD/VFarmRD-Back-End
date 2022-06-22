@@ -2,13 +2,12 @@ package com.example.vfarmrdbackend.payload;
 
 import java.util.List;
 
-public class FormulaCreateOtherVersionRequest {
-    private int formula_id;
+public class FormulaUpgradeRequest {
     private float formula_cost;
     private int formula_weight;
     private List<PhaseCreateRequest> phaseCreateRequest;
 
-    public FormulaCreateOtherVersionRequest() {
+    public FormulaUpgradeRequest() {
     }
 
     public int getFormula_weight() {
@@ -17,14 +16,6 @@ public class FormulaCreateOtherVersionRequest {
 
     public void setFormula_weight(int formula_weight) {
         this.formula_weight = formula_weight;
-    }
-
-    public int getFormula_id() {
-        return formula_id;
-    }
-
-    public void setFormula_id(int formula_id) {
-        this.formula_id = formula_id;
     }
 
     public float getFormula_cost() {

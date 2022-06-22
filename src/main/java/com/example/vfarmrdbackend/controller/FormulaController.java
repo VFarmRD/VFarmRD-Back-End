@@ -3,9 +3,11 @@ package com.example.vfarmrdbackend.controller;
 import java.util.List;
 
 import com.example.vfarmrdbackend.model.Formula;
-import com.example.vfarmrdbackend.payload.FormulaCreateOtherVersionRequest;
+import com.example.vfarmrdbackend.payload.FormulaUpgradeRequest;
+import com.example.vfarmrdbackend.payload.MessageResponse;
 import com.example.vfarmrdbackend.payload.FormulaCreateRequest;
 import com.example.vfarmrdbackend.payload.FormulaGetResponse;
+import com.example.vfarmrdbackend.payload.FormulaUpdateRequest;
 import com.example.vfarmrdbackend.service.FormulaService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,12 +39,18 @@ public class FormulaController {
             "or hasAuthority('manager')")
     public ResponseEntity<?> getAllFormulaByProduct_id(@RequestParam("product_id") String product_id,
             @RequestParam(defaultValue = "", required = false) String formula_status) {
-        List<Formula> listFormulas = formulaService.getAllFormulaByProduct_id(product_id, "%" + formula_status + "%");
-        if (listFormulas != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(listFormulas);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    "Can't found any formula!");
+        try {
+            List<Formula> listFormulas = formulaService.getAllFormulaByProduct_id(product_id,
+                    "%" + formula_status + "%");
+            if (listFormulas != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(listFormulas);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new MessageResponse("Lỗi", "Không tìm thấy công thức nào!"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -49,116 +58,105 @@ public class FormulaController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getFormulaByFormula_id(@PathVariable("formula_id") int formula_id) {
-        FormulaGetResponse formulaGetResponse = formulaService.getFormulaByFormula_id(formula_id);
-        if (formulaGetResponse != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(formulaGetResponse);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    "Formula not found!");
+        try {
+            FormulaGetResponse formulaGetResponse = formulaService.getFormulaByFormula_id(formula_id);
+            if (formulaGetResponse != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(formulaGetResponse);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new MessageResponse("Lỗi", "Công thức không tồn tại!"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
-    @PostMapping("/formulas/create")
+    @PostMapping("/formulas")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> createFormula(@RequestBody FormulaCreateRequest formulaCreateRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
             formulaService.createFormula(formulaCreateRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    "Create new formula completed!");
+                    new MessageResponse("Thành công", "Công thức mới đã được tạo!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
-    @PutMapping("/formulas/submit/{formula_id}")
-    @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> submitFormula(@PathVariable("formula_id") int formula_id) {
-        try {
-            formulaService.setFormula_status(formula_id, "pending");
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    "Submit formula successfully!");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "Submit formula fail!");
-        }
-    }
-
-    @PutMapping("/formulas/delete/{formula_id}")
+    @DeleteMapping("/formulas/{formula_id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> deleteFormula(@PathVariable("formula_id") int formula_id) {
         try {
-            formulaService.setFormula_status(formula_id, "deleted");
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    "Delete formula successfully!");
+            if (formulaService.setFormula_status(formula_id, "deleted")) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new MessageResponse("Thành công", "Công thức đã bị xóa!"));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new MessageResponse("Lỗi", "Công thức không tồn tại!"));
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "Delete formula fail!");
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
-    @PostMapping("/formulas/update")
+    @PutMapping("/formulas/{formula_id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> updateFormula(
-            @RequestBody FormulaCreateOtherVersionRequest formulaCreateOtherVersionRequest,
-            @RequestHeader("Authorization") String jwt) {
+            @PathVariable("formula_id") int formula_id,
+            @RequestBody FormulaUpdateRequest formulaUpdateRequest) {
         try {
-            formulaService.createAnotherFormula_version(formulaCreateOtherVersionRequest, jwt, "update");
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    "Update Formula successfully!");
+            if (formulaService.updateFormula(formula_id, formulaUpdateRequest)) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new MessageResponse("Thành công", "Công thức đã được cập nhật!"));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new MessageResponse("Lỗi", "Công thức không tồn tại!"));
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down");
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
-    @PostMapping("/formulas/upgrade")
+    @PutMapping("/formulas/{formula_id}/upgrade")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> upgradeFormula(
-            @RequestBody FormulaCreateOtherVersionRequest formulaCreateOtherVersionRequest,
+            @PathVariable("formula_id") int formula_id,
+            @RequestBody FormulaUpgradeRequest formulaUpgradeRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
-            formulaService.createAnotherFormula_version(formulaCreateOtherVersionRequest, jwt, "upgrade");
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    "Upgrade Formula successfully!");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "The server is down");
-        }
-    }
-
-    @PutMapping("/formulas/approve/{formula_id}")
-    @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> approveFormula(@PathVariable("formula_id") int formula_id) {
-        try {
-            if (formulaService.setFormula_status(formula_id, "approved")) {
+            if (formulaService.upgradeFormula(formula_id, formulaUpgradeRequest, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        "Approve formula successfully!");
+                        new MessageResponse("Thành công", "Công thức đã được nâng cấp!"));
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                        "This formula haven't submit yet!");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new MessageResponse("Lỗi", "Công thức không tồn tại!"));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
-    @PutMapping("/formulas/deny/{formula_id}")
+    @PutMapping("/formulas/{formula_id}/status")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> denyFormula(@PathVariable("formula_id") int formula_id) {
+    public ResponseEntity<?> changeFormula_status(@PathVariable("formula_id") int formula_id,
+            @RequestParam("status") String status) {
         try {
-            if (formulaService.setFormula_status(formula_id, "denied")) {
+            if (formulaService.setFormula_status(formula_id, status)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        "Deny formula successfully!");
+                        new MessageResponse("Thành công", "Công thức đã được cập nhật!"));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                        "This formula haven't submit yet!");
+                        new MessageResponse("Lỗi", "Công thức này chưa được gửi!"));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "Deny formula fail!");
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 }
