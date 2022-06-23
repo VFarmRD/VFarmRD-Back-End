@@ -147,8 +147,8 @@ public class FormulaService {
     public boolean setFormula_status(int formula_id, String status) {
         Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
         if (formula != null) {
-            if (!status.equals("on process") || !status.equals("approved")
-                    || !status.equals("pending") || !status.equals("canceled")) {
+            if (!status.equals("on process") && !status.equals("approved")
+                    && !status.equals("pending") && !status.equals("canceled")) {
                 return false;
             }
             if (status.equals("approved") || status.equals("on process")) {

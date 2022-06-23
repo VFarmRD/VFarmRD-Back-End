@@ -143,13 +143,13 @@ public class FormulaController {
     }
 
     @PutMapping("/formulas/{formula_id}/status")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> changeFormula_status(@PathVariable("formula_id") int formula_id,
             @RequestParam("status") String status) {
         try {
             if (formulaService.setFormula_status(formula_id, status)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new MessageResponse("Thành công", "Công thức đã được cập nhật!"));
+                        new MessageResponse("Thành công", "Công thức đã được cập nhật trạng thái!"));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
                         new MessageResponse("Lỗi", "Công thức này chưa được gửi!"));
