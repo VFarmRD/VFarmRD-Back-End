@@ -65,6 +65,32 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/products/have-formula")
+    @PreAuthorize("hasAuthority('staff') " +
+            "or hasAuthority('manager')")
+    public ResponseEntity<?> getProductHasFormula() {
+        List<Product> listProduct = productService.getProductHasFormula();
+        if (listProduct != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(listProduct);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    "Product not found!");
+        }
+    }
+
+    @GetMapping("/products/have-formula-is-pending")
+    @PreAuthorize("hasAuthority('staff') " + "or hasAuthority('manager')")
+
+    public ResponseEntity<?> getProductHasFormulaIsPending() {
+        List<Product> listProduct = productService.getProductHasFormulaIsPending();
+        if (listProduct != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(listProduct);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    "Product not found!");
+        }
+    }
+
     @PostMapping("/products/create")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> createProduct(@RequestBody ProductCreateRequest productCreateRequest,

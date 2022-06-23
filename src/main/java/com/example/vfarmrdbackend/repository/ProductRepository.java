@@ -40,5 +40,10 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
         @Query(value = "select * from products p where p.product_code = :product_code", nativeQuery = true)
         Product getProductByProduct_code(@Param("product_code") String product_code);
 
+        @Query(value = "select * from products p where p.product_id in (select distinct p.product_id from products p, formulas f where p.product_id = f.product_id)", nativeQuery = true)
+        List<Product> getProductHasFormula();
+
+        @Query(value = "select * from products p where p.product_id in (select distinct p.product_id from products p, formulas f where p.product_id = f.product_id and f.formula_status = 'pending')", nativeQuery = true)
+        List<Product> getProductHasFormulaIsPending();
 
 }
