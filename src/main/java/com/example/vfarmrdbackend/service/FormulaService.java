@@ -112,7 +112,7 @@ public class FormulaService {
         formula.setFormula_pre_version("none");
         formula.setFormula_version(
                 String.valueOf(formulaRepository.getTotalFormulaOfProduct(formula.getProduct_id()) + 1));
-        formula.setFormula_status("on progress");
+        formula.setFormula_status("on process");
         formula.setFormula_cost(formulaCreateRequest.getFormula_cost());
         formula.setFormula_weight(formulaCreateRequest.getFormula_weight());
         formula.setCreated_time(date);
