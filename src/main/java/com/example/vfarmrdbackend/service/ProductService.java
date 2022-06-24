@@ -50,12 +50,8 @@ public class ProductService {
         return productRepository.getProductByProduct_id(product_id);
     }
 
-    public List<Product> getProductHasFormula() {
-        return productRepository.getProductHasFormula();
-    }
-
-    public List<Product> getProductHasFormulaIsPending() {
-        return productRepository.getProductHasFormulaIsPending();
+    public List<Product> getProductHaveFormula_status(String formula_status) {
+        return productRepository.getProductHaveFormula_status(formula_status);
     }
 
     public String generateProductCode() {
