@@ -65,29 +65,21 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/products/have-formula")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
-    public ResponseEntity<?> getProductHasFormula() {
-        List<Product> listProduct = productService.getProductHasFormula();
-        if (listProduct != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(listProduct);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    "Product not found!");
-        }
-    }
-
-    @GetMapping("/products/have-formula-is-pending")
+    @GetMapping("/products/have-formula-status")
     @PreAuthorize("hasAuthority('staff') " + "or hasAuthority('manager')")
-
-    public ResponseEntity<?> getProductHasFormulaIsPending() {
-        List<Product> listProduct = productService.getProductHasFormulaIsPending();
-        if (listProduct != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(listProduct);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    "Product not found!");
+    public ResponseEntity<?> getProductHasFormulaIsPending(
+            @RequestParam(defaultValue = "", required = false) String status) {
+        try {
+            List<Product> listProduct = productService.getProductHaveFormula_status("%" + status + "%");
+            if (listProduct != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(listProduct);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        "Product not found!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    e.getMessage());
         }
     }
 
