@@ -179,7 +179,7 @@ public class FormulaService {
                             formula.getFormula_version()) + 1));
             newFormula.setFormula_cost(formulaUpgradeRequest.getFormula_cost());
             newFormula.setFormula_weight(formulaUpgradeRequest.getFormula_weight());
-            newFormula.setFormula_status("on progress");
+            newFormula.setFormula_status("on process");
             newFormula.setCreated_time(formula.getCreated_time());
             newFormula.setModified_time(date);
             formulaRepository.save(newFormula);
