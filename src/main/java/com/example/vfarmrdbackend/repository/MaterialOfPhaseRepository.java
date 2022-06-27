@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.vfarmrdbackend.model.MaterialOfPhase;
 
-public interface MaterialOfPhaseRepository extends JpaRepository<MaterialOfPhase,Integer> {
+public interface MaterialOfPhaseRepository extends JpaRepository<MaterialOfPhase, Integer> {
 
     @Query(value = "select * from materialofphase m where m.phase_id = :phase_id", nativeQuery = true)
     List<MaterialOfPhase> getAllMaterialOfOnePhase(@Param("phase_id") int phase_id);
@@ -18,4 +18,7 @@ public interface MaterialOfPhaseRepository extends JpaRepository<MaterialOfPhase
 
     @Query(value = "select SUM(*) from materialofphase m where m.phase_id = :phase_id", nativeQuery = true)
     int getAmountOfMaterialInPhase();
+
+    @Query(value = "select m.mop_id from materialofphase m where m.phase_id = :phase_id", nativeQuery = true)
+    List<Integer> getAllMaterial_idInPhase(@Param("phase_id") int phase_id);
 }
