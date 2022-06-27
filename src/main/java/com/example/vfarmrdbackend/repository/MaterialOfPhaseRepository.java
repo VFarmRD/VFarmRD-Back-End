@@ -15,5 +15,7 @@ public interface MaterialOfPhaseRepository extends JpaRepository<MaterialOfPhase
 
     @Query(value = "select * from materialofphase m where m.mop_id = :mop_id", nativeQuery = true)
     MaterialOfPhase getOneMaterialOfOnePhase(@Param("mop_id") int mop_id);
-    
+
+    @Query(value = "select SUM(*) from materialofphase m where m.phase_id = :phase_id", nativeQuery = true)
+    int getAmountOfMaterialInPhase();
 }

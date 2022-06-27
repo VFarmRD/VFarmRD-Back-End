@@ -13,10 +13,12 @@ import com.example.vfarmrdbackend.model.Phase;
 import com.example.vfarmrdbackend.model.Test;
 import com.example.vfarmrdbackend.model.User;
 import com.example.vfarmrdbackend.payload.FormulaUpgradeRequest;
+import com.example.vfarmrdbackend.payload.MaterialOfPhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.FormulaCreateRequest;
 import com.example.vfarmrdbackend.payload.FormulaGetResponse;
 import com.example.vfarmrdbackend.payload.FormulaUpdateRequest;
 import com.example.vfarmrdbackend.payload.MaterialOfPhaseGetResponse;
+import com.example.vfarmrdbackend.payload.MaterialOfPhaseUpdateRequest;
 import com.example.vfarmrdbackend.payload.PhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.PhaseGetResponse;
 import com.example.vfarmrdbackend.payload.PhaseUpdateRequest;
@@ -134,9 +136,34 @@ public class FormulaService {
         if (updateFormula != null && !updateFormula.getFormula_status().equals("approved")) {
             updateFormula.setFormula_cost(formulaUpdateRequest.getFormula_cost());
             updateFormula.setFormula_weight(formulaUpdateRequest.getFormula_weight());
-            List<PhaseUpdateRequest> listPhase = formulaUpdateRequest.getPhaseUpdateRequest();
-            for (int i = 0; i < listPhase.size(); i++) {
-                phaseService.updatePhase(listPhase.get(i));
+            List<PhaseUpdateRequest> listPhaseUpdate = formulaUpdateRequest.getPhaseUpdateRequest();
+            List<Integer> listOldPhase_id = phaseRepository.getAllPhase_idOfFormula(formula_id);
+            for (int i = 0; i < listPhaseUpdate.size(); i++) {
+                PhaseUpdateRequest phaseUpdateRequest = listPhaseUpdate.get(i);
+                if (phaseUpdateRequest.getPhase_id() != 0) {
+                    phaseService.updatePhase(phaseUpdateRequest);
+                    listOldPhase_id.remove(Integer.valueOf(phaseUpdateRequest.getPhase_id()));
+                } else if (phaseUpdateRequest.getPhase_id() == 0) {
+                    PhaseCreateRequest phaseCreateRequest = new PhaseCreateRequest();
+                    phaseCreateRequest.setPhase_description(phaseUpdateRequest.getPhase_description());
+                    phaseCreateRequest.setPhase_index(phaseCreateRequest.getPhase_index());
+                    List<MaterialOfPhaseUpdateRequest> listMaterialUpdateInput = phaseUpdateRequest
+                            .getMaterialOfPhaseUpdateRequest();
+                    phaseService.createPhase(formula_id, phaseCreateRequest);
+                    int newest_phase_id = phaseRepository.getLatestPhase_id();
+                    for (int j = 0; j < listMaterialUpdateInput.size(); j++) {
+                        MaterialOfPhaseUpdateRequest materialOfPhaseUpdate = listMaterialUpdateInput.get(j);
+                        MaterialOfPhaseCreateRequest materialOfPhaseCreate = new MaterialOfPhaseCreateRequest();
+                        materialOfPhaseCreate.setMaterial_id(materialOfPhaseUpdate.getMaterial_id());
+                        materialOfPhaseCreate.setMaterial_cost(materialOfPhaseUpdate.getMaterial_cost());
+                        materialOfPhaseCreate.setMaterial_percent(materialOfPhaseUpdate.getMaterial_percent());
+                        materialOfPhaseCreate.setMaterial_weight(materialOfPhaseUpdate.getMaterial_weight());
+                        materialOfPhaseService.createMaterialOfPhase(newest_phase_id, materialOfPhaseCreate);
+                    }
+                }
+            }
+            for (int i = 0; i < listOldPhase_id.size(); i++) {
+                phaseService.deletePhase(listOldPhase_id.get(i));
             }
             formulaRepository.save(updateFormula);
             return true;
