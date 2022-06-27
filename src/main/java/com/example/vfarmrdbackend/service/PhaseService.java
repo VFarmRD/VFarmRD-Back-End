@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.vfarmrdbackend.model.MaterialOfPhase;
 import com.example.vfarmrdbackend.model.Phase;
 import com.example.vfarmrdbackend.payload.MaterialOfPhaseUpdateRequest;
 import com.example.vfarmrdbackend.payload.PhaseCreateRequest;
@@ -30,6 +31,7 @@ public class PhaseService {
     public void createPhase(int formula_id, PhaseCreateRequest phaseCreateRequest) {
         Phase phase = new Phase();
         phase.setFormula_id(formula_id);
+        phase.setPhase_index(phaseCreateRequest.getPhase_index());
         phase.setPhase_description(phaseCreateRequest.getPhase_description());
         phaseRepository.save(phase);
     }
@@ -37,6 +39,7 @@ public class PhaseService {
     public boolean updatePhase(PhaseUpdateRequest phaseUpdateRequest) {
         Phase phase = phaseRepository.getPhaseByPhase_id(phaseUpdateRequest.getPhase_id());
         if (phase != null) {
+            phase.setPhase_index(phaseUpdateRequest.getPhase_index());
             phase.setPhase_description(phaseUpdateRequest.getPhase_description());
             List<MaterialOfPhaseUpdateRequest> listMaterial = phaseUpdateRequest.getMaterialOfPhaseUpdateRequest();
             for (int i = 0; i < listMaterial.size(); i++) {
@@ -52,6 +55,10 @@ public class PhaseService {
     public boolean deletePhase(int phase_id) {
         Phase phase = phaseRepository.getPhaseByPhase_id(phase_id);
         if (phase != null) {
+            List<MaterialOfPhase> listMaterialOfPhases = materialOfPhaseService.getAllMaterialOfPhase(phase_id);
+            for (int i = 0; i < listMaterialOfPhases.size(); i++) {
+                materialOfPhaseService.deleteMaterialOfPhase(listMaterialOfPhases.get(i).getMop_id());
+            }
             phaseRepository.delete(phase);
             return true;
         } else {

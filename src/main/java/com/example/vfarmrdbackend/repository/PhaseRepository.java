@@ -19,4 +19,6 @@ public interface PhaseRepository extends JpaRepository<Phase, Integer> {
     @Query(value = "SELECT p.phase_id FROM phases p order by p.phase_id desc limit 1;", nativeQuery = true)
     int getLatestPhase_id();
 
+    @Query(value = "select p.phase_id from phases p where p.formula_id = :formula_id", nativeQuery = true)
+    List<Integer> getAllPhase_idOfFormula(@Param("formula_id") int formula_id);
 }
