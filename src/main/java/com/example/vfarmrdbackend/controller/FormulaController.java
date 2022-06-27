@@ -10,6 +10,7 @@ import com.example.vfarmrdbackend.payload.FormulaGetResponse;
 import com.example.vfarmrdbackend.payload.FormulaUpdateRequest;
 import com.example.vfarmrdbackend.service.FormulaService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Formula", description = "The Formula's API")
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping(path = "/api")
 public class FormulaController {
     @Autowired

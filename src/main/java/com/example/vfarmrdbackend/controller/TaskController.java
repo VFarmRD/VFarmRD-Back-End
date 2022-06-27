@@ -23,10 +23,12 @@ import com.example.vfarmrdbackend.payload.TaskUpdateRequest;
 import com.example.vfarmrdbackend.service.JwtService;
 import com.example.vfarmrdbackend.service.TaskService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Task", description = "The Task's API")
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping(path = "/api")
 public class TaskController {
     @Autowired

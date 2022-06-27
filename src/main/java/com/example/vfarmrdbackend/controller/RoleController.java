@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.vfarmrdbackend.model.Role;
 import com.example.vfarmrdbackend.service.RoleService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Role", description = "The Role's API")
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping(path = "/api")
 public class RoleController {
     @Autowired

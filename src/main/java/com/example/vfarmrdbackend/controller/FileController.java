@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.Date;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Tag(name = "File", description = "The File's API")
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping(path = "/api")
 public class FileController {
         @Autowired
