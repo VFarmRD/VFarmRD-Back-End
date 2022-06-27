@@ -6,6 +6,7 @@ import com.example.vfarmrdbackend.model.MaterialOfPhase;
 import com.example.vfarmrdbackend.payload.MaterialOfPhaseUpdateRequest;
 import com.example.vfarmrdbackend.service.MaterialOfPhaseService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Material Of Phase", description = "The Material Of Phase's API")
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping(path = "/api")
 public class MaterialOfPhaseController {
     @Autowired

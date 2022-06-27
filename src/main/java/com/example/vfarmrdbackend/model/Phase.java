@@ -12,6 +12,7 @@ public class Phase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int phase_id;
+    private int phase_index;
     private int formula_id;
     private String phase_description;
 
@@ -24,6 +25,14 @@ public class Phase {
 
     public void setPhase_id(int phase_id) {
         this.phase_id = phase_id;
+    }
+
+    public int getPhase_index() {
+        return phase_index;
+    }
+
+    public void setPhase_index(int phase_index) {
+        this.phase_index = phase_index;
     }
 
     public int getFormula_id() {

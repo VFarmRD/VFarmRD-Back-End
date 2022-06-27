@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Phase", description = "The Phase's API")
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping(path = "/api")
 public class PhaseController {
     @Autowired

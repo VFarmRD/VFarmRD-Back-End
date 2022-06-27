@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.vfarmrdbackend.model.UserRole;
 import com.example.vfarmrdbackend.repository.UserRoleRepository;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "User Role", description = "The User Role's API")
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping(path = "/api")
 public class UserRoleController {
     @Autowired
@@ -26,7 +28,7 @@ public class UserRoleController {
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<List<UserRole>> getAllUserRoles() {
         try {
-            List<UserRole>listUserRoles = userRoleRepository.findAll();
+            List<UserRole> listUserRoles = userRoleRepository.findAll();
             if (listUserRoles.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
