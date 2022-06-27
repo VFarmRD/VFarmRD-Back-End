@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.TestStandard;
 import com.example.vfarmrdbackend.payload.MessageResponse;
 import com.example.vfarmrdbackend.payload.TestStandardRequest;
 import com.example.vfarmrdbackend.repository.TestStandardRepository;
 
+@Service
 public class TestStandardService {
 
     @Autowired
