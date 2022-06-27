@@ -7,15 +7,20 @@ import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.MaterialOfPhase;
 import com.example.vfarmrdbackend.model.Phase;
+import com.example.vfarmrdbackend.payload.MaterialOfPhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.MaterialOfPhaseUpdateRequest;
 import com.example.vfarmrdbackend.payload.PhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.PhaseUpdateRequest;
+import com.example.vfarmrdbackend.repository.MaterialOfPhaseRepository;
 import com.example.vfarmrdbackend.repository.PhaseRepository;
 
 @Service
 public class PhaseService {
     @Autowired
     private PhaseRepository phaseRepository;
+
+    @Autowired
+    private MaterialOfPhaseRepository materialOfPhaseRepository;
 
     @Autowired
     MaterialOfPhaseService materialOfPhaseService;
@@ -42,8 +47,25 @@ public class PhaseService {
             phase.setPhase_index(phaseUpdateRequest.getPhase_index());
             phase.setPhase_description(phaseUpdateRequest.getPhase_description());
             List<MaterialOfPhaseUpdateRequest> listMaterial = phaseUpdateRequest.getMaterialOfPhaseUpdateRequest();
+            List<Integer> listOldMaterial = materialOfPhaseRepository
+                    .getAllMaterial_idInPhase(phaseUpdateRequest.getPhase_id());
             for (int i = 0; i < listMaterial.size(); i++) {
-                materialOfPhaseService.updateMaterialOfPhase(listMaterial.get(i));
+                MaterialOfPhaseUpdateRequest materialUpdate = listMaterial.get(i);
+                if (materialUpdate.getMop_id() != 0) {
+                    materialOfPhaseService.updateMaterialOfPhase(materialUpdate);
+                    listOldMaterial.remove(Integer.valueOf(materialUpdate.getMop_id()));
+                } else if (materialUpdate.getMop_id() == 0) {
+                    MaterialOfPhaseCreateRequest materialCreate = new MaterialOfPhaseCreateRequest();
+                    materialCreate.setMaterial_id(materialUpdate.getMaterial_id());
+                    materialCreate.setMaterial_cost(materialUpdate.getMaterial_cost());
+                    materialCreate.setMaterial_percent(materialUpdate.getMaterial_percent());
+                    materialCreate.setMaterial_weight(materialUpdate.getMaterial_weight());
+                    materialOfPhaseService.createMaterialOfPhase(phaseUpdateRequest.getPhase_id(),
+                            materialCreate);
+                }
+            }
+            for (int i = 0; i < listOldMaterial.size(); i++) {
+                materialOfPhaseService.deleteMaterialOfPhase(listOldMaterial.get(i));
             }
             phaseRepository.save(phase);
             return true;
