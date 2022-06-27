@@ -131,7 +131,7 @@ public class FormulaService {
 
     public boolean updateFormula(int formula_id, FormulaUpdateRequest formulaUpdateRequest) {
         Formula updateFormula = formulaRepository.getFormulaByFormula_id(formula_id);
-        if (updateFormula != null && updateFormula.getFormula_status().equals("approved")) {
+        if (updateFormula != null && !updateFormula.getFormula_status().equals("approved")) {
             updateFormula.setFormula_cost(formulaUpdateRequest.getFormula_cost());
             updateFormula.setFormula_weight(formulaUpdateRequest.getFormula_weight());
             List<PhaseUpdateRequest> listPhase = formulaUpdateRequest.getPhaseUpdateRequest();
