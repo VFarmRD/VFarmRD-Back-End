@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.service.security;
+package com.example.vfarmrdbackend.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

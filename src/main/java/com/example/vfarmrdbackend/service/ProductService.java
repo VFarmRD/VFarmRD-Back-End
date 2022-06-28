@@ -87,6 +87,8 @@ public class ProductService {
         product.setD(productCreateRequest.getD());
         product.setTolerance(productCreateRequest.getTolerance());
         product.setMaterial_norm_loss(productCreateRequest.getMaterial_norm_loss());
+        product.setExpired_date(productCreateRequest.getExpired_date());
+        product.setRetail_price(productCreateRequest.getRetail_price());
         product.setCreated_time(date);
         product.setProduct_status("activated");
         productRepository.save(product);
@@ -105,6 +107,8 @@ public class ProductService {
             product.setAssigned_user_id(productUpdateRequest.getAssigned_user_id());
             product.setProduct_inquiry(productUpdateRequest.getProduct_inquiry());
             product.setModified_time(date);
+            product.setExpired_date(productUpdateRequest.getExpired_date());
+            product.setRetail_price(productUpdateRequest.getRetail_price());
             productRepository.save(product);
             return true;
         } else {

@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.service;
+package com.example.vfarmrdbackend.config;
 
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +15,6 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
     bearerFormat = "JWT",
     scheme = "bearer"
 )
-public class SwaggerConfigure {
+public class SwaggerConfig {
     
 }
