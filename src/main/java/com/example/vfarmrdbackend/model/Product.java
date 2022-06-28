@@ -28,8 +28,26 @@ public class Product {
     private int material_norm_loss;
     private Date created_time;
     private Date modified_time;
+    private String expired_date;
+    private float retail_price;
 
     public Product() {
+    }
+
+    public String getExpired_date() {
+        return expired_date;
+    }
+
+    public void setExpired_date(String expired_date) {
+        this.expired_date = expired_date;
+    }
+
+    public float getRetail_price() {
+        return retail_price;
+    }
+
+    public void setRetail_price(float retail_price) {
+        this.retail_price = retail_price;
     }
 
     public int getProduct_id() {
