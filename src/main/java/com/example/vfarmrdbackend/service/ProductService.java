@@ -96,6 +96,7 @@ public class ProductService {
         map.put("object_type", "products");
         map.put("object_id",
                 String.valueOf(productRepository.getProduct_idByProduct_code(product_code)));
+        map.put("product_code", product_code);
         return map;
     }
 
