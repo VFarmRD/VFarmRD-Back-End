@@ -1,20 +1,28 @@
 package com.example.vfarmrdbackend.payload;
 
 public class ProductCreateRequest {
+    private String product_code;
     private String product_name;
     private String client_id;
-    private int assigned_user_id;
     private String product_inquiry;
     private String brand_name;
-    private int volume;
-    private int capacity;
-    private float d;
+    private float volume;
+    private float product_weight;
+    private float density;
     private float tolerance;
     private int material_norm_loss;
     private String expired_date;
     private float retail_price;
 
     public ProductCreateRequest() {
+    }
+
+    public String getProduct_code() {
+        return product_code;
+    }
+
+    public void setProduct_code(String product_code) {
+        this.product_code = product_code;
     }
 
     public String getExpired_date() {
@@ -41,28 +49,28 @@ public class ProductCreateRequest {
         this.brand_name = brand_name;
     }
 
-    public int getVolume() {
+    public float getVolume() {
         return volume;
     }
 
-    public void setVolume(int volume) {
+    public void setVolume(float volume) {
         this.volume = volume;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public float getProduct_weight() {
+        return product_weight;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setProduct_weight(float product_weight) {
+        this.product_weight = product_weight;
     }
 
-    public float getD() {
-        return d;
+    public float getDensity() {
+        return density;
     }
 
-    public void setD(float d) {
-        this.d = d;
+    public void setDensity(float density) {
+        this.density = density;
     }
 
     public float getTolerance() {
@@ -95,14 +103,6 @@ public class ProductCreateRequest {
 
     public void setClient_id(String client_id) {
         this.client_id = client_id;
-    }
-
-    public int getAssigned_user_id() {
-        return assigned_user_id;
-    }
-
-    public void setAssigned_user_id(int assigned_user_id) {
-        this.assigned_user_id = assigned_user_id;
     }
 
     public String getProduct_inquiry() {

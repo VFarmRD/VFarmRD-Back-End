@@ -82,8 +82,4 @@ public class FileService {
     public void deleteFile(int file_id) {
         fileRepository.deleteById(file_id);
     }
-
-    // public int getNewestFile_id(String object_type, String object_id) {
-    // return fileRepository.getNewestFile_id(object_type, object_id);
-    // }
 }
