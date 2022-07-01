@@ -8,11 +8,38 @@ public class FormulaGetResponse {
     private float formula_weight;
     private float user_id;
     private String user_fullname;
+    private float volume;
+    private float product_weight;
+    private float density;
     private List<PhaseGetResponse> phaseGetResponse;
     private String test_status;
     private List<TestGetResponse> listTestResponse;
 
     public FormulaGetResponse() {
+    }
+
+    public float getVolume() {
+        return volume;
+    }
+
+    public void setVolume(float volume) {
+        this.volume = volume;
+    }
+
+    public float getProduct_weight() {
+        return product_weight;
+    }
+
+    public void setProduct_weight(float product_weight) {
+        this.product_weight = product_weight;
+    }
+
+    public float getDensity() {
+        return density;
+    }
+
+    public void setDensity(float density) {
+        this.density = density;
     }
 
     public String getTest_status() {
@@ -46,8 +73,6 @@ public class FormulaGetResponse {
     public void setFormula_cost(float formula_cost) {
         this.formula_cost = formula_cost;
     }
-
-  
 
     public float getFormula_weight() {
         return formula_weight;

@@ -213,9 +213,9 @@ public class FormulaService {
             newFormula.setFormula_version(formula.getFormula_version() + "." + String
                     .valueOf(formulaRepository.totalFormulaHaveMatchPreVersion(formula.getProject_id(),
                             formula.getFormula_version()) + 1));
-            newFormula.setVolume(formulaUpdateRequest.getVolume());
-            newFormula.setProduct_weight(formulaUpdateRequest.getProduct_weight());
-            newFormula.setDensity(formulaUpdateRequest.getDensity());
+            newFormula.setVolume(formulaUpgradeRequest.getVolume());
+            newFormula.setProduct_weight(formulaUpgradeRequest.getProduct_weight());
+            newFormula.setDensity(formulaUpgradeRequest.getDensity());
             newFormula.setFormula_cost(formulaUpgradeRequest.getFormula_cost());
             newFormula.setFormula_weight(formulaUpgradeRequest.getFormula_weight());
             newFormula.setFormula_status("on process");
