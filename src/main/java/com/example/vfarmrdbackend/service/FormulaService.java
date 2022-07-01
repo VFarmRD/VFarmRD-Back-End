@@ -52,17 +52,20 @@ public class FormulaService {
 
     Date date;
 
-    public List<Formula> getAllFormulaByProduct_id(String product_id, String formula_status) {
-        return formulaRepository.getAllFormulaByProduct_idAndStatus(product_id, formula_status);
+    public List<Formula> getAllFormulaByProject_id(String project_id, String formula_status) {
+        return formulaRepository.getAllFormulaByProject_idAndStatus(project_id, formula_status);
     }
 
     public FormulaGetResponse getFormulaByFormula_id(int formula_id) {
         Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
         FormulaGetResponse formulaGetResponse = new FormulaGetResponse();
-        formulaGetResponse.setProduct_id(formula.getProduct_id());
+        formulaGetResponse.setProject_id(formula.getProject_id());
         formulaGetResponse.setFormula_weight(formula.getFormula_weight());
         formulaGetResponse.setFormula_cost(formula.getFormula_cost());
         formulaGetResponse.setUser_id(formula.getCreated_user_id());
+        formulaGetResponse.setVolume(formula.getVolume());
+        formulaGetResponse.setProduct_weight(formula.getProduct_weight());
+        formulaGetResponse.setDensity(formula.getDensity());
         User user = userService.getUserInfo(formula.getCreated_user_id());
         formulaGetResponse.setUser_fullname(user.getFullname());
         List<Phase> listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
@@ -109,14 +112,17 @@ public class FormulaService {
     public void createFormula(FormulaCreateRequest formulaCreateRequest, String jwt) {
         date = new Date();
         Formula formula = new Formula();
-        formula.setProduct_id(formulaCreateRequest.getProduct_id());
+        formula.setProject_id(formulaCreateRequest.getProject_id());
         formula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
         formula.setFormula_pre_version("none");
         formula.setFormula_version(
-                String.valueOf(formulaRepository.getTotalFormulaOfProduct(formula.getProduct_id()) + 1));
+                String.valueOf(formulaRepository.getTotalFormulaOfProduct(formula.getProject_id()) + 1));
         formula.setFormula_status("on process");
         formula.setFormula_cost(formulaCreateRequest.getFormula_cost());
         formula.setFormula_weight(formulaCreateRequest.getFormula_weight());
+        formula.setVolume(formulaCreateRequest.getVolume());
+        formula.setProduct_weight(formulaCreateRequest.getProduct_weight());
+        formula.setDensity(formulaCreateRequest.getDensity());
         formula.setCreated_time(date);
         formulaRepository.save(formula);
         for (int i = 0; i < formulaCreateRequest.getPhaseCreateRequest().size(); i++) {
@@ -136,6 +142,9 @@ public class FormulaService {
         if (updateFormula != null && !updateFormula.getFormula_status().equals("approved")) {
             updateFormula.setFormula_cost(formulaUpdateRequest.getFormula_cost());
             updateFormula.setFormula_weight(formulaUpdateRequest.getFormula_weight());
+            updateFormula.setVolume(formulaUpdateRequest.getVolume());
+            updateFormula.setProduct_weight(formulaUpdateRequest.getProduct_weight());
+            updateFormula.setDensity(formulaUpdateRequest.getDensity());
             List<PhaseUpdateRequest> listPhaseUpdate = formulaUpdateRequest.getPhaseUpdateRequest();
             List<Integer> listOldPhase_id = phaseRepository.getAllPhase_idOfFormula(formula_id);
             for (int i = 0; i < listPhaseUpdate.size(); i++) {
@@ -198,12 +207,15 @@ public class FormulaService {
         Formula newFormula = new Formula();
         date = new Date();
         if (formula != null) {
-            newFormula.setProduct_id(formula.getProduct_id());
+            newFormula.setProject_id(formula.getProject_id());
             newFormula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
             newFormula.setFormula_pre_version(formula.getFormula_version());
             newFormula.setFormula_version(formula.getFormula_version() + "." + String
-                    .valueOf(formulaRepository.totalFormulaHaveMatchPreVersion(formula.getProduct_id(),
+                    .valueOf(formulaRepository.totalFormulaHaveMatchPreVersion(formula.getProject_id(),
                             formula.getFormula_version()) + 1));
+            newFormula.setVolume(formulaUpdateRequest.getVolume());
+            newFormula.setProduct_weight(formulaUpdateRequest.getProduct_weight());
+            newFormula.setDensity(formulaUpdateRequest.getDensity());
             newFormula.setFormula_cost(formulaUpgradeRequest.getFormula_cost());
             newFormula.setFormula_weight(formulaUpgradeRequest.getFormula_weight());
             newFormula.setFormula_status("on process");

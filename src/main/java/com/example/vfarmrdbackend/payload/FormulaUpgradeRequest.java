@@ -5,9 +5,36 @@ import java.util.List;
 public class FormulaUpgradeRequest {
     private float formula_cost;
     private int formula_weight;
+    private float volume;
+    private float product_weight;
+    private float density;
     private List<PhaseCreateRequest> phaseCreateRequest;
 
     public FormulaUpgradeRequest() {
+    }
+
+    public float getVolume() {
+        return volume;
+    }
+
+    public void setVolume(float volume) {
+        this.volume = volume;
+    }
+
+    public float getProduct_weight() {
+        return product_weight;
+    }
+
+    public void setProduct_weight(float product_weight) {
+        this.product_weight = product_weight;
+    }
+
+    public float getDensity() {
+        return density;
+    }
+
+    public void setDensity(float density) {
+        this.density = density;
     }
 
     public int getFormula_weight() {

@@ -15,7 +15,9 @@ public class Product {
     private int product_id;
     private String product_code;
     private String product_name;
+    private int formula_id;
     private String client_id;
+    private int user_id;
     private String product_inquiry;
     private String product_status;
     private String brand_name;
@@ -30,6 +32,22 @@ public class Product {
     private float retail_price;
 
     public Product() {
+    }
+
+    public int getFormula_id() {
+        return formula_id;
+    }
+
+    public void setFormula_id(int formula_id) {
+        this.formula_id = formula_id;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     public String getExpired_date() {
