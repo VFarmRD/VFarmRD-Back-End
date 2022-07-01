@@ -39,10 +39,10 @@ public class FormulaController {
     @GetMapping("/formulas")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllFormulaByProduct_id(@RequestParam("product_id") String product_id,
+    public ResponseEntity<?> getAllFormulaByProject_id(@RequestParam("project_id") String project_id,
             @RequestParam(defaultValue = "", required = false) String formula_status) {
         try {
-            List<Formula> listFormulas = formulaService.getAllFormulaByProduct_id(product_id,
+            List<Formula> listFormulas = formulaService.getAllFormulaByProject_id(project_id,
                     "%" + formula_status + "%");
             if (listFormulas != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(listFormulas);

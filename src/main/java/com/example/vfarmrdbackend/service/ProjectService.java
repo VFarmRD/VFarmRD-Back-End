@@ -67,7 +67,7 @@ public class ProjectService {
         newProject.setAssigned_user_id(request.getAssigned_user_id());
         newProject.setProject_code(request.getProject_code());
         newProject.setCreated_time(new Date());
-        newProject.setProject_status("on process");
+        newProject.setProject_status("running");
         newProject.setComplete_date(request.getComplete_date());
         newProject.setRequirement(request.getRequirement());
         newProject.setEstimated_weight(request.getEstimated_weight());
@@ -99,7 +99,7 @@ public class ProjectService {
     public ResponseEntity<?> deleteProject(String project_id) {
         Project project = projectRepository.getProjectByProject_id(project_id);
         if (project != null) {
-            project.setProject_status("deleted");
+            project.setProject_status("canceled");
             project.setModified_time(new Date());
             projectRepository.save(project);
             return ResponseEntity.status(HttpStatus.OK).body(

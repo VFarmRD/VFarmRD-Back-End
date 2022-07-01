@@ -13,7 +13,7 @@ public class Formula {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int formula_id;
-    private String product_id;
+    private String project_id;
     private int created_user_id;
     private String formula_pre_version;
     private String formula_version;
@@ -22,8 +22,35 @@ public class Formula {
     private int formula_weight;
     private Date created_time;
     private Date modified_time;
+    private float volume;
+    private float product_weight;
+    private float density;
 
     public Formula() {
+    }
+
+    public float getVolume() {
+        return volume;
+    }
+
+    public void setVolume(float volume) {
+        this.volume = volume;
+    }
+
+    public float getProduct_weight() {
+        return product_weight;
+    }
+
+    public void setProduct_weight(float product_weight) {
+        this.product_weight = product_weight;
+    }
+
+    public float getDensity() {
+        return density;
+    }
+
+    public void setDensity(float density) {
+        this.density = density;
     }
 
     public int getFormula_weight() {
@@ -58,12 +85,12 @@ public class Formula {
         this.formula_id = formula_id;
     }
 
-    public String getProduct_id() {
-        return product_id;
+    public String getProject_id() {
+        return project_id;
     }
 
-    public void setProduct_id(String product_id) {
-        this.product_id = product_id;
+    public void setProject_id(String project_id) {
+        this.project_id = project_id;
     }
 
     public String getFormula_version() {

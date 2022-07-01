@@ -94,6 +94,8 @@ public class ProductService {
         product.setRetail_price(productCreateRequest.getRetail_price());
         product.setCreated_time(date);
         product.setProduct_status("activated");
+        product.setUser_id(productCreateRequest.getUser_id());
+        product.setFormula_id(productCreateRequest.getFormula_id());
         productRepository.save(product);
         Map<String, String> map = new HashMap<>();
         map.put("object_type", "products");
