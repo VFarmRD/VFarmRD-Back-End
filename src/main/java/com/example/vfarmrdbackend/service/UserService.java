@@ -12,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.vfarmrdbackend.model.Role;
 import com.example.vfarmrdbackend.model.User;
 import com.example.vfarmrdbackend.model.UserRole;
 import com.example.vfarmrdbackend.payload.JwtResponse;
@@ -117,7 +116,7 @@ public class UserService {
         if (role_name.equals("manager") || role_name.equals("admin")) {
             setUser_role(user_id, roleRepository.getRole_IdByRole_name("manager"));
         }
-        if (role_name.equals("staff") || role_name.equals("admin")) {
+        if (role_name.equals("staff") || role_name.equals("manager") || role_name.equals("admin")) {
             setUser_role(user_id, roleRepository.getRole_IdByRole_name("staff"));
         }
         user = userRepository.getUserByUser_name(signUpRequest.getUser_name());
@@ -125,26 +124,39 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void upgradeUserRoleToAdmin(int user_id, String role_name) {
-        List<Role> listRole = roleRepository.getAllRoles();
-        for (int i = 0; i < listRole.size(); i++) {
-            if (listRole.get(i).getRole_id() != roleRepository.getRoleByRole_name(role_name)
-                    .getRole_id()) {
-                UserRole newuserrole = new UserRole();
-                newuserrole.setUser_id(user_id);
-                newuserrole.setRole_id(listRole.get(i).getRole_id());
-                userRoleRepository.save(newuserrole);
-            }
-        }
+    public void addUserRole(int user_id, int role_id) {
+        UserRole newuserrole = new UserRole();
+        newuserrole.setUser_id(user_id);
+        newuserrole.setRole_id(role_id);
+        userRoleRepository.save(newuserrole);
     }
 
-    public void degradeUserRoleFromAdmin(int user_id, String role_name) {
-        List<UserRole> listUserRole = userRoleRepository.getAllRoleOfOneByUser_id(user_id);
-        for (int i = 0; i < listUserRole.size(); i++) {
-            if (listUserRole.get(i).getRole_id() != roleRepository.getRoleByRole_name(role_name)
-                    .getRole_id()) {
-                userRoleRepository.delete(listUserRole.get(i));
-            }
+    public void deleteUserRole(int user_id, int role_id) {
+        UserRole olduserrole = userRoleRepository.getUserRoleByUser_idAndRole_id(user_id, role_id);
+        userRoleRepository.delete(olduserrole);
+    }
+
+    public void changeUserRole(int user_id, int change_role_id) {
+        int highest_user_role = userRoleRepository.getHighestRole_idWithUser_Id(user_id);
+        if (change_role_id == 1 && highest_user_role == 3) {
+            addUserRole(user_id, 1);
+            addUserRole(user_id, 2);
+        }
+        if (change_role_id == 1 && highest_user_role == 2) {
+            addUserRole(user_id, 1);
+        }
+        if (change_role_id == 2 && highest_user_role == 1) {
+            deleteUserRole(user_id, 1);
+        }
+        if (change_role_id == 2 && highest_user_role == 3) {
+            addUserRole(user_id, change_role_id);
+        }
+        if (change_role_id == 3 && highest_user_role == 1) {
+            deleteUserRole(user_id, 1);
+            deleteUserRole(user_id, 2);
+        }
+        if (change_role_id == 3 && highest_user_role == 2) {
+            deleteUserRole(user_id, 2);
         }
     }
 
@@ -154,14 +166,7 @@ public class UserService {
         UserRole userrole = userRoleRepository.getUserRoleByUser_id(userRequest.getUser_id());
         int change_role_id = roleRepository.getRoleByRole_name(userRequest.getRole_name()).getRole_id();
         if (user != null && userrole != null) {
-            if (user.getRole_name().equals("admin") && !userRequest.getRole_name().equals("admin")) {
-                degradeUserRoleFromAdmin(userRequest.getUser_id(), userRequest.getRole_name());
-            } else if (!user.getRole_name().equals("admin") && userRequest.getRole_name().equals("admin")) {
-                upgradeUserRoleToAdmin(userRequest.getUser_id(), userRequest.getRole_name());
-            } else {
-                userrole.setRole_id(change_role_id);
-                userRoleRepository.save(userrole);
-            }
+            changeUserRole(userRequest.getUser_id(), change_role_id);
             user.setEmail(userRequest.getEmail());
             user.setFullname(userRequest.getFullname());
             user.setPhone(userRequest.getPhone());

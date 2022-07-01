@@ -91,7 +91,7 @@ public class ProductController {
             @RequestHeader("Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
-                    productService.createProduct(productCreateRequest, jwt));
+                    productService.createProduct(productCreateRequest));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     e.getMessage());

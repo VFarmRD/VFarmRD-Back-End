@@ -16,14 +16,12 @@ public class Product {
     private String product_code;
     private String product_name;
     private String client_id;
-    private int created_user_id;
-    private int assigned_user_id;
     private String product_inquiry;
     private String product_status;
     private String brand_name;
-    private int volume;
-    private int capacity;
-    private float d;
+    private float volume;
+    private float product_weight;
+    private float density;
     private float tolerance;
     private int material_norm_loss;
     private Date created_time;
@@ -66,22 +64,6 @@ public class Product {
         this.product_code = product_code;
     }
 
-    public int getCreated_user_id() {
-        return created_user_id;
-    }
-
-    public void setCreated_user_id(int created_user_id) {
-        this.created_user_id = created_user_id;
-    }
-
-    public int getAssigned_user_id() {
-        return assigned_user_id;
-    }
-
-    public void setAssigned_user_id(int assigned_user_id) {
-        this.assigned_user_id = assigned_user_id;
-    }
-
     public String getProduct_name() {
         return product_name;
     }
@@ -122,28 +104,28 @@ public class Product {
         this.brand_name = brand_name;
     }
 
-    public int getVolume() {
+    public float getVolume() {
         return volume;
     }
 
-    public void setVolume(int volume) {
+    public void setVolume(float volume) {
         this.volume = volume;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public float getProduct_weight() {
+        return product_weight;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setProduct_weight(float product_weight) {
+        this.product_weight = product_weight;
     }
 
-    public float getD() {
-        return d;
+    public float getDensity() {
+        return density;
     }
 
-    public void setD(float d) {
-        this.d = d;
+    public void setDensity(float density) {
+        this.density = density;
     }
 
     public float getTolerance() {

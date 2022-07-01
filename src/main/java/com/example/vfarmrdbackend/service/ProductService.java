@@ -71,20 +71,23 @@ public class ProductService {
         }
     }
 
-    public Map<String, String> createProduct(ProductCreateRequest productCreateRequest, String jwt) {
+    public Map<String, String> createProduct(ProductCreateRequest productCreateRequest) {
         date = new Date();
         Product product = new Product();
         String product_code = generateProductCode();
-        product.setProduct_code(product_code);
+        if (productCreateRequest.getProduct_code() != null) {
+            product_code = productCreateRequest.getProduct_code();
+            product.setProduct_code(productCreateRequest.getProduct_code());
+        } else {
+            product.setProduct_code(product_code);
+        }
         product.setProduct_name(productCreateRequest.getProduct_name());
         product.setClient_id(productCreateRequest.getClient_id());
-        product.setAssigned_user_id(productCreateRequest.getAssigned_user_id());
-        product.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
         product.setProduct_inquiry(productCreateRequest.getProduct_inquiry());
         product.setBrand_name(productCreateRequest.getBrand_name());
         product.setVolume(productCreateRequest.getVolume());
-        product.setCapacity(productCreateRequest.getCapacity());
-        product.setD(productCreateRequest.getD());
+        product.setProduct_weight(productCreateRequest.getProduct_weight());
+        product.setDensity(productCreateRequest.getDensity());
         product.setTolerance(productCreateRequest.getTolerance());
         product.setMaterial_norm_loss(productCreateRequest.getMaterial_norm_loss());
         product.setExpired_date(productCreateRequest.getExpired_date());
@@ -105,7 +108,9 @@ public class ProductService {
         if (product != null) {
             date = new Date();
             product.setProduct_name(productUpdateRequest.getProduct_name());
-            product.setAssigned_user_id(productUpdateRequest.getAssigned_user_id());
+            if (productUpdateRequest.getProduct_code() != null) {
+                product.setProduct_code(productUpdateRequest.getProduct_code());
+            }
             product.setProduct_inquiry(productUpdateRequest.getProduct_inquiry());
             product.setModified_time(date);
             product.setExpired_date(productUpdateRequest.getExpired_date());
