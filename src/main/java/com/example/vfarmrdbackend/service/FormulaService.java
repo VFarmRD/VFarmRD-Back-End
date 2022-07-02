@@ -60,6 +60,7 @@ public class FormulaService {
         Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
         FormulaGetResponse formulaGetResponse = new FormulaGetResponse();
         formulaGetResponse.setProject_id(formula.getProject_id());
+        formulaGetResponse.setFormula_version(formula.getFormula_version());
         formulaGetResponse.setFormula_weight(formula.getFormula_weight());
         formulaGetResponse.setFormula_cost(formula.getFormula_cost());
         formulaGetResponse.setUser_id(formula.getCreated_user_id());

@@ -4,6 +4,7 @@ import java.util.List;
 
 public class FormulaGetResponse {
     private String project_id;
+    private String formula_version;
     private float formula_cost;
     private float formula_weight;
     private float user_id;
@@ -104,6 +105,14 @@ public class FormulaGetResponse {
 
     public void setPhaseGetResponse(List<PhaseGetResponse> phaseGetResponse) {
         this.phaseGetResponse = phaseGetResponse;
+    }
+
+    public String getFormula_version() {
+        return formula_version;
+    }
+
+    public void setFormula_version(String formula_version) {
+        this.formula_version = formula_version;
     }
 
 }
