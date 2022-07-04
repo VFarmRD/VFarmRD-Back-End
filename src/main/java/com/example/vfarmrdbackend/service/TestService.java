@@ -8,14 +8,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.vfarmrdbackend.model.File;
 import com.example.vfarmrdbackend.model.Test;
-import com.example.vfarmrdbackend.model.TestStandard;
-import com.example.vfarmrdbackend.model.TestStandardSet;
 import com.example.vfarmrdbackend.model.User;
 import com.example.vfarmrdbackend.payload.FileResponse;
 import com.example.vfarmrdbackend.payload.TestCreateRequest;
 import com.example.vfarmrdbackend.payload.TestCreateValue;
 import com.example.vfarmrdbackend.payload.TestGetResponse;
-import com.example.vfarmrdbackend.payload.TestStandardSetGetResponse;
 import com.example.vfarmrdbackend.payload.TestUpdateRequest;
 import com.example.vfarmrdbackend.repository.FileRepository;
 import com.example.vfarmrdbackend.repository.TestRepository;
@@ -55,15 +52,6 @@ public class TestService {
         response.setUser_role(user.getRole_name());
         response.setTest_expect(test.getTest_expect());
         response.setTest_result(test.isTest_result());
-        TestStandardSet testStandardSet = testStandardSetRepository.getTestStandardById(test.getTeststandardset_id());
-        TestStandardSetGetResponse responseStandard = new TestStandardSetGetResponse();
-        responseStandard.setTeststandardset_id(test.getTeststandardset_id());
-        responseStandard.setTeststandardset_name(testStandardSet.getTeststandardset_name());
-        responseStandard.setDescription(testStandardSet.getDescription());
-        List<TestStandard> listTestStandard = testStandardRepository
-                .getTestStandardWithSet_id(test.getTeststandardset_id());
-        responseStandard.setTestStandard(listTestStandard);
-        response.setTestStandardSetGetResponse(responseStandard);
         response.setObject_type("tests");
         File file = fileRepository.getFileByObjTypeAndId("tests", String.valueOf(test_id));
         if (file != null) {
@@ -90,7 +78,6 @@ public class TestService {
             test.setUser_id(user_id);
             test.setTest_expect(testCreateValue.getTest_expect());
             test.setTest_result(testCreateValue.isTest_result());
-            test.setTeststandardset_id(testCreateValue.getTeststandardset_id());
             testRepository.save(test);
         }
     }
@@ -101,7 +88,6 @@ public class TestService {
             test.setTest_content(testUpdateRequest.getTest_content());
             test.setTest_expect(testUpdateRequest.getTest_expect());
             test.setTest_result(testUpdateRequest.isTest_result());
-            test.setTeststandardset_id(testUpdateRequest.getTeststandardset_id());
             testRepository.save(test);
             return true;
         }
