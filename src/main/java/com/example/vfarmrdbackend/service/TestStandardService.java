@@ -40,11 +40,11 @@ public class TestStandardService {
         }
     }
 
-    public ResponseEntity<?> createStandard(TestStandardRequest request) {
+    public ResponseEntity<?> createStandard(int teststandardset_id, TestStandardRequest request) {
         TestStandard newTestStandard = new TestStandard();
         newTestStandard.setTeststandard_name(request.getTeststandard_name());
         newTestStandard.setDescription(request.getDescription());
-        newTestStandard.setTeststandardset_id(request.getTeststandardset_id());
+        newTestStandard.setTeststandardset_id(teststandardset_id);
         testStandardRepository.save(newTestStandard);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new MessageResponse("Thành công", "Tạo Tiêu Chuẩn Thử Nghiệm thành công!"));
@@ -55,7 +55,6 @@ public class TestStandardService {
         if (updateTestStandard != null) {
             updateTestStandard.setTeststandard_name(request.getTeststandard_name());
             updateTestStandard.setDescription(request.getDescription());
-            updateTestStandard.setTeststandardset_id(request.getTeststandardset_id());
             testStandardRepository.save(updateTestStandard);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Thay đổi Tiêu Chuẩn Thử Nghiệm thành công!"));

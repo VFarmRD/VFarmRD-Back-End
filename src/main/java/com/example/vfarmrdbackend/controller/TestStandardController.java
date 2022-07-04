@@ -53,9 +53,11 @@ public class TestStandardController {
 
     @PostMapping("/teststandards")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
-    public ResponseEntity<?> createStandard(@RequestBody TestStandardRequest testStandardRequest) {
+    public ResponseEntity<?> createStandard(
+            @RequestParam(defaultValue = "", required = false) int teststandardset_id,
+            @RequestBody TestStandardRequest testStandardRequest) {
         try {
-            return testStandardService.createStandard(testStandardRequest);
+            return testStandardService.createStandard(teststandardset_id, testStandardRequest);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

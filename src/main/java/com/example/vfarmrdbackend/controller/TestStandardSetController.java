@@ -71,7 +71,7 @@ public class TestStandardSetController {
             return testStandardSetService.updateStandardSet(request, teststandardset_id);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+                    new MessageResponse("Lỗi", e.getMessage()));
         }
     }
 
