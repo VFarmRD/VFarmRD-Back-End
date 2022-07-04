@@ -60,10 +60,11 @@ public class TestStandardSetService {
         newTestStandardSet.setTeststandardset_name(request.getTeststandardset_name());
         newTestStandardSet.setDescription(request.getDescription());
         List<TestStandardRequest> listTestStandard = request.getTestStandardRequest();
-        for (int i = 0; i < listTestStandard.size(); i++) {
-            testStandardService.createStandard(listTestStandard.get(i));
-        }
         testStandardSetRepository.save(newTestStandardSet);
+        int testStandardSet_id = testStandardSetRepository.getTestStandard_idByName(request.getTeststandardset_name());
+        for (int i = 0; i < listTestStandard.size(); i++) {
+            testStandardService.createStandard(testStandardSet_id, listTestStandard.get(i));
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
                 new MessageResponse("Thành công", "Tạo bộ Tiêu Chuẩn Thử Nghiệm mới thành công!"));
     }
@@ -87,8 +88,7 @@ public class TestStandardSetService {
                     TestStandardRequest newTestStandard = new TestStandardRequest();
                     newTestStandard.setTeststandard_name(testStandard.getTeststandard_name());
                     newTestStandard.setDescription(testStandard.getDescription());
-                    newTestStandard.setTeststandardset_id(teststandardset_id);
-                    testStandardService.createStandard(newTestStandard);
+                    testStandardService.createStandard(teststandardset_id, newTestStandard);
                 }
             }
             for (int i = 0; i < listTestStandard_id.size(); i++) {

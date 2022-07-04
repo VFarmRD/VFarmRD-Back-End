@@ -1,10 +1,11 @@
 package com.example.vfarmrdbackend.payload;
 
-public class TestStandardRequest {
+public class TestStandardUpdateRequest {
+    private int teststandard_id;
     private String teststandard_name;
     private String description;
 
-    public TestStandardRequest() {
+    public TestStandardUpdateRequest() {
     }
 
     public String getTeststandard_name() {
@@ -21,6 +22,14 @@ public class TestStandardRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getTeststandard_id() {
+        return teststandard_id;
+    }
+
+    public void setTeststandard_id(int teststandard_id) {
+        this.teststandard_id = teststandard_id;
     }
 
 }
