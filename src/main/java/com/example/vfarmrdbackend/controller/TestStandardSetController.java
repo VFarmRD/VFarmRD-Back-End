@@ -9,76 +9,77 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.vfarmrdbackend.payload.MessageResponse;
-import com.example.vfarmrdbackend.payload.TestStandardRequest;
-import com.example.vfarmrdbackend.service.TestStandardService;
+import com.example.vfarmrdbackend.payload.TestStandardSetCreateRequest;
+import com.example.vfarmrdbackend.payload.TestStandardSetUpdateRequest;
+import com.example.vfarmrdbackend.service.TestStandardSetService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "TestStandard", description = "The TestStandard's API")
+@Tag(name = "TestStandardSet", description = "The TestStandardSet's API")
 @RestController
 @SecurityRequirement(name = "bearerAuth")
 @RequestMapping(path = "/api")
-public class TestStandardController {
+public class TestStandardSetController {
     @Autowired
-    TestStandardService testStandardService;
+    TestStandardSetService testStandardSetService;
 
-    @GetMapping("/teststandards")
+    @GetMapping("/teststandardsets")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
-    public ResponseEntity<?> getAllStandard() {
+    public ResponseEntity<?> getAllStandardSet() {
         try {
-            return testStandardService.getAllStandard();
+            return testStandardSetService.getAllStandardSet();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
-    @GetMapping("/teststandards/{teststandard_id}")
+    @GetMapping("/teststandardsets/{teststandardset_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
-    public ResponseEntity<?> getStandard(@RequestParam("teststandard_id") int teststandard_id) {
+    public ResponseEntity<?> getStandardSet(@RequestParam("teststandardset_id") int teststandardset_id) {
         try {
-            return testStandardService.getStandard(teststandard_id);
+            return testStandardSetService.getStandardSet(teststandardset_id);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
-    @PostMapping("/teststandards")
+    @PostMapping("/teststandardsets")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
-    public ResponseEntity<?> createStandard(@RequestBody TestStandardRequest testStandardRequest) {
+    public ResponseEntity<?> createStandardSet(@RequestBody TestStandardSetCreateRequest request) {
         try {
-            return testStandardService.createStandard(testStandardRequest);
+            return testStandardSetService.createStandardSet(request);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
-    @PutMapping("/teststandards/{teststandard_id}")
+    @PutMapping("/teststandardsets/{teststandardset_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
-    public ResponseEntity<?> updateStandard(@PathVariable("teststandard_id") int teststandard_id,
-            @RequestBody TestStandardRequest testStandardRequest) {
+    public ResponseEntity<?> updateStandardSet(@PathVariable("teststandardset_id") int teststandardset_id,
+            @RequestBody TestStandardSetUpdateRequest request) {
         try {
-            return testStandardService.updateStandard(teststandard_id, testStandardRequest);
+            return testStandardSetService.updateStandardSet(request, teststandardset_id);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
-    @DeleteMapping("/teststandards/{teststandard_id}")
+    @DeleteMapping("/teststandardsets/{teststandardset_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
-    public ResponseEntity<?> deleteStandard(@RequestParam("teststandard_id") int teststandard_id) {
+    public ResponseEntity<?> deleteStandardSet(@RequestParam("teststandardset_id") int teststandardset_id) {
         try {
-            return testStandardService.deleteStandard(teststandard_id);
+            return testStandardSetService.deleteStandardSet(teststandardset_id);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

@@ -7,6 +7,7 @@ public class TestResponse {
     private String test_expect;
     private boolean test_result;
     private String object_type;
+    private int teststandardset_id;
 
     public TestResponse() {
     }
@@ -57,6 +58,14 @@ public class TestResponse {
 
     public void setObject_type(String object_type) {
         this.object_type = object_type;
+    }
+
+    public int getTeststandardset_id() {
+        return teststandardset_id;
+    }
+
+    public void setTeststandardset_id(int teststandardset_id) {
+        this.teststandardset_id = teststandardset_id;
     }
 
 }

@@ -30,7 +30,7 @@ public class TaskService {
         List<TaskGetResponse> listTasksResponse = new ArrayList<>();
         User requestUser = userRepository.getUserByUser_id(user_id);
         if (requestUser.getRole_name().equals("staff")) {
-            listTasks = taskRepository.getAllTasksWithUser_idAndRoleStaff(user_id);
+            listTasks = taskRepository.getAllTasksWithUser_id(user_id);
         } else {
             listTasks = taskRepository.findAll();
         }
@@ -44,7 +44,7 @@ public class TaskService {
             newTaskInfo.setUser_id(task.getUser_id());
             newTaskInfo.setUser_name(user.getUser_name());
             newTaskInfo.setUser_role(user.getRole_name());
-            newTaskInfo.setProduct_id(task.getProduct_id());
+            newTaskInfo.setProject_id(task.getProject_id());
             newTaskInfo.setCreated_date(task.getCreated_date());
             newTaskInfo.setEstimated_date(task.getEstimated_date());
             if (date.after(task.getEstimated_date()) && !task.getTask_status().equals("done")) {
@@ -71,7 +71,7 @@ public class TaskService {
         Task newTask = new Task();
         newTask.setTask_name(taskCreateRequest.getTask_name());
         newTask.setUser_id(taskCreateRequest.getUser_id());
-        newTask.setProduct_id(taskCreateRequest.getProduct_id());
+        newTask.setProject_id(taskCreateRequest.getProject_id());
         newTask.setCreated_date(date);
         newTask.setEstimated_date(taskCreateRequest.getEstimated_date());
         newTask.setDescription(taskCreateRequest.getDescription());

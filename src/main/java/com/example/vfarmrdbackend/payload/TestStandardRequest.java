@@ -3,6 +3,7 @@ package com.example.vfarmrdbackend.payload;
 public class TestStandardRequest {
     private String teststandard_name;
     private String description;
+    private int teststandardset_id;
 
     public TestStandardRequest() {
     }
@@ -21,6 +22,14 @@ public class TestStandardRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getTeststandardset_id() {
+        return teststandardset_id;
+    }
+
+    public void setTeststandardset_id(int teststandardset_id) {
+        this.teststandardset_id = teststandardset_id;
     }
 
 }
