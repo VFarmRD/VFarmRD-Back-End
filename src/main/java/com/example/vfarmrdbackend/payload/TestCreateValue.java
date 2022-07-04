@@ -4,7 +4,6 @@ public class TestCreateValue {
     private String test_content;
     private String test_expect;
     private boolean test_result;
-    private int teststandardset_id;
 
     public TestCreateValue() {
     }
@@ -31,14 +30,6 @@ public class TestCreateValue {
 
     public void setTest_result(boolean test_result) {
         this.test_result = test_result;
-    }
-
-    public int getTeststandardset_id() {
-        return teststandardset_id;
-    }
-
-    public void setTeststandardset_id(int teststandardset_id) {
-        this.teststandardset_id = teststandardset_id;
     }
 
 }
