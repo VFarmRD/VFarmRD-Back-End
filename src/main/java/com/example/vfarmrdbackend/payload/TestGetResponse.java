@@ -10,12 +10,21 @@ public class TestGetResponse {
     private boolean test_result;
     private String object_type;
     private FileResponse fileResponse;
+    private TestStandardSetGetResponse testStandardSetGetResponse;
 
     public TestGetResponse() {
     }
 
     public int getTest_id() {
         return test_id;
+    }
+
+    public TestStandardSetGetResponse getTestStandardSetGetResponse() {
+        return testStandardSetGetResponse;
+    }
+
+    public void setTestStandardSetGetResponse(TestStandardSetGetResponse testStandardSetGetResponse) {
+        this.testStandardSetGetResponse = testStandardSetGetResponse;
     }
 
     public void setTest_id(int test_id) {

@@ -17,6 +17,7 @@ public class Test {
     private int user_id;
     private String test_expect;
     private boolean test_result;
+    private int teststandardset_id;
 
     public Test() {
     }
@@ -67,6 +68,14 @@ public class Test {
 
     public void setFormula_id(int formula_id) {
         this.formula_id = formula_id;
+    }
+
+    public int getTeststandardset_id() {
+        return teststandardset_id;
+    }
+
+    public void setTeststandardset_id(int teststandardset_id) {
+        this.teststandardset_id = teststandardset_id;
     }
 
 }

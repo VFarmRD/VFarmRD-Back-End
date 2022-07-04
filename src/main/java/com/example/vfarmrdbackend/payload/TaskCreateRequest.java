@@ -5,7 +5,7 @@ import java.util.Date;
 public class TaskCreateRequest {
     private String task_name;
     private int user_id;
-    private int product_id;
+    private int project_id;
     private Date estimated_date;
     private String description;
 
@@ -28,14 +28,6 @@ public class TaskCreateRequest {
         this.user_id = user_id;
     }
 
-    public int getProduct_id() {
-        return product_id;
-    }
-
-    public void setProduct_id(int product_id) {
-        this.product_id = product_id;
-    }
-
     public Date getEstimated_date() {
         return estimated_date;
     }
@@ -50,6 +42,14 @@ public class TaskCreateRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getProject_id() {
+        return project_id;
+    }
+
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
     }
 
 }

@@ -8,7 +8,7 @@ public class TaskGetResponse {
     private int user_id;
     private String user_name;
     private String user_role;
-    private int product_id;
+    private int project_id;
     private Date created_date;
     private Date estimated_date;
     private String task_status;
@@ -57,14 +57,6 @@ public class TaskGetResponse {
         this.user_role = user_role;
     }
 
-    public int getProduct_id() {
-        return product_id;
-    }
-
-    public void setProduct_id(int product_id) {
-        this.product_id = product_id;
-    }
-
     public Date getCreated_date() {
         return created_date;
     }
@@ -95,6 +87,14 @@ public class TaskGetResponse {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getProject_id() {
+        return project_id;
+    }
+
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
     }
 
 }

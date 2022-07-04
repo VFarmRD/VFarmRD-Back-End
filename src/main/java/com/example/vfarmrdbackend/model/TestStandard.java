@@ -14,6 +14,7 @@ public class TestStandard {
     private int teststandard_id;
     private String teststandard_name;
     private String description;
+    private int teststandardset_id;
 
     public TestStandard() {
     }
@@ -40,6 +41,14 @@ public class TestStandard {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getTeststandardset_id() {
+        return teststandardset_id;
+    }
+
+    public void setTeststandardset_id(int teststandardset_id) {
+        this.teststandardset_id = teststandardset_id;
     }
 
 }
