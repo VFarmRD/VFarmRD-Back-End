@@ -46,6 +46,7 @@ public class TaskService {
             newTaskInfo.setUser_role(user.getRole_name());
             newTaskInfo.setProject_id(task.getProject_id());
             newTaskInfo.setCreated_date(task.getCreated_date());
+            newTaskInfo.setStart_date(task.getStart_date());
             newTaskInfo.setEstimated_date(task.getEstimated_date());
             if (date.after(task.getEstimated_date()) && !task.getTask_status().equals("done")) {
                 newTaskInfo.setTask_status("overtime");
@@ -73,6 +74,7 @@ public class TaskService {
         newTask.setUser_id(taskCreateRequest.getUser_id());
         newTask.setProject_id(taskCreateRequest.getProject_id());
         newTask.setCreated_date(date);
+        newTask.setStart_date(taskCreateRequest.getStart_date());
         newTask.setEstimated_date(taskCreateRequest.getEstimated_date());
         newTask.setDescription(taskCreateRequest.getDescription());
         newTask.setTask_status("doing");
@@ -84,6 +86,7 @@ public class TaskService {
         if (updateTask != null) {
             updateTask.setTask_name(taskUpdateRequest.getTask_name());
             updateTask.setUser_id(taskUpdateRequest.getUser_id());
+            updateTask.setStart_date(taskUpdateRequest.getStart_date());
             updateTask.setEstimated_date(taskUpdateRequest.getEstimated_date());
             updateTask.setDescription(taskUpdateRequest.getDescription());
             updateTask.setTask_status(taskUpdateRequest.getTask_status());

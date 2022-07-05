@@ -5,6 +5,7 @@ import java.util.Date;
 public class TaskUpdateRequest {
     private String task_name;
     private int user_id;
+    private Date start_date;
     private Date estimated_date;
     private String task_status;
     private String description;
@@ -50,6 +51,14 @@ public class TaskUpdateRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Date getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(Date start_date) {
+        this.start_date = start_date;
     }
 
 }
