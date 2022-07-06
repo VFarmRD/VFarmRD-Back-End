@@ -15,6 +15,7 @@ import com.example.vfarmrdbackend.model.User;
 import com.example.vfarmrdbackend.payload.FormulaUpgradeRequest;
 import com.example.vfarmrdbackend.payload.MaterialOfPhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.FormulaCreateRequest;
+import com.example.vfarmrdbackend.payload.FormulaGetAllResponse;
 import com.example.vfarmrdbackend.payload.FormulaGetResponse;
 import com.example.vfarmrdbackend.payload.FormulaUpdateRequest;
 import com.example.vfarmrdbackend.payload.MaterialOfPhaseGetResponse;
@@ -52,8 +53,28 @@ public class FormulaService {
 
     Date date;
 
-    public List<Formula> getAllFormulaByProject_id(String project_id, String formula_status) {
-        return formulaRepository.getAllFormulaByProject_idAndStatus(project_id, formula_status);
+    public List<FormulaGetAllResponse> getAllFormulaByProject_id(String project_id, String formula_status) {
+        List<Formula> listFormulas = formulaRepository.getAllFormulaByProject_idAndStatus(project_id, formula_status);
+        List<FormulaGetAllResponse> listFormulasGetAll = new ArrayList<>();
+        for (int i = 0; i < listFormulas.size(); i++) {
+            Formula formula = listFormulas.get(i);
+            FormulaGetAllResponse formulaGetAllResponse = new FormulaGetAllResponse();
+            formulaGetAllResponse.setFormula_id(formula.getFormula_id());
+            formulaGetAllResponse.setProject_id(formula.getProject_id());
+            formulaGetAllResponse.setFormula_pre_version(formula.getFormula_pre_version());
+            formulaGetAllResponse.setFormula_status(formula.getFormula_status());
+            formulaGetAllResponse.setFormula_version(formula.getFormula_version());
+            formulaGetAllResponse.setFormula_weight(formula.getFormula_weight());
+            formulaGetAllResponse.setFormula_cost(formula.getFormula_cost());
+            formulaGetAllResponse.setUser_id(formula.getCreated_user_id());
+            formulaGetAllResponse.setVolume(formula.getVolume());
+            formulaGetAllResponse.setProduct_weight(formula.getProduct_weight());
+            formulaGetAllResponse.setDensity(formula.getDensity());
+            User user = userService.getUserInfo(formula.getCreated_user_id());
+            formulaGetAllResponse.setUser_name(user.getFullname());
+            listFormulasGetAll.add(formulaGetAllResponse);
+        }
+        return listFormulasGetAll;
     }
 
     public FormulaGetResponse getFormulaByFormula_id(int formula_id) {
@@ -68,7 +89,7 @@ public class FormulaService {
         formulaGetResponse.setProduct_weight(formula.getProduct_weight());
         formulaGetResponse.setDensity(formula.getDensity());
         User user = userService.getUserInfo(formula.getCreated_user_id());
-        formulaGetResponse.setUser_fullname(user.getFullname());
+        formulaGetResponse.setUser_name(user.getFullname());
         List<Phase> listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
         List<PhaseGetResponse> listPhaseGetResponse = new ArrayList<>();
         for (int i = 0; i < listPhases.size(); i++) {
