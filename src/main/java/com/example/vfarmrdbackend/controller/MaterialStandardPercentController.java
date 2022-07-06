@@ -72,7 +72,7 @@ public class MaterialStandardPercentController {
     public ResponseEntity<?> createMaterialStandardPercent(@RequestBody MaterialStandardPercentRequest request) {
         try {
             materialStandardPercentService.createMaterialStandardPercent(request);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+            return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Tạo tiêu chuẩn phần trăm nguyên liệu thành công!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -86,7 +86,7 @@ public class MaterialStandardPercentController {
             @RequestBody MaterialStandardPercentRequest request) {
         try {
             if (materialStandardPercentService.updateMaterialStandardPercent(msp_id, request)) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse("Thành công", "Cập nhật tiêu chuẩn phần trăm nguyên liệu thành công!"));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -104,7 +104,7 @@ public class MaterialStandardPercentController {
         try {
 
             if (materialStandardPercentService.deleteMaterialStandardPercent(msp_id)) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse("Thành công", "Xóa tiêu chuẩn phần trăm nguyên liệu thành công!"));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(

@@ -8,7 +8,7 @@ public class FormulaGetResponse {
     private float formula_cost;
     private float formula_weight;
     private float user_id;
-    private String user_fullname;
+    private String user_name;
     private float volume;
     private float product_weight;
     private float density;
@@ -91,14 +91,6 @@ public class FormulaGetResponse {
         this.user_id = user_id;
     }
 
-    public String getUser_fullname() {
-        return user_fullname;
-    }
-
-    public void setUser_fullname(String user_fullname) {
-        this.user_fullname = user_fullname;
-    }
-
     public List<PhaseGetResponse> getPhaseGetResponse() {
         return phaseGetResponse;
     }
@@ -113,6 +105,14 @@ public class FormulaGetResponse {
 
     public void setFormula_version(String formula_version) {
         this.formula_version = formula_version;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 
 }

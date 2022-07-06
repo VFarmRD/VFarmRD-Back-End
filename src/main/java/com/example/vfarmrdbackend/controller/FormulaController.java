@@ -2,10 +2,10 @@ package com.example.vfarmrdbackend.controller;
 
 import java.util.List;
 
-import com.example.vfarmrdbackend.model.Formula;
 import com.example.vfarmrdbackend.payload.FormulaUpgradeRequest;
 import com.example.vfarmrdbackend.payload.MessageResponse;
 import com.example.vfarmrdbackend.payload.FormulaCreateRequest;
+import com.example.vfarmrdbackend.payload.FormulaGetAllResponse;
 import com.example.vfarmrdbackend.payload.FormulaGetResponse;
 import com.example.vfarmrdbackend.payload.FormulaUpdateRequest;
 import com.example.vfarmrdbackend.service.FormulaService;
@@ -42,7 +42,7 @@ public class FormulaController {
     public ResponseEntity<?> getAllFormulaByProject_id(@RequestParam("project_id") String project_id,
             @RequestParam(defaultValue = "", required = false) String formula_status) {
         try {
-            List<Formula> listFormulas = formulaService.getAllFormulaByProject_id(project_id,
+            List<FormulaGetAllResponse> listFormulas = formulaService.getAllFormulaByProject_id(project_id,
                     "%" + formula_status + "%");
             if (listFormulas != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(listFormulas);

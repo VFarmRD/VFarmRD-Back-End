@@ -52,7 +52,7 @@ public class ProjectController {
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
-
+    
     @PostMapping("/projects/")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> createProject(@RequestBody ProjectRequest request,

@@ -70,7 +70,7 @@ public class MaterialConflictController {
     public ResponseEntity<?> createMaterialConflict(@RequestBody MaterialConflictRequest request) {
         try {
             materialConflictService.createMaterialConflict(request);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+            return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Tạo nguyên liệu xung đột thành công!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -84,7 +84,7 @@ public class MaterialConflictController {
             @RequestBody MaterialConflictRequest request) {
         try {
             if (materialConflictService.updateMaterialConflict(materialconflict_id, request)) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse("Thành công", "Cập nhật nguyên liệu xung đột thành công!"));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -102,7 +102,7 @@ public class MaterialConflictController {
         try {
 
             if (materialConflictService.deleteMaterialConflict(materialconflict_id)) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse("Thành công", "Xóa nguyên liệu xung đột thành công!"));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
