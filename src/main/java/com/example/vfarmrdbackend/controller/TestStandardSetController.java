@@ -43,7 +43,7 @@ public class TestStandardSetController {
 
     @GetMapping("/teststandardsets/{teststandardset_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
-    public ResponseEntity<?> getStandardSet(@RequestParam("teststandardset_id") int teststandardset_id) {
+    public ResponseEntity<?> getStandardSet(@PathVariable("teststandardset_id") int teststandardset_id) {
         try {
             return testStandardSetService.getStandardSet(teststandardset_id);
         } catch (Exception e) {
