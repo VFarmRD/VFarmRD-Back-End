@@ -23,11 +23,16 @@ public class MaterialConflictService {
     }
 
     public void createMaterialConflict(MaterialConflictRequest request) {
-        MaterialConflict newMaterialConflict = new MaterialConflict();
-        newMaterialConflict.setFirst_material_id(request.getFirst_material_id());
-        newMaterialConflict.setSecond_material_id(request.getSecond_material_id());
-        newMaterialConflict.setDescription(request.getDescription());
-        materialConflictRepository.save(newMaterialConflict);
+        MaterialConflict firstNewMaterialConflict = new MaterialConflict();
+        firstNewMaterialConflict.setFirst_material_id(request.getFirst_material_id());
+        firstNewMaterialConflict.setSecond_material_id(request.getSecond_material_id());
+        firstNewMaterialConflict.setDescription(request.getDescription());
+        materialConflictRepository.save(firstNewMaterialConflict);
+        MaterialConflict secondNewMaterialConflict = new MaterialConflict();
+        secondNewMaterialConflict.setFirst_material_id(request.getSecond_material_id());
+        secondNewMaterialConflict.setSecond_material_id(request.getFirst_material_id());
+        secondNewMaterialConflict.setDescription(request.getDescription());
+        materialConflictRepository.save(secondNewMaterialConflict);
     }
 
     public boolean updateMaterialConflict(int materialconflict_id, MaterialConflictRequest request) {
