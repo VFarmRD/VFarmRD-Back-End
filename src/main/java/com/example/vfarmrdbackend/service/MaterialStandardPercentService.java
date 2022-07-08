@@ -22,7 +22,7 @@ public class MaterialStandardPercentService {
         return materialStandardPercentRepository.getMaterialStandardPercentById(msp_id);
     }
 
-    public MaterialStandardPercent getMaterialStandardPercentByMaterial_id(int material_id) {
+    public MaterialStandardPercent getMaterialStandardPercentByMaterial_id(String material_id) {
         return materialStandardPercentRepository.getMaterialStandardPercentByMaterial_id(material_id);
     }
 

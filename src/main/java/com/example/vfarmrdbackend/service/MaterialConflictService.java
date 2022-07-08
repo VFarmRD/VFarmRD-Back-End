@@ -22,7 +22,7 @@ public class MaterialConflictService {
         return materialConflictRepository.getMaterialConflictById(materialconflict_id);
     }
 
-    public MaterialConflict getMaterialConflictByFirstMaterialId(int first_material_id) {
+    public MaterialConflict getMaterialConflictByFirstMaterialId(String first_material_id) {
         return materialConflictRepository.getMaterialConflictByFirstMaterialId(first_material_id);
     }
 
