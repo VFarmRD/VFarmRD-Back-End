@@ -26,7 +26,7 @@ public class TaskService {
 
     Date date;
 
-    @Scheduled(cron = "0 0 0 ? * * *")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void setTask_statusIfOvertime() {
         date = new Date();
         List<Task> listTasks = taskRepository.findAll();
