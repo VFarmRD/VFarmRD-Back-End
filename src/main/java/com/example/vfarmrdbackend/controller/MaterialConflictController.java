@@ -87,7 +87,7 @@ public class MaterialConflictController {
 
     @PostMapping("/materialconflicts")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createMaterialConflict(@RequestBody MaterialConflictCreateRequest request) {
+    public ResponseEntity<?> createMaterialConflict(@RequestBody List<MaterialConflictCreateRequest> request) {
         try {
             materialConflictService.createMaterialConflict(request);
             return ResponseEntity.status(HttpStatus.OK).body(
