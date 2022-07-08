@@ -1,5 +1,6 @@
 package com.example.vfarmrdbackend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +28,20 @@ public class MaterialConflictService {
         return materialConflictRepository.getMaterialConflictByFirstMaterialId(first_material_id);
     }
 
-    public void createMaterialConflict(MaterialConflictCreateRequest request) {
-        MaterialConflict firstNewMaterialConflict = new MaterialConflict();
-        firstNewMaterialConflict.setFirst_material_id(request.getFirst_material_id());
-        firstNewMaterialConflict.setSecond_material_id(request.getSecond_material_id());
-        firstNewMaterialConflict.setDescription(request.getDescription());
-        materialConflictRepository.save(firstNewMaterialConflict);
-        MaterialConflict secondNewMaterialConflict = new MaterialConflict();
-        secondNewMaterialConflict.setFirst_material_id(request.getSecond_material_id());
-        secondNewMaterialConflict.setSecond_material_id(request.getFirst_material_id());
-        secondNewMaterialConflict.setDescription(request.getDescription());
-        materialConflictRepository.save(secondNewMaterialConflict);
+    public void createMaterialConflict(List<MaterialConflictCreateRequest> listRequest) {
+        for (int i = 0; i < listRequest.size(); i++) {
+            MaterialConflictCreateRequest request = listRequest.get(i);
+            MaterialConflict firstNewMaterialConflict = new MaterialConflict();
+            firstNewMaterialConflict.setFirst_material_id(request.getFirst_material_id());
+            firstNewMaterialConflict.setSecond_material_id(request.getSecond_material_id());
+            firstNewMaterialConflict.setDescription(request.getDescription());
+            materialConflictRepository.save(firstNewMaterialConflict);
+            MaterialConflict secondNewMaterialConflict = new MaterialConflict();
+            secondNewMaterialConflict.setFirst_material_id(request.getSecond_material_id());
+            secondNewMaterialConflict.setSecond_material_id(request.getFirst_material_id());
+            secondNewMaterialConflict.setDescription(request.getDescription());
+            materialConflictRepository.save(secondNewMaterialConflict);
+        }
     }
 
     public void updateMaterialConflict(List<MaterialConflictUpdateRequest> listRequest) {
@@ -46,6 +50,7 @@ public class MaterialConflictService {
                 .getMaterialConflictByMaterial_id(material_id);
         List<Integer> listMaterialConflict_id = materialConflictRepository
                 .getMaterialConflictIdBMaterial_id(material_id);
+        List<MaterialConflictCreateRequest> listCreateRequest = new ArrayList<>();
         for (int i = 0; i < listRequest.size(); i++) {
             if (listRequest.get(i).getMaterialconflict_id() != 0) {
                 for (int j = 0; j < listMaterialConflict.size(); j++) {
@@ -71,8 +76,11 @@ public class MaterialConflictService {
                 createRequest.setFirst_material_id(listRequest.get(i).getFirst_material_id());
                 createRequest.setSecond_material_id(listRequest.get(i).getSecond_material_id());
                 createRequest.setDescription(listRequest.get(i).getDescription());
-                createMaterialConflict(createRequest);
+                listCreateRequest.add(createRequest);
             }
+        }
+        for (int i = 0; i < listCreateRequest.size(); i++) {
+            createMaterialConflict(listCreateRequest);
         }
         for (int i = 0; i < listMaterialConflict_id.size(); i++) {
             deleteMaterialConflict(listMaterialConflict_id.get(i));
