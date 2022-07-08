@@ -22,6 +22,10 @@ public class MaterialConflictService {
         return materialConflictRepository.getMaterialConflictById(materialconflict_id);
     }
 
+    public MaterialConflict getMaterialConflictByFirstMaterialId(int first_material_id) {
+        return materialConflictRepository.getMaterialConflictByFirstMaterialId(first_material_id);
+    }
+
     public void createMaterialConflict(MaterialConflictRequest request) {
         MaterialConflict firstNewMaterialConflict = new MaterialConflict();
         firstNewMaterialConflict.setFirst_material_id(request.getFirst_material_id());
