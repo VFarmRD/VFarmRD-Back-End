@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.vfarmrdbackend.model.MaterialConflict;
-import com.example.vfarmrdbackend.payload.MaterialConflictRequest;
+import com.example.vfarmrdbackend.payload.MaterialConflictCreateRequest;
+import com.example.vfarmrdbackend.payload.MaterialConflictUpdateRequest;
 import com.example.vfarmrdbackend.payload.MessageResponse;
 import com.example.vfarmrdbackend.service.MaterialConflictService;
 
@@ -86,7 +87,7 @@ public class MaterialConflictController {
 
     @PostMapping("/materialconflicts")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createMaterialConflict(@RequestBody MaterialConflictRequest request) {
+    public ResponseEntity<?> createMaterialConflict(@RequestBody MaterialConflictCreateRequest request) {
         try {
             materialConflictService.createMaterialConflict(request);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -97,18 +98,13 @@ public class MaterialConflictController {
         }
     }
 
-    @PutMapping("/materialconflicts/{materialconflict_id}")
+    @PutMapping("/materialconflicts/")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updateMaterialConflict(@PathVariable("materialconflict_id") int materialconflict_id,
-            @RequestBody MaterialConflictRequest request) {
+    public ResponseEntity<?> updateMaterialConflict(@RequestBody List<MaterialConflictUpdateRequest> request) {
         try {
-            if (materialConflictService.updateMaterialConflict(materialconflict_id, request)) {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new MessageResponse("Thành công", "Cập nhật nguyên liệu xung đột thành công!"));
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new MessageResponse("Lỗi", "Không tìm thấy nguyên liệu xung đột nào!"));
-            }
+            materialConflictService.updateMaterialConflict(request);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new MessageResponse("Thành công", "Cập nhật nguyên liệu xung đột thành công!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
