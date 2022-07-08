@@ -1,11 +1,20 @@
 package com.example.vfarmrdbackend.payload;
 
-public class MaterialConflictRequest {
+public class MaterialConflictUpdateRequest {
+    private int materialconflict_id;
     private String first_material_id;
     private String second_material_id;
     private String description;
 
-    public MaterialConflictRequest() {
+    public MaterialConflictUpdateRequest() {
+    }
+
+    public int getMaterialconflict_id() {
+        return materialconflict_id;
+    }
+
+    public void setMaterialconflict_id(int materialconflict_id) {
+        this.materialconflict_id = materialconflict_id;
     }
 
     public String getFirst_material_id() {
