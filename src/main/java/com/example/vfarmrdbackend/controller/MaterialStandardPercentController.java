@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.vfarmrdbackend.model.MaterialStandardPercent;
@@ -67,9 +68,9 @@ public class MaterialStandardPercentController {
         }
     }
 
-    @GetMapping("/materialstandardpercents/{material_id}/material")
+    @GetMapping("/materialstandardpercents/")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> getMaterialStandardPercentByMaterial_id(@PathVariable("material_id") String material_id) {
+    public ResponseEntity<?> getMaterialStandardPercentByMaterial_id(@RequestParam("material_id") String material_id) {
         try {
             MaterialStandardPercent materialstandardpercents = materialStandardPercentService
                     .getMaterialStandardPercentByMaterial_id(material_id);

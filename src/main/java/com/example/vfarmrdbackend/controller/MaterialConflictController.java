@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.vfarmrdbackend.model.MaterialConflict;
@@ -65,11 +66,11 @@ public class MaterialConflictController {
         }
     }
 
-    @GetMapping("/materialconflicts/{material_id}/material")
+    @GetMapping("/materialconflicts/")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> getMaterialConflictByFirstMaterialId(@PathVariable("material_id") String material_id) {
+    public ResponseEntity<?> getMaterialConflictByFirstMaterialId(@RequestParam("material_id") String material_id) {
         try {
-            MaterialConflict materialconflicts = materialConflictService
+            List<MaterialConflict> materialconflicts = materialConflictService
                     .getMaterialConflictByFirstMaterialId(material_id);
             if (materialconflicts != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(materialconflicts);
