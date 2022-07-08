@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Task;
@@ -24,6 +25,20 @@ public class TaskService {
     private UserRepository userRepository;
 
     Date date;
+
+    @Scheduled(cron = "0 0 0 ? * * *")
+    public void setTask_statusIfOvertime() {
+        date = new Date();
+        List<Task> listTasks = taskRepository.findAll();
+        for (int i = 0; i < listTasks.size(); i++) {
+            Task task = listTasks.get(i);
+            if (date.after(task.getEstimated_date()) &&
+                    !task.getTask_status().equals("done")) {
+                task.setTask_status("overtime");
+            }
+            taskRepository.save(task);
+        }
+    }
 
     public List<TaskGetResponse> getAllTasks(int user_id) {
         List<Task> listTasks = new ArrayList<>();
