@@ -67,6 +67,24 @@ public class MaterialStandardPercentController {
         }
     }
 
+    @GetMapping("/materialstandardpercents/{material_id}/material")
+    @PreAuthorize("hasAuthority('staff')")
+    public ResponseEntity<?> getMaterialStandardPercentByMaterial_id(@PathVariable("material_id") int material_id) {
+        try {
+            MaterialStandardPercent materialstandardpercents = materialStandardPercentService
+                    .getMaterialStandardPercentByMaterial_id(material_id);
+            if (materialstandardpercents != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(materialstandardpercents);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new MessageResponse("Lỗi", "Không tìm thấy tiêu chuẩn phần trăm nguyên liệu nào!"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
     @PostMapping("/materialstandardpercents")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> createMaterialStandardPercent(@RequestBody MaterialStandardPercentRequest request) {

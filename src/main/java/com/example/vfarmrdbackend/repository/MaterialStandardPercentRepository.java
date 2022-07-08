@@ -9,4 +9,7 @@ import com.example.vfarmrdbackend.model.MaterialStandardPercent;
 public interface MaterialStandardPercentRepository extends JpaRepository<MaterialStandardPercent, Integer> {
     @Query(value = "select * from materialstandardpercent m  where m.msp_id = :msp_id", nativeQuery = true)
     MaterialStandardPercent getMaterialStandardPercentById(@Param("msp_id") int msp_id);
+
+    @Query(value = "select * from materialstandardpercent m  where m.material_id = :material_id", nativeQuery = true)
+    MaterialStandardPercent getMaterialStandardPercentByMaterial_id(@Param("material_id") int material_id);
 }

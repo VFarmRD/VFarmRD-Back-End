@@ -65,6 +65,24 @@ public class MaterialConflictController {
         }
     }
 
+    @GetMapping("/materialconflicts/{material_id}/material")
+    @PreAuthorize("hasAuthority('staff')")
+    public ResponseEntity<?> getMaterialConflictByFirstMaterialId(@PathVariable("material_id") int material_id) {
+        try {
+            MaterialConflict materialconflicts = materialConflictService
+                    .getMaterialConflictByFirstMaterialId(material_id);
+            if (materialconflicts != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(materialconflicts);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new MessageResponse("Lỗi", "Không tìm thấy nguyên liệu xung đột nào!"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
     @PostMapping("/materialconflicts")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> createMaterialConflict(@RequestBody MaterialConflictRequest request) {
