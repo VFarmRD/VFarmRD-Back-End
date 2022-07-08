@@ -69,7 +69,7 @@ public class MaterialStandardPercentController {
 
     @GetMapping("/materialstandardpercents/{material_id}/material")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> getMaterialStandardPercentByMaterial_id(@PathVariable("material_id") int material_id) {
+    public ResponseEntity<?> getMaterialStandardPercentByMaterial_id(@PathVariable("material_id") String material_id) {
         try {
             MaterialStandardPercent materialstandardpercents = materialStandardPercentService
                     .getMaterialStandardPercentByMaterial_id(material_id);

@@ -11,5 +11,5 @@ public interface MaterialStandardPercentRepository extends JpaRepository<Materia
     MaterialStandardPercent getMaterialStandardPercentById(@Param("msp_id") int msp_id);
 
     @Query(value = "select * from materialstandardpercent m  where m.material_id = :material_id", nativeQuery = true)
-    MaterialStandardPercent getMaterialStandardPercentByMaterial_id(@Param("material_id") int material_id);
+    MaterialStandardPercent getMaterialStandardPercentByMaterial_id(@Param("material_id") String material_id);
 }

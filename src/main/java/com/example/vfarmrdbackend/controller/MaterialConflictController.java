@@ -67,7 +67,7 @@ public class MaterialConflictController {
 
     @GetMapping("/materialconflicts/{material_id}/material")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> getMaterialConflictByFirstMaterialId(@PathVariable("material_id") int material_id) {
+    public ResponseEntity<?> getMaterialConflictByFirstMaterialId(@PathVariable("material_id") String material_id) {
         try {
             MaterialConflict materialconflicts = materialConflictService
                     .getMaterialConflictByFirstMaterialId(material_id);
