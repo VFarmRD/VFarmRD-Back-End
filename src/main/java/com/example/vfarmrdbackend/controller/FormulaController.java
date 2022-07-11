@@ -90,9 +90,10 @@ public class FormulaController {
 
     @DeleteMapping("/formulas/{formula_id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> deleteFormula(@PathVariable("formula_id") int formula_id) {
+    public ResponseEntity<?> deleteFormula(@PathVariable("formula_id") int formula_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (formulaService.setFormula_status(formula_id, "canceled")) {
+            if (formulaService.setFormula_status(formula_id, "canceled", jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse("Thành công", "Công thức đã bị xóa!"));
             } else {
@@ -147,9 +148,10 @@ public class FormulaController {
     @PutMapping("/formulas/{formula_id}/status")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> changeFormula_status(@PathVariable("formula_id") int formula_id,
-            @RequestParam("status") String status) {
+            @RequestParam("status") String status,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (formulaService.setFormula_status(formula_id, status)) {
+            if (formulaService.setFormula_status(formula_id, status, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse("Thành công", "Công thức đã được cập nhật trạng thái!"));
             } else {

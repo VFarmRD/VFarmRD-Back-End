@@ -63,11 +63,7 @@ public class TaskService {
             newTaskInfo.setCreated_date(task.getCreated_date());
             newTaskInfo.setStart_date(task.getStart_date());
             newTaskInfo.setEstimated_date(task.getEstimated_date());
-            if (date.after(task.getEstimated_date()) && !task.getTask_status().equals("done")) {
-                newTaskInfo.setTask_status("overtime");
-            } else {
-                newTaskInfo.setTask_status(task.getTask_status());
-            }
+            newTaskInfo.setTask_status(task.getTask_status());
             newTaskInfo.setDescription(task.getDescription());
             listTasksResponse.add(newTaskInfo);
         }

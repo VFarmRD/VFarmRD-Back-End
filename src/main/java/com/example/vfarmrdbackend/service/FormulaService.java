@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Formula;
 import com.example.vfarmrdbackend.model.MaterialOfPhase;
+import com.example.vfarmrdbackend.model.Notification;
 import com.example.vfarmrdbackend.model.Phase;
 import com.example.vfarmrdbackend.model.Test;
 import com.example.vfarmrdbackend.model.User;
@@ -50,6 +51,9 @@ public class FormulaService {
 
     @Autowired
     TestService testService;
+
+    @Autowired
+    NotificationService notificationService;
 
     Date date;
 
@@ -202,7 +206,7 @@ public class FormulaService {
         return false;
     }
 
-    public boolean setFormula_status(int formula_id, String status) {
+    public boolean setFormula_status(int formula_id, String status, String jwt) {
         Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
         if (formula != null) {
             if (!status.equals("on process") && !status.equals("approved")
@@ -218,6 +222,21 @@ public class FormulaService {
             formula.setFormula_status(status);
             formula.setModified_time(date);
             formulaRepository.save(formula);
+            if (status.equals("approved")) {
+                notificationService.createNotification(new Notification(
+                        JwtService.getUser_idFromToken(jwt),
+                        formula.getCreated_user_id(),
+                        "Thông báo",
+                        "Công thức đã được thông qua!",
+                        date));
+            } else if (status.equals("pending")) {
+                notificationService.createNotification(new Notification(
+                        JwtService.getUser_idFromToken(jwt),
+                        formula.getCreated_user_id(),
+                        "Thông báo",
+                        "Công thức đã bị từ chối!",
+                        date));
+            }
             return true;
         } else {
             return false;
