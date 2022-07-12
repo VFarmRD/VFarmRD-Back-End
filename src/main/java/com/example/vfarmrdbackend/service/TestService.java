@@ -69,20 +69,20 @@ public class TestService {
         return response;
     }
 
-    public void createTest(TestCreateRequest testCreateRequest, int user_id) {
+    public void createTest(TestCreateRequest testCreateRequest, String jwt) {
         for (int i = 0; i < testCreateRequest.getListTestCreateValues().size(); i++) {
             TestCreateValue testCreateValue = testCreateRequest.getListTestCreateValues().get(i);
             Test test = new Test();
             test.setFormula_id(testCreateRequest.getFormula_id());
             test.setTest_content(testCreateValue.getTest_content());
-            test.setUser_id(user_id);
+            test.setUser_id(JwtService.getUser_idFromToken(jwt));
             test.setTest_expect(testCreateValue.getTest_expect());
             test.setTest_result(testCreateValue.isTest_result());
             testRepository.save(test);
         }
     }
 
-    public boolean updateTest(TestUpdateRequest testUpdateRequest, int test_id) {
+    public boolean updateTest(TestUpdateRequest testUpdateRequest, int test_id, String jwt) {
         Test test = testRepository.getTestByTest_id(test_id);
         if (test != null) {
             test.setTest_content(testUpdateRequest.getTest_content());
@@ -94,7 +94,7 @@ public class TestService {
         return false;
     }
 
-    public boolean deleteTest(int test_id) {
+    public boolean deleteTest(int test_id, String jwt) {
         Test test = testRepository.getTestByTest_id(test_id);
         if (test != null) {
             testRepository.delete(test);

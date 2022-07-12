@@ -8,9 +8,11 @@ import javax.validation.Valid;
 
 import com.example.vfarmrdbackend.model.User;
 import com.example.vfarmrdbackend.payload.LoginRequest;
+import com.example.vfarmrdbackend.payload.MessageResponse;
 import com.example.vfarmrdbackend.payload.SignupRequest;
 import com.example.vfarmrdbackend.payload.UserRequest;
 import com.example.vfarmrdbackend.repository.UserRepository;
+import com.example.vfarmrdbackend.service.JwtService;
 import com.example.vfarmrdbackend.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -113,7 +116,7 @@ public class UserController {
             pageUsers = userRepository.findUserByFields("%" + user_name + "%",
                     "%" + email + "%", "%" + fullname + "%", "%" + phone + "%",
                     "%" + role_name + "%", user_status, paging);
-                    listUsers = pageUsers.getContent();
+            listUsers = pageUsers.getContent();
             // Map<String, Object> response = new HashMap<>();
             // response.put("users", listUsers);
             // response.put("currentPage", pageUsers.getNumber());
@@ -144,9 +147,10 @@ public class UserController {
 
     @PutMapping("/users/update")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (userService.updateUser(userRequest)) {
+            if (userService.updateUser(userRequest, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         "Update user successfully!");
             } else {
@@ -160,9 +164,10 @@ public class UserController {
 
     @PutMapping("/users/delete/{user_id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> deleteUser(@PathVariable("user_id") int user_id) {
+    public ResponseEntity<?> deleteUser(@PathVariable("user_id") int user_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (userService.deleteUser(user_id)) {
+            if (userService.deleteUser(user_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Delete user successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
@@ -175,9 +180,10 @@ public class UserController {
 
     @PutMapping("/users/recover/{user_id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<?> recoverUser(@PathVariable("user_id") int user_id) {
+    public ResponseEntity<?> recoverUser(@PathVariable("user_id") int user_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (userService.recoverUser(user_id)) {
+            if (userService.recoverUser(user_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Recover user successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
@@ -188,4 +194,21 @@ public class UserController {
         }
     }
 
+    @GetMapping("/users/check-valid-jwt")
+    public ResponseEntity<?> checkTokenIsExpired(@RequestHeader("Authorization") String jwt) {
+        try {
+            if (JwtService.checkJWTIsExpired(jwt)) {
+                return ResponseEntity.status(HttpStatus.GONE).body(new MessageResponse(
+                        "Thông báo",
+                        "Token đã hết hạn!"));
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(
+                        "Thông báo",
+                        "Token chưa hết hạn!"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    e.getMessage());
+        }
+    }
 }

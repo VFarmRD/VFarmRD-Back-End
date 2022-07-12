@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.vfarmrdbackend.model.Log;
 import com.example.vfarmrdbackend.model.User;
 import com.example.vfarmrdbackend.model.UserRole;
 import com.example.vfarmrdbackend.payload.JwtResponse;
@@ -39,12 +40,13 @@ public class UserService {
     UserRoleRepository userRoleRepository;
 
     @Autowired
+    LogService logService;
+
+    @Autowired
     PasswordEncoder encoder;
 
     @Autowired
     JwtUtils jwtUtils;
-
-    Date date;
 
     public User getUserInfo(int user_id) {
         User user = userRepository.getUserByUser_id(user_id);
@@ -98,7 +100,6 @@ public class UserService {
     }
 
     public void register(SignupRequest signUpRequest) {
-        date = new Date();
         User user = new User();
         user.setUser_name(signUpRequest.getUser_name());
         user.setEmail(signUpRequest.getEmail());
@@ -106,7 +107,7 @@ public class UserService {
         user.setPhone(signUpRequest.getPhone());
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
         user.setUser_status(true);
-        user.setCreated_time(date);
+        user.setCreated_time(new Date());
         userRepository.save(user);
         int user_id = userRepository.getUserByUser_name(signUpRequest.getUser_name()).getUser_id();
         String role_name = signUpRequest.getRole_name();
@@ -160,8 +161,7 @@ public class UserService {
         }
     }
 
-    public boolean updateUser(UserRequest userRequest) {
-        date = new Date();
+    public boolean updateUser(UserRequest userRequest, String jwt) {
         User user = userRepository.getUserByUser_id(userRequest.getUser_id());
         UserRole userrole = userRoleRepository.getUserRoleByUser_id(userRequest.getUser_id());
         int change_role_id = roleRepository.getRoleByRole_name(userRequest.getRole_name()).getRole_id();
@@ -172,34 +172,47 @@ public class UserService {
             user.setPhone(userRequest.getPhone());
             user.setRole_name(userRoleRepository.getHighestRoleWithUser_Id(user.getUser_id()));
             user.setPassword(encoder.encode(userRequest.getPassword()));
-            user.setModified_time(date);
+            user.setModified_time(new Date());
             userRepository.save(user);
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "USER",
+                    "UPDATE",
+                    String.valueOf(userRequest.getUser_id()),
+                    new Date()));
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean deleteUser(int id) {
+    public boolean deleteUser(int id, String jwt) {
         User user = userRepository.getUserByUser_id(id);
         if (user != null) {
-            date = new Date();
-            user.setModified_time(date);
+            user.setModified_time(new Date());
             user.setUser_status(false);
             userRepository.save(user);
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "USER",
+                    "DEACTIVATE",
+                    String.valueOf(id),
+                    new Date()));
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean recoverUser(int id) {
+    public boolean recoverUser(int id, String jwt) {
         User user = userRepository.getUserByUser_id(id);
         if (user != null) {
-            date = new Date();
-            user.setModified_time(date);
+            user.setModified_time(new Date());
             user.setUser_status(true);
             userRepository.save(user);
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "USER",
+                    "RECOVERY",
+                    String.valueOf(id),
+                    new Date()));
             return true;
         } else {
             return false;

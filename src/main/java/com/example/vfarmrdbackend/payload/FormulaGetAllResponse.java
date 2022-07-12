@@ -17,6 +17,7 @@ public class FormulaGetAllResponse {
     private float density;
     private Date created_time;
     private Date modified_time;
+    private String description;
 
     public FormulaGetAllResponse() {
     }
@@ -131,6 +132,14 @@ public class FormulaGetAllResponse {
 
     public void setDensity(float density) {
         this.density = density;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

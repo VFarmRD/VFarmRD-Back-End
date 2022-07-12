@@ -40,7 +40,7 @@ public class TestStandardService {
         }
     }
 
-    public ResponseEntity<?> createStandard(int teststandardset_id, TestStandardRequest request) {
+    public ResponseEntity<?> createStandard(int teststandardset_id, TestStandardRequest request, String jwt) {
         TestStandard newTestStandard = new TestStandard();
         newTestStandard.setTeststandard_name(request.getTeststandard_name());
         newTestStandard.setDescription(request.getDescription());
@@ -50,7 +50,7 @@ public class TestStandardService {
                 new MessageResponse("Thành công", "Tạo Tiêu Chuẩn Thử Nghiệm thành công!"));
     }
 
-    public ResponseEntity<?> updateStandard(int teststandard_id, TestStandardRequest request) {
+    public ResponseEntity<?> updateStandard(int teststandard_id, TestStandardRequest request, String jwt) {
         TestStandard updateTestStandard = testStandardRepository.getTestStandard(teststandard_id);
         if (updateTestStandard != null) {
             updateTestStandard.setTeststandard_name(request.getTeststandard_name());
@@ -64,7 +64,7 @@ public class TestStandardService {
         }
     }
 
-    public ResponseEntity<?> deleteStandard(int teststandard_id) {
+    public ResponseEntity<?> deleteStandard(int teststandard_id, String jwt) {
         TestStandard deleteTestStandard = testStandardRepository.getTestStandard(teststandard_id);
         if (deleteTestStandard != null) {
             testStandardRepository.delete(deleteTestStandard);
