@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,9 +55,10 @@ public class TestStandardSetController {
 
     @PostMapping("/teststandardsets")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
-    public ResponseEntity<?> createStandardSet(@RequestBody TestStandardSetCreateRequest request) {
+    public ResponseEntity<?> createStandardSet(@RequestBody TestStandardSetCreateRequest request,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            return testStandardSetService.createStandardSet(request);
+            return testStandardSetService.createStandardSet(request, jwt);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -66,9 +68,9 @@ public class TestStandardSetController {
     @PutMapping("/teststandardsets/{teststandardset_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> updateStandardSet(@PathVariable("teststandardset_id") int teststandardset_id,
-            @RequestBody TestStandardSetUpdateRequest request) {
+            @RequestBody TestStandardSetUpdateRequest request, @RequestHeader("Authorization") String jwt) {
         try {
-            return testStandardSetService.updateStandardSet(request, teststandardset_id);
+            return testStandardSetService.updateStandardSet(request, teststandardset_id, jwt);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", e.getMessage()));
@@ -77,9 +79,10 @@ public class TestStandardSetController {
 
     @DeleteMapping("/teststandardsets/{teststandardset_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
-    public ResponseEntity<?> deleteStandardSet(@RequestParam("teststandardset_id") int teststandardset_id) {
+    public ResponseEntity<?> deleteStandardSet(@RequestParam("teststandardset_id") int teststandardset_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            return testStandardSetService.deleteStandardSet(teststandardset_id);
+            return testStandardSetService.deleteStandardSet(teststandardset_id, jwt);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

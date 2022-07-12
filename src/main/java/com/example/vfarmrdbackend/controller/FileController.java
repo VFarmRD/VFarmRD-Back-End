@@ -127,9 +127,10 @@ public class FileController {
         @DeleteMapping("/files/delete/{file_id}")
         @PreAuthorize("hasAuthority('staff') " +
                         "or hasAuthority('manager')")
-        public ResponseEntity<?> deleteFile(@PathVariable("file_id") int file_id) {
+        public ResponseEntity<?> deleteFile(@PathVariable("file_id") int file_id,
+                        @RequestHeader("Authorization") String jwt) {
                 try {
-                        fileService.deleteFile(file_id);
+                        fileService.deleteFile(file_id,jwt);
                         return ResponseEntity.status(HttpStatus.OK).body(
                                         "Delete File successfully!");
                 } catch (Exception e) {

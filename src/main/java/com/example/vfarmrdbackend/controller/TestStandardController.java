@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,9 +56,9 @@ public class TestStandardController {
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> createStandard(
             @RequestParam(defaultValue = "", required = false) int teststandardset_id,
-            @RequestBody TestStandardRequest testStandardRequest) {
+            @RequestBody TestStandardRequest testStandardRequest, @RequestHeader("Authorization") String jwt) {
         try {
-            return testStandardService.createStandard(teststandardset_id, testStandardRequest);
+            return testStandardService.createStandard(teststandardset_id, testStandardRequest, jwt);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -67,9 +68,9 @@ public class TestStandardController {
     @PutMapping("/teststandards/{teststandard_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> updateStandard(@PathVariable("teststandard_id") int teststandard_id,
-            @RequestBody TestStandardRequest testStandardRequest) {
+            @RequestBody TestStandardRequest testStandardRequest, @RequestHeader("Authorization") String jwt) {
         try {
-            return testStandardService.updateStandard(teststandard_id, testStandardRequest);
+            return testStandardService.updateStandard(teststandard_id, testStandardRequest, jwt);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -78,9 +79,10 @@ public class TestStandardController {
 
     @DeleteMapping("/teststandards/{teststandard_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
-    public ResponseEntity<?> deleteStandard(@RequestParam("teststandard_id") int teststandard_id) {
+    public ResponseEntity<?> deleteStandard(@RequestParam("teststandard_id") int teststandard_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            return testStandardService.deleteStandard(teststandard_id);
+            return testStandardService.deleteStandard(teststandard_id, jwt);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

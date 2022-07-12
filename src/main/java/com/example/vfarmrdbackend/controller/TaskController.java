@@ -70,9 +70,10 @@ public class TaskController {
 
     @PostMapping("/tasks")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> createTask(@RequestBody TaskCreateRequest taskCreateRequest) {
+    public ResponseEntity<?> createTask(@RequestBody TaskCreateRequest taskCreateRequest,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            taskService.createTask(taskCreateRequest);
+            taskService.createTask(taskCreateRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body("Create Task successfully!!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -83,9 +84,9 @@ public class TaskController {
     @PutMapping("/tasks/{task_id}")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> updateTask(@PathVariable("task_id") int task_id,
-            @RequestBody TaskUpdateRequest taskUpdateRequest) {
+            @RequestBody TaskUpdateRequest taskUpdateRequest, @RequestHeader("Authorization") String jwt) {
         try {
-            if (taskService.updateTask(task_id, taskUpdateRequest)) {
+            if (taskService.updateTask(task_id, taskUpdateRequest, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Update task successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not found!");
@@ -98,9 +99,10 @@ public class TaskController {
 
     @DeleteMapping("/tasks/{task_id}")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> deleteTask(@PathVariable("task_id") int task_id) {
+    public ResponseEntity<?> deleteTask(@PathVariable("task_id") int task_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (taskService.deleteTask(task_id)) {
+            if (taskService.deleteTask(task_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Delete task successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not found!");

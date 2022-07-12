@@ -20,4 +20,7 @@ public interface MaterialConflictRepository extends JpaRepository<MaterialConfli
 
     @Query(value = "select * from materialconflicts m  where m.first_material_id = :material_id or m.second_material_id = :material_id", nativeQuery = true)
     List<MaterialConflict> getMaterialConflictByMaterial_id(@Param("material_id") String material_id);
+
+    @Query(value = "select * from materialconflicts m  where m.first_material_id = :first_material_id and m.second_material_id = :second_material_id", nativeQuery = true)
+    MaterialConflict getMaterialConflictByTwoMaterial_id(@Param("first_material_id") String first_material_id,@Param("second_material_id") String second_material_id);
 }

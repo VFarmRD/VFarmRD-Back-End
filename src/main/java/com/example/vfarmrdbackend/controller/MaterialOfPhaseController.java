@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,7 @@ public class MaterialOfPhaseController {
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> getAllMOPwithPhase_id(@RequestParam("phase_id") int phase_id) {
         try {
-            List<MaterialOfPhase>listMaterialOfPhases = materialOfPhaseService.getAllMaterialOfPhase(phase_id);
+            List<MaterialOfPhase> listMaterialOfPhases = materialOfPhaseService.getAllMaterialOfPhase(phase_id);
             if (listMaterialOfPhases != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(listMaterialOfPhases);
             } else {
@@ -67,9 +68,10 @@ public class MaterialOfPhaseController {
     @PutMapping("/materialofphase/update")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> updateMaterialOfPhase(
-            @RequestBody MaterialOfPhaseUpdateRequest materialOfPhaseUpdateRequest) {
+            @RequestBody MaterialOfPhaseUpdateRequest materialOfPhaseUpdateRequest,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (materialOfPhaseService.updateMaterialOfPhase(materialOfPhaseUpdateRequest)) {
+            if (materialOfPhaseService.updateMaterialOfPhase(materialOfPhaseUpdateRequest, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         "Update Material Of Phase successfully!");
             } else {
@@ -84,9 +86,10 @@ public class MaterialOfPhaseController {
 
     @DeleteMapping("/materialofphase/delete/{mop_id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> deleteMaterialOfPhase(@PathVariable("mop_id") int mop_id) {
+    public ResponseEntity<?> deleteMaterialOfPhase(@PathVariable("mop_id") int mop_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (materialOfPhaseService.deleteMaterialOfPhase(mop_id)) {
+            if (materialOfPhaseService.deleteMaterialOfPhase(mop_id,jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         "Delete Material Of Phase successfully!");
             } else {

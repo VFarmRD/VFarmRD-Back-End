@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,9 +67,10 @@ public class PhaseController {
 
     @PutMapping("/phases/update")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updatePhase(@RequestBody PhaseUpdateRequest phaseUpdateRequest) {
+    public ResponseEntity<?> updatePhase(@RequestBody PhaseUpdateRequest phaseUpdateRequest,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (phaseService.updatePhase(phaseUpdateRequest)) {
+            if (phaseService.updatePhase(phaseUpdateRequest, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Update phase successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Phase not found!");
@@ -81,9 +83,10 @@ public class PhaseController {
 
     @DeleteMapping("/phases/delete/{phase_id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> deletePhase(@PathVariable("phase_id") int phase_id) {
+    public ResponseEntity<?> deletePhase(@PathVariable("phase_id") int phase_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (phaseService.deletePhase(phase_id)) {
+            if (phaseService.deletePhase(phase_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Delete phase successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Phase not found!");
