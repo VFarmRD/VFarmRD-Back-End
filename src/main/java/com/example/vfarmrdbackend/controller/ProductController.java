@@ -91,7 +91,7 @@ public class ProductController {
             @RequestHeader("Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
-                    productService.createProduct(productCreateRequest));
+                    productService.createProduct(productCreateRequest, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     e.getMessage());
@@ -100,9 +100,10 @@ public class ProductController {
 
     @PutMapping("/products/update")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest) {
+    public ResponseEntity<?> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            productService.updateProduct(productUpdateRequest);
+            productService.updateProduct(productUpdateRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Update product successfully!");
         } catch (Exception e) {
@@ -113,9 +114,10 @@ public class ProductController {
 
     @PutMapping("/products/delete/{product_id}")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> deleteProduct(@PathVariable("product_id") String product_id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable("product_id") String product_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            productService.deleteProduct(product_id);
+            productService.deleteProduct(product_id, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Delete product successfully!");
         } catch (Exception e) {

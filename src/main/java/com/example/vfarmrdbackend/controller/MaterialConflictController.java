@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -87,9 +88,10 @@ public class MaterialConflictController {
 
     @PostMapping("/materialconflicts")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createMaterialConflict(@RequestBody List<MaterialConflictCreateRequest> request) {
+    public ResponseEntity<?> createMaterialConflict(@RequestBody List<MaterialConflictCreateRequest> request,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            materialConflictService.createMaterialConflict(request);
+            materialConflictService.createMaterialConflict(request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Tạo nguyên liệu xung đột thành công!"));
         } catch (Exception e) {
@@ -100,9 +102,10 @@ public class MaterialConflictController {
 
     @PutMapping("/materialconflicts/")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> updateMaterialConflict(@RequestBody List<MaterialConflictUpdateRequest> request) {
+    public ResponseEntity<?> updateMaterialConflict(@RequestBody List<MaterialConflictUpdateRequest> request,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            materialConflictService.updateMaterialConflict(request);
+            materialConflictService.updateMaterialConflict(request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Cập nhật nguyên liệu xung đột thành công!"));
         } catch (Exception e) {
@@ -113,10 +116,11 @@ public class MaterialConflictController {
 
     @DeleteMapping("/materialconflicts/{materialconflict_id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> deleteMaterialConflict(@PathVariable("materialconflict_id") int materialconflict_id) {
+    public ResponseEntity<?> deleteMaterialConflict(@PathVariable("materialconflict_id") int materialconflict_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
 
-            if (materialConflictService.deleteMaterialConflict(materialconflict_id)) {
+            if (materialConflictService.deleteMaterialConflict(materialconflict_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse("Thành công", "Xóa nguyên liệu xung đột thành công!"));
             } else {

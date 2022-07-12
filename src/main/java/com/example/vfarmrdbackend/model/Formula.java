@@ -25,6 +25,7 @@ public class Formula {
     private float volume;
     private float product_weight;
     private float density;
+    private String description;
 
     public Formula() {
     }
@@ -131,5 +132,13 @@ public class Formula {
 
     public void setModified_time(Date modified_time) {
         this.modified_time = modified_time;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

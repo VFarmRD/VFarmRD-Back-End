@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.vfarmrdbackend.model.Log;
 import com.example.vfarmrdbackend.model.Product;
 import com.example.vfarmrdbackend.payload.ProductCreateRequest;
 import com.example.vfarmrdbackend.payload.ProductUpdateRequest;
@@ -23,7 +24,8 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    Date date;
+    @Autowired
+    LogService logService;
 
     // Map<String, Object>
     public List<Product> getAllProducts(String product_name,
@@ -71,8 +73,7 @@ public class ProductService {
         }
     }
 
-    public Map<String, String> createProduct(ProductCreateRequest productCreateRequest) {
-        date = new Date();
+    public Map<String, String> createProduct(ProductCreateRequest productCreateRequest, String jwt) {
         Product product = new Product();
         String product_code = generateProductCode();
         if (productCreateRequest.getProduct_code() != null) {
@@ -92,7 +93,7 @@ public class ProductService {
         product.setMaterial_norm_loss(productCreateRequest.getMaterial_norm_loss());
         product.setExpired_date(productCreateRequest.getExpired_date());
         product.setRetail_price(productCreateRequest.getRetail_price());
-        product.setCreated_time(date);
+        product.setCreated_time(new Date());
         product.setProduct_status("activated");
         product.setUser_id(productCreateRequest.getUser_id());
         product.setFormula_id(productCreateRequest.getFormula_id());
@@ -102,34 +103,48 @@ public class ProductService {
         map.put("object_id",
                 String.valueOf(productRepository.getProduct_idByProduct_code(product_code)));
         map.put("product_code", product_code);
+        logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                "PRODUCT",
+                "CREATE",
+                String.valueOf(productRepository.getProduct_idByProduct_code(product_code)),
+                new Date()));
         return map;
     }
 
-    public boolean updateProduct(ProductUpdateRequest productUpdateRequest) {
+    public boolean updateProduct(ProductUpdateRequest productUpdateRequest, String jwt) {
         Product product = productRepository.getProductByProduct_id(productUpdateRequest.getProduct_id());
         if (product != null) {
-            date = new Date();
             product.setProduct_name(productUpdateRequest.getProduct_name());
             if (productUpdateRequest.getProduct_code() != null) {
                 product.setProduct_code(productUpdateRequest.getProduct_code());
             }
             product.setProduct_inquiry(productUpdateRequest.getProduct_inquiry());
-            product.setModified_time(date);
+            product.setModified_time(new Date());
             product.setExpired_date(productUpdateRequest.getExpired_date());
             product.setRetail_price(productUpdateRequest.getRetail_price());
             productRepository.save(product);
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "PRODUCT",
+                    "UPDATE",
+                    String.valueOf(productUpdateRequest.getProduct_id()),
+                    new Date()));
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean deleteProduct(String product_id) {
+    public boolean deleteProduct(String product_id, String jwt) {
         Product product = productRepository.getProductByProduct_id(product_id);
         if (product != null) {
             product.setProduct_status("deactivated");
-            product.setModified_time(date);
+            product.setModified_time(new Date());
             productRepository.save(product);
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "PRODUCT",
+                    "DELETE",
+                    product_id,
+                    new Date()));
             return true;
         } else {
             return false;

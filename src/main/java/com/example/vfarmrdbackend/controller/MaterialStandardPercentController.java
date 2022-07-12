@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -88,11 +89,16 @@ public class MaterialStandardPercentController {
 
     @PostMapping("/materialstandardpercents")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> createMaterialStandardPercent(@RequestBody MaterialStandardPercentRequest request) {
+    public ResponseEntity<?> createMaterialStandardPercent(@RequestBody MaterialStandardPercentRequest request,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            materialStandardPercentService.createMaterialStandardPercent(request);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new MessageResponse("Thành công", "Tạo tiêu chuẩn phần trăm nguyên liệu thành công!"));
+            if (materialStandardPercentService.createMaterialStandardPercent(request, jwt)) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new MessageResponse("Thành công", "Tạo tiêu chuẩn phần trăm nguyên liệu thành công!"));
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                        new MessageResponse("Lỗi", "Tiêu chuẩn phần trăm nguyên liệu này đã tồn tại!"));
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -102,9 +108,10 @@ public class MaterialStandardPercentController {
     @PutMapping("/materialstandardpercents/{msp_id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> updateMaterialStandardPercent(@PathVariable("msp_id") int msp_id,
-            @RequestBody MaterialStandardPercentRequest request) {
+            @RequestBody MaterialStandardPercentRequest request,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (materialStandardPercentService.updateMaterialStandardPercent(msp_id, request)) {
+            if (materialStandardPercentService.updateMaterialStandardPercent(msp_id, request, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse("Thành công", "Cập nhật tiêu chuẩn phần trăm nguyên liệu thành công!"));
             } else {
@@ -119,10 +126,11 @@ public class MaterialStandardPercentController {
 
     @DeleteMapping("/materialstandardpercents/{msp_id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> deleteMaterialStandardPercent(@PathVariable("msp_id") int msp_id) {
+    public ResponseEntity<?> deleteMaterialStandardPercent(@PathVariable("msp_id") int msp_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
 
-            if (materialStandardPercentService.deleteMaterialStandardPercent(msp_id)) {
+            if (materialStandardPercentService.deleteMaterialStandardPercent(msp_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse("Thành công", "Xóa tiêu chuẩn phần trăm nguyên liệu thành công!"));
             } else {

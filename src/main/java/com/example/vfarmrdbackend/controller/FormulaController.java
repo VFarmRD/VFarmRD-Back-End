@@ -79,9 +79,8 @@ public class FormulaController {
     public ResponseEntity<?> createFormula(@RequestBody FormulaCreateRequest formulaCreateRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
-            formulaService.createFormula(formulaCreateRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new MessageResponse("Thành công", "Công thức mới đã được tạo!"));
+                    formulaService.createFormula(formulaCreateRequest, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -110,14 +109,16 @@ public class FormulaController {
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> updateFormula(
             @PathVariable("formula_id") int formula_id,
-            @RequestBody FormulaUpdateRequest formulaUpdateRequest) {
+            @RequestBody FormulaUpdateRequest formulaUpdateRequest,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (formulaService.updateFormula(formula_id, formulaUpdateRequest)) {
+            int id = formulaService.updateFormula(formula_id, formulaUpdateRequest, jwt);
+            if (id != 0) {
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new MessageResponse("Thành công", "Công thức đã được cập nhật!"));
+                        id);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new MessageResponse("Lỗi", "Công thức không tồn tại!"));
+                        id);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -132,12 +133,13 @@ public class FormulaController {
             @RequestBody FormulaUpgradeRequest formulaUpgradeRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
-            if (formulaService.upgradeFormula(formula_id, formulaUpgradeRequest, jwt)) {
+            int id = formulaService.upgradeFormula(formula_id, formulaUpgradeRequest, jwt);
+            if (id != 0) {
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new MessageResponse("Thành công", "Công thức đã được nâng cấp!"));
+                        id);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new MessageResponse("Lỗi", "Công thức không tồn tại!"));
+                        id);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.vfarmrdbackend.model.Log;
 import com.example.vfarmrdbackend.model.Project;
 import com.example.vfarmrdbackend.payload.MessageResponse;
 import com.example.vfarmrdbackend.payload.ProjectGetResponse;
@@ -23,7 +24,8 @@ public class ProjectService {
     @Autowired
     private UserRepository userRepository;
 
-    Date date;
+    @Autowired
+    LogService logService;
 
     public ResponseEntity<?> getAllProjects() {
         List<Project> listProjects = projectRepository.findAll();
@@ -35,7 +37,7 @@ public class ProjectService {
         }
     }
 
-    public ResponseEntity<?> getProjectByProject_id(String project_id) {
+    public ResponseEntity<?> getProjectByProject_id(int project_id) {
         Project project = projectRepository.getProjectByProject_id(project_id);
         if (project != null) {
             ProjectGetResponse response = new ProjectGetResponse();
@@ -72,11 +74,17 @@ public class ProjectService {
         newProject.setRequirement(request.getRequirement());
         newProject.setEstimated_weight(request.getEstimated_weight());
         projectRepository.save(newProject);
+        logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                "PROJECT",
+                "CREATE",
+                String.valueOf(
+                        projectRepository.getProjectByProject_code(newProject.getProject_code()).getProject_id()),
+                new Date()));
         return ResponseEntity.status(HttpStatus.OK).body(
                 new MessageResponse("Thành công", "Tạo Dự Án thành công!"));
     }
 
-    public ResponseEntity<?> updateProject(String project_id, ProjectRequest request) {
+    public ResponseEntity<?> updateProject(int project_id, ProjectRequest request, String jwt) {
         Project updateProject = projectRepository.getProjectByProject_id(project_id);
         if (updateProject != null) {
             updateProject.setProject_name(request.getProject_name());
@@ -88,6 +96,11 @@ public class ProjectService {
             updateProject.setRequirement(request.getRequirement());
             updateProject.setEstimated_weight(request.getEstimated_weight());
             projectRepository.save(updateProject);
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "PROJECT",
+                    "UPDATE",
+                    String.valueOf(project_id),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Chỉnh sửa Dự Án thành công!"));
         } else {
@@ -96,12 +109,17 @@ public class ProjectService {
         }
     }
 
-    public ResponseEntity<?> deleteProject(String project_id) {
+    public ResponseEntity<?> deleteProject(int project_id, String jwt) {
         Project project = projectRepository.getProjectByProject_id(project_id);
         if (project != null) {
             project.setProject_status("canceled");
             project.setModified_time(new Date());
             projectRepository.save(project);
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "PROJECT",
+                    "DELETE",
+                    String.valueOf(project_id),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Xóa Dự Án thành công!"));
         } else {

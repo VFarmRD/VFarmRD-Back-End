@@ -28,4 +28,7 @@ public interface FileRepository extends JpaRepository<File, Integer> {
 
     @Query(value = "select * from files f where f.object_type = :object_type and f.object_id = :object_id", nativeQuery = true)
     File getFileByObjTypeAndId(@Param("object_type") String object_type, @Param("object_id") String object_id);
+
+    @Query(value = "select * from files f where f.user_id = :user_id order by f.file_id desc limit 1", nativeQuery = true)
+    File getNewFileUploadByUser(@Param("user_id") int user_id);
 }
