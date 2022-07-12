@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import com.example.vfarmrdbackend.model.File;
+import com.example.vfarmrdbackend.model.Log;
 import com.example.vfarmrdbackend.payload.FileResponse;
 import com.example.vfarmrdbackend.repository.FileRepository;
 
@@ -23,7 +24,8 @@ public class FileService {
     @Autowired
     private FileRepository fileRepository;
 
-    Date date;
+    @Autowired
+    LogService logService;
 
     public void deleteOldFile(String object_type, String object_id) {
         File oldFile = fileRepository.getFileByObjTypeAndId(object_type, String.valueOf(object_id));
@@ -36,7 +38,6 @@ public class FileService {
             String object_id)
             throws IOException {
         for (int i = 0; i < listFile.size(); i++) {
-            date = new Date();
             deleteOldFile(object_type, object_id);
             File newFile = new File();
             newFile.setUser_id(user_id);
@@ -44,9 +45,15 @@ public class FileService {
             newFile.setFile_type(listFile.get(i).getContentType());
             newFile.setObject_type(object_type);
             newFile.setObject_id(object_id);
-            newFile.setCreated_time(date);
+            newFile.setCreated_time(new Date());
             newFile.setFile_data(listFile.get(i).getBytes());
             fileRepository.save(newFile);
+            logService.createLog(new Log(
+                    user_id,
+                    "FILE",
+                    "CREATE",
+                    String.valueOf(fileRepository.getNewFileUploadByUser(user_id).getFile_id()),
+                    new Date()));
         }
         Map<String, List<Integer>> listFile_id = new HashMap<String, List<Integer>>();
         listFile_id.put("listFile_id", fileRepository.getNewestFile_id(object_type, object_id, listFile.size()));
@@ -79,7 +86,13 @@ public class FileService {
         return fileRepository.findFileWithKeyword(keyword, user_id).stream();
     }
 
-    public void deleteFile(int file_id) {
+    public void deleteFile(int file_id, String jwt) {
         fileRepository.deleteById(file_id);
+        logService.createLog(new Log(
+                JwtService.getUser_idFromToken(jwt),
+                "FILE",
+                "DELETE",
+                String.valueOf(file_id),
+                new Date()));
     }
 }

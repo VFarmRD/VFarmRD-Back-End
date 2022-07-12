@@ -12,6 +12,7 @@ public class FormulaGetResponse {
     private float volume;
     private float product_weight;
     private float density;
+    private String description;
     private List<PhaseGetResponse> phaseGetResponse;
     private String test_status;
     private List<TestGetResponse> listTestResponse;
@@ -113,6 +114,14 @@ public class FormulaGetResponse {
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

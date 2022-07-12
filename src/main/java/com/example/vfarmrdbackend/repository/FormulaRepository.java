@@ -30,4 +30,8 @@ public interface FormulaRepository extends JpaRepository<Formula, Integer> {
         int totalFormulaHaveMatchPreVersion(@Param("project_id") String project_id,
                         @Param("formula_pre_version") String formula_pre_version);
 
+        @Query(value = "select * from formulas f where f.project_id = :project_id and f.formula_version = :formula_version", nativeQuery = true)
+        int getFormula_idByProject_idAndVersion(@Param("project_id") String project_id,
+                        @Param("formula_version") String formula_version);
+
 }

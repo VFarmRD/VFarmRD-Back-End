@@ -6,7 +6,6 @@ import com.example.vfarmrdbackend.model.Test;
 import com.example.vfarmrdbackend.payload.TestCreateRequest;
 import com.example.vfarmrdbackend.payload.TestGetResponse;
 import com.example.vfarmrdbackend.payload.TestUpdateRequest;
-import com.example.vfarmrdbackend.service.JwtService;
 import com.example.vfarmrdbackend.service.TestService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -74,7 +73,7 @@ public class TestController {
     public ResponseEntity<?> createTest(@RequestBody TestCreateRequest testCreateRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
-            testService.createTest(testCreateRequest, JwtService.getUser_idFromToken(jwt));
+            testService.createTest(testCreateRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body("Create new test completed!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -85,9 +84,9 @@ public class TestController {
     @PutMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> updateTest(@PathVariable("test_id") int test_id,
-            @RequestBody TestUpdateRequest testUpdateRequest) {
+            @RequestBody TestUpdateRequest testUpdateRequest, @RequestHeader("Authorization") String jwt) {
         try {
-            if (testService.updateTest(testUpdateRequest, test_id)) {
+            if (testService.updateTest(testUpdateRequest, test_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Test not found!");
@@ -100,9 +99,10 @@ public class TestController {
 
     @DeleteMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> deleteTest(@PathVariable("test_id") int test_id) {
+    public ResponseEntity<?> deleteTest(@PathVariable("test_id") int test_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (testService.deleteTest(test_id)) {
+            if (testService.deleteTest(test_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Delete test successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Test not found!");

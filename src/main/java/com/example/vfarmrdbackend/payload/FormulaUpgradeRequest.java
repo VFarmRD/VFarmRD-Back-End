@@ -8,6 +8,7 @@ public class FormulaUpgradeRequest {
     private float volume;
     private float product_weight;
     private float density;
+    private String description;
     private List<PhaseCreateRequest> phaseCreateRequest;
 
     public FormulaUpgradeRequest() {
@@ -59,6 +60,14 @@ public class FormulaUpgradeRequest {
 
     public void setPhaseCreateRequest(List<PhaseCreateRequest> phaseCreateRequest) {
         this.phaseCreateRequest = phaseCreateRequest;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

@@ -16,15 +16,17 @@ public class Log {
     private int log_id;
     private int user_id;
     private String object_type;
+    private String action_type;
     private String object_id;
     private Date created_time;
 
     public Log() {
     }
 
-    public Log(int user_id, String object_type, String object_id, Date created_time) {
+    public Log(int user_id, String object_type, String action_type, String object_id, Date created_time) {
         this.user_id = user_id;
         this.object_type = object_type;
+        this.action_type = action_type;
         this.object_id = object_id;
         this.created_time = created_time;
     }
@@ -67,6 +69,14 @@ public class Log {
 
     public void setObject_type(String object_type) {
         this.object_type = object_type;
+    }
+
+    public String getAction_type() {
+        return action_type;
+    }
+
+    public void setAction_type(String action_type) {
+        this.action_type = action_type;
     }
 
 }

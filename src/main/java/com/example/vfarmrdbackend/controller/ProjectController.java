@@ -44,7 +44,7 @@ public class ProjectController {
     @GetMapping("/projects/{project_id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getProjectByProject_id(@PathVariable("project_id") String project_id) {
+    public ResponseEntity<?> getProjectByProject_id(@PathVariable("project_id") int project_id) {
         try {
             return projectService.getProjectByProject_id(project_id);
         } catch (Exception e) {
@@ -52,7 +52,7 @@ public class ProjectController {
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
-    
+
     @PostMapping("/projects/")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> createProject(@RequestBody ProjectRequest request,
@@ -67,10 +67,10 @@ public class ProjectController {
 
     @PutMapping("/projects/{project_id}")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> updateProjects(@PathVariable("project_id") String project_id,
-            @RequestBody ProjectRequest request) {
+    public ResponseEntity<?> updateProjects(@PathVariable("project_id") int project_id,
+            @RequestBody ProjectRequest request, @RequestHeader("Authorization") String jwt) {
         try {
-            return projectService.updateProject(project_id, request);
+            return projectService.updateProject(project_id, request, jwt);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -79,9 +79,10 @@ public class ProjectController {
 
     @DeleteMapping("/projects/{project_id}")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> deleteProject(@PathVariable("project_id") String project_id) {
+    public ResponseEntity<?> deleteProject(@PathVariable("project_id") int project_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            return projectService.deleteProject(project_id);
+            return projectService.deleteProject(project_id, jwt);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

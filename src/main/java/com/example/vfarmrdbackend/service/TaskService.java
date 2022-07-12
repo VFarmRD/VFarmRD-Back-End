@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.example.vfarmrdbackend.model.Log;
 import com.example.vfarmrdbackend.model.Task;
 import com.example.vfarmrdbackend.model.User;
 import com.example.vfarmrdbackend.payload.TaskCreateRequest;
@@ -24,11 +25,12 @@ public class TaskService {
     @Autowired
     private UserRepository userRepository;
 
-    Date date;
+    @Autowired
+    LogService logService;
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void setTask_statusIfOvertime() {
-        date = new Date();
+        Date date = new Date();
         List<Task> listTasks = taskRepository.findAll();
         for (int i = 0; i < listTasks.size(); i++) {
             Task task = listTasks.get(i);
@@ -50,7 +52,6 @@ public class TaskService {
             listTasks = taskRepository.findAll();
         }
         for (int i = 0; i < listTasks.size(); i++) {
-            date = new Date();
             Task task = listTasks.get(i);
             TaskGetResponse newTaskInfo = new TaskGetResponse();
             User user = userRepository.getUserByUser_id(task.getUser_id());
@@ -79,17 +80,21 @@ public class TaskService {
     }
 
     public void createTask(TaskCreateRequest taskCreateRequest, String jwt) {
-        date = new Date();
         Task newTask = new Task();
         newTask.setTask_name(taskCreateRequest.getTask_name());
         newTask.setUser_id(taskCreateRequest.getUser_id());
         newTask.setProject_id(taskCreateRequest.getProject_id());
-        newTask.setCreated_date(date);
+        newTask.setCreated_date(new Date());
         newTask.setStart_date(taskCreateRequest.getStart_date());
         newTask.setEstimated_date(taskCreateRequest.getEstimated_date());
         newTask.setDescription(taskCreateRequest.getDescription());
         newTask.setTask_status("doing");
         taskRepository.save(newTask);
+        logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                "TASK",
+                "CREATE",
+                String.valueOf(taskRepository.getNewestTaskByProject_id(newTask.getProject_id())),
+                new Date()));
     }
 
     public boolean updateTask(int task_id, TaskUpdateRequest taskUpdateRequest, String jwt) {
@@ -102,6 +107,11 @@ public class TaskService {
             updateTask.setDescription(taskUpdateRequest.getDescription());
             updateTask.setTask_status(taskUpdateRequest.getTask_status());
             taskRepository.save(updateTask);
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "TASK",
+                    "UPDATE",
+                    String.valueOf(task_id),
+                    new Date()));
             return true;
         }
         return false;
@@ -112,6 +122,11 @@ public class TaskService {
         if (deleteTask != null) {
             deleteTask.setTask_status("deleted");
             taskRepository.save(deleteTask);
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "TASK",
+                    "DELETE",
+                    String.valueOf(task_id),
+                    new Date()));
             return true;
         }
         return false;
