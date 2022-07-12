@@ -76,7 +76,7 @@ public class ProjectService {
                 new MessageResponse("Thành công", "Tạo Dự Án thành công!"));
     }
 
-    public ResponseEntity<?> updateProject(String project_id, ProjectRequest request) {
+    public ResponseEntity<?> updateProject(String project_id, ProjectRequest request, String jwt) {
         Project updateProject = projectRepository.getProjectByProject_id(project_id);
         if (updateProject != null) {
             updateProject.setProject_name(request.getProject_name());
@@ -96,7 +96,7 @@ public class ProjectService {
         }
     }
 
-    public ResponseEntity<?> deleteProject(String project_id) {
+    public ResponseEntity<?> deleteProject(String project_id, String jwt) {
         Project project = projectRepository.getProjectByProject_id(project_id);
         if (project != null) {
             project.setProject_status("canceled");

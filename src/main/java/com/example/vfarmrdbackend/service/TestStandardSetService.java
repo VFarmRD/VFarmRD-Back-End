@@ -55,7 +55,7 @@ public class TestStandardSetService {
         }
     }
 
-    public ResponseEntity<?> createStandardSet(TestStandardSetCreateRequest request) {
+    public ResponseEntity<?> createStandardSet(TestStandardSetCreateRequest request, String jwt) {
         TestStandardSet newTestStandardSet = new TestStandardSet();
         newTestStandardSet.setTeststandardset_name(request.getTeststandardset_name());
         newTestStandardSet.setDescription(request.getDescription());
@@ -63,13 +63,14 @@ public class TestStandardSetService {
         testStandardSetRepository.save(newTestStandardSet);
         int testStandardSet_id = testStandardSetRepository.getTestStandard_idByName(request.getTeststandardset_name());
         for (int i = 0; i < listTestStandard.size(); i++) {
-            testStandardService.createStandard(testStandardSet_id, listTestStandard.get(i));
+            testStandardService.createStandard(testStandardSet_id, listTestStandard.get(i), jwt);
         }
         return ResponseEntity.status(HttpStatus.OK).body(
                 new MessageResponse("Thành công", "Tạo bộ Tiêu Chuẩn Thử Nghiệm mới thành công!"));
     }
 
-    public ResponseEntity<?> updateStandardSet(TestStandardSetUpdateRequest request, int teststandardset_id) {
+    public ResponseEntity<?> updateStandardSet(TestStandardSetUpdateRequest request, int teststandardset_id,
+            String jwt) {
         TestStandardSet updateTestStandardSet = testStandardSetRepository.getTestStandardById(teststandardset_id);
         if (updateTestStandardSet != null) {
             updateTestStandardSet.setTeststandardset_name(request.getTeststandardset_name());
@@ -82,17 +83,17 @@ public class TestStandardSetService {
                     TestStandardRequest updateTestStandard = new TestStandardRequest();
                     updateTestStandard.setTeststandard_name(testStandard.getTeststandard_name());
                     updateTestStandard.setDescription(testStandard.getDescription());
-                    testStandardService.updateStandard(testStandard.getTeststandard_id(), updateTestStandard);
+                    testStandardService.updateStandard(testStandard.getTeststandard_id(), updateTestStandard, jwt);
                     listTestStandard_id.remove(Integer.valueOf(testStandard.getTeststandard_id()));
                 } else if (testStandard.getTeststandard_id() == 0) {
                     TestStandardRequest newTestStandard = new TestStandardRequest();
                     newTestStandard.setTeststandard_name(testStandard.getTeststandard_name());
                     newTestStandard.setDescription(testStandard.getDescription());
-                    testStandardService.createStandard(teststandardset_id, newTestStandard);
+                    testStandardService.createStandard(teststandardset_id, newTestStandard, jwt);
                 }
             }
             for (int i = 0; i < listTestStandard_id.size(); i++) {
-                testStandardService.deleteStandard(listTestStandard_id.get(i));
+                testStandardService.deleteStandard(listTestStandard_id.get(i), jwt);
             }
             testStandardSetRepository.save(updateTestStandardSet);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -104,7 +105,7 @@ public class TestStandardSetService {
         }
     }
 
-    public ResponseEntity<?> deleteStandardSet(int teststandardset_id) {
+    public ResponseEntity<?> deleteStandardSet(int teststandardset_id, String jwt) {
         TestStandardSet testStandardSet = testStandardSetRepository.getTestStandardById(teststandardset_id);
         if (testStandardSet != null) {
             testStandardSetRepository.delete(testStandardSet);

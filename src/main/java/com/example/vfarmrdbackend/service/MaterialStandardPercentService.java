@@ -26,14 +26,14 @@ public class MaterialStandardPercentService {
         return materialStandardPercentRepository.getMaterialStandardPercentByMaterial_id(material_id);
     }
 
-    public void createMaterialStandardPercent(MaterialStandardPercentRequest request) {
+    public void createMaterialStandardPercent(MaterialStandardPercentRequest request, String jwt) {
         MaterialStandardPercent newMaterialStandardPercent = new MaterialStandardPercent();
         newMaterialStandardPercent.setMaterial_id(request.getMaterial_id());
         newMaterialStandardPercent.setMax_percent(request.getMax_percent());
         materialStandardPercentRepository.save(newMaterialStandardPercent);
     }
 
-    public boolean updateMaterialStandardPercent(int msp_id, MaterialStandardPercentRequest request) {
+    public boolean updateMaterialStandardPercent(int msp_id, MaterialStandardPercentRequest request, String jwt) {
         MaterialStandardPercent updateMaterialStandardPercent = materialStandardPercentRepository
                 .getMaterialStandardPercentById(msp_id);
         if (updateMaterialStandardPercent != null) {
@@ -45,7 +45,7 @@ public class MaterialStandardPercentService {
         return false;
     }
 
-    public boolean deleteMaterialStandardPercent(int msp_id) {
+    public boolean deleteMaterialStandardPercent(int msp_id, String jwt) {
         MaterialStandardPercent deleteMaterialStandardPercent = materialStandardPercentRepository
                 .getMaterialStandardPercentById(msp_id);
         if (deleteMaterialStandardPercent != null) {

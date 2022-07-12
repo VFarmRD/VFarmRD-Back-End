@@ -78,7 +78,7 @@ public class TaskService {
         return taskRepository.getTaskByTask_id(task_id);
     }
 
-    public void createTask(TaskCreateRequest taskCreateRequest) {
+    public void createTask(TaskCreateRequest taskCreateRequest, String jwt) {
         date = new Date();
         Task newTask = new Task();
         newTask.setTask_name(taskCreateRequest.getTask_name());
@@ -92,7 +92,7 @@ public class TaskService {
         taskRepository.save(newTask);
     }
 
-    public boolean updateTask(int task_id, TaskUpdateRequest taskUpdateRequest) {
+    public boolean updateTask(int task_id, TaskUpdateRequest taskUpdateRequest, String jwt) {
         Task updateTask = taskRepository.getTaskByTask_id(task_id);
         if (updateTask != null) {
             updateTask.setTask_name(taskUpdateRequest.getTask_name());
@@ -107,7 +107,7 @@ public class TaskService {
         return false;
     }
 
-    public boolean deleteTask(int task_id) {
+    public boolean deleteTask(int task_id, String jwt) {
         Task deleteTask = taskRepository.getTaskByTask_id(task_id);
         if (deleteTask != null) {
             deleteTask.setTask_status("deleted");

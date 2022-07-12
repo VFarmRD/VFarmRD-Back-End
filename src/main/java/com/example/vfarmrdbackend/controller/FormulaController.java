@@ -110,9 +110,10 @@ public class FormulaController {
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> updateFormula(
             @PathVariable("formula_id") int formula_id,
-            @RequestBody FormulaUpdateRequest formulaUpdateRequest) {
+            @RequestBody FormulaUpdateRequest formulaUpdateRequest,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            if (formulaService.updateFormula(formula_id, formulaUpdateRequest)) {
+            if (formulaService.updateFormula(formula_id, formulaUpdateRequest,jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse("Thành công", "Công thức đã được cập nhật!"));
             } else {

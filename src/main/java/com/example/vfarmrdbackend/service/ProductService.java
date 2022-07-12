@@ -71,7 +71,7 @@ public class ProductService {
         }
     }
 
-    public Map<String, String> createProduct(ProductCreateRequest productCreateRequest) {
+    public Map<String, String> createProduct(ProductCreateRequest productCreateRequest, String jwt) {
         date = new Date();
         Product product = new Product();
         String product_code = generateProductCode();
@@ -105,7 +105,7 @@ public class ProductService {
         return map;
     }
 
-    public boolean updateProduct(ProductUpdateRequest productUpdateRequest) {
+    public boolean updateProduct(ProductUpdateRequest productUpdateRequest, String jwt) {
         Product product = productRepository.getProductByProduct_id(productUpdateRequest.getProduct_id());
         if (product != null) {
             date = new Date();
@@ -124,7 +124,7 @@ public class ProductService {
         }
     }
 
-    public boolean deleteProduct(String product_id) {
+    public boolean deleteProduct(String product_id, String jwt) {
         Product product = productRepository.getProductByProduct_id(product_id);
         if (product != null) {
             product.setProduct_status("deactivated");

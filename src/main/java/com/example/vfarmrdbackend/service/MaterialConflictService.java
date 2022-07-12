@@ -28,7 +28,7 @@ public class MaterialConflictService {
         return materialConflictRepository.getMaterialConflictByFirstMaterialId(first_material_id);
     }
 
-    public void createMaterialConflict(List<MaterialConflictCreateRequest> listRequest) {
+    public void createMaterialConflict(List<MaterialConflictCreateRequest> listRequest,String jwt) {
         for (int i = 0; i < listRequest.size(); i++) {
             MaterialConflictCreateRequest request = listRequest.get(i);
             MaterialConflict firstNewMaterialConflict = new MaterialConflict();
@@ -44,7 +44,7 @@ public class MaterialConflictService {
         }
     }
 
-    public void updateMaterialConflict(List<MaterialConflictUpdateRequest> listRequest) {
+    public void updateMaterialConflict(List<MaterialConflictUpdateRequest> listRequest,String jwt) {
         String material_id = listRequest.get(0).getFirst_material_id();
         List<MaterialConflict> listMaterialConflict = materialConflictRepository
                 .getMaterialConflictByMaterial_id(material_id);
@@ -80,14 +80,14 @@ public class MaterialConflictService {
             }
         }
         for (int i = 0; i < listCreateRequest.size(); i++) {
-            createMaterialConflict(listCreateRequest);
+            createMaterialConflict(listCreateRequest,jwt);
         }
         for (int i = 0; i < listMaterialConflict_id.size(); i++) {
-            deleteMaterialConflict(listMaterialConflict_id.get(i));
+            deleteMaterialConflict(listMaterialConflict_id.get(i),jwt);
         }
     }
 
-    public boolean deleteMaterialConflict(int materialconflict_id) {
+    public boolean deleteMaterialConflict(int materialconflict_id,String jwt) {
         MaterialConflict deleteConflict = materialConflictRepository.getMaterialConflictById(materialconflict_id);
         if (deleteConflict != null) {
             materialConflictRepository.delete(deleteConflict);

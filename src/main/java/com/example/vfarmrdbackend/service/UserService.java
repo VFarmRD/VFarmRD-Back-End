@@ -160,7 +160,7 @@ public class UserService {
         }
     }
 
-    public boolean updateUser(UserRequest userRequest) {
+    public boolean updateUser(UserRequest userRequest, String jwt) {
         date = new Date();
         User user = userRepository.getUserByUser_id(userRequest.getUser_id());
         UserRole userrole = userRoleRepository.getUserRoleByUser_id(userRequest.getUser_id());
@@ -180,7 +180,7 @@ public class UserService {
         }
     }
 
-    public boolean deleteUser(int id) {
+    public boolean deleteUser(int id, String jwt) {
         User user = userRepository.getUserByUser_id(id);
         if (user != null) {
             date = new Date();
@@ -193,7 +193,7 @@ public class UserService {
         }
     }
 
-    public boolean recoverUser(int id) {
+    public boolean recoverUser(int id, String jwt) {
         User user = userRepository.getUserByUser_id(id);
         if (user != null) {
             date = new Date();

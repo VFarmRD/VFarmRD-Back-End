@@ -23,7 +23,8 @@ public class MaterialOfPhaseService {
         return materialOfPhaseRepository.getOneMaterialOfOnePhase(mop_id);
     }
 
-    public void createMaterialOfPhase(int phase_id, MaterialOfPhaseCreateRequest materialOfPhaseCreateRequest) {
+    public void createMaterialOfPhase(int phase_id, MaterialOfPhaseCreateRequest materialOfPhaseCreateRequest,
+            String jwt) {
         MaterialOfPhase materialOfPhase = new MaterialOfPhase();
         materialOfPhase.setPhase_id(phase_id);
         materialOfPhase.setMaterial_id(materialOfPhaseCreateRequest.getMaterial_id());
@@ -33,7 +34,7 @@ public class MaterialOfPhaseService {
         materialOfPhaseRepository.save(materialOfPhase);
     }
 
-    public boolean updateMaterialOfPhase(MaterialOfPhaseUpdateRequest materialOfPhaseUpdateRequest) {
+    public boolean updateMaterialOfPhase(MaterialOfPhaseUpdateRequest materialOfPhaseUpdateRequest, String jwt) {
         MaterialOfPhase materialOfPhase = materialOfPhaseRepository
                 .getOneMaterialOfOnePhase(materialOfPhaseUpdateRequest.getMop_id());
         if (materialOfPhase != null) {
@@ -47,7 +48,7 @@ public class MaterialOfPhaseService {
         return false;
     }
 
-    public boolean deleteMaterialOfPhase(int mop_id) {
+    public boolean deleteMaterialOfPhase(int mop_id, String jwt) {
         MaterialOfPhase materialOfPhase = materialOfPhaseRepository
                 .getOneMaterialOfOnePhase(mop_id);
         if (materialOfPhase != null) {

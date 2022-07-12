@@ -69,7 +69,7 @@ public class TestService {
         return response;
     }
 
-    public void createTest(TestCreateRequest testCreateRequest, int user_id) {
+    public void createTest(TestCreateRequest testCreateRequest, int user_id, String jwt) {
         for (int i = 0; i < testCreateRequest.getListTestCreateValues().size(); i++) {
             TestCreateValue testCreateValue = testCreateRequest.getListTestCreateValues().get(i);
             Test test = new Test();
@@ -82,7 +82,7 @@ public class TestService {
         }
     }
 
-    public boolean updateTest(TestUpdateRequest testUpdateRequest, int test_id) {
+    public boolean updateTest(TestUpdateRequest testUpdateRequest, int test_id, String jwt) {
         Test test = testRepository.getTestByTest_id(test_id);
         if (test != null) {
             test.setTest_content(testUpdateRequest.getTest_content());
@@ -94,7 +94,7 @@ public class TestService {
         return false;
     }
 
-    public boolean deleteTest(int test_id) {
+    public boolean deleteTest(int test_id, String jwt) {
         Test test = testRepository.getTestByTest_id(test_id);
         if (test != null) {
             testRepository.delete(test);
