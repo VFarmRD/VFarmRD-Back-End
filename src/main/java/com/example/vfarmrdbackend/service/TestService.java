@@ -82,16 +82,16 @@ public class TestService {
         }
     }
 
-    public boolean updateTest(TestUpdateRequest testUpdateRequest, int test_id, String jwt) {
-        Test test = testRepository.getTestByTest_id(test_id);
-        if (test != null) {
-            test.setTest_content(testUpdateRequest.getTest_content());
-            test.setTest_expect(testUpdateRequest.getTest_expect());
-            test.setTest_result(testUpdateRequest.isTest_result());
-            testRepository.save(test);
-            return true;
+    public void updateTest(List<TestUpdateRequest> listRequest, String jwt) {
+        for (int i = 0; i < listRequest.size(); i++) {
+            Test test = testRepository.getTestByTest_id(listRequest.get(i).getTest_id());
+            if (test != null) {
+                test.setTest_content(listRequest.get(i).getTest_content());
+                test.setTest_expect(listRequest.get(i).getTest_expect());
+                test.setTest_result(listRequest.get(i).isTest_result());
+                testRepository.save(test);
+            }
         }
-        return false;
     }
 
     public boolean deleteTest(int test_id, String jwt) {

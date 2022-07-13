@@ -9,6 +9,7 @@ public class FormulaUpdateRequest {
     private float product_weight;
     private float density;
     private String description;
+    private float loss;
     private List<PhaseUpdateRequest> phaseUpdateRequest;
 
     public FormulaUpdateRequest() {
@@ -68,6 +69,14 @@ public class FormulaUpdateRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public float getLoss() {
+        return loss;
+    }
+
+    public void setLoss(float loss) {
+        this.loss = loss;
     }
 
 }

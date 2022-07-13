@@ -13,6 +13,7 @@ public class FormulaGetResponse {
     private float product_weight;
     private float density;
     private String description;
+    private float loss;
     private List<PhaseGetResponse> phaseGetResponse;
     private String test_status;
     private List<TestGetResponse> listTestResponse;
@@ -122,6 +123,14 @@ public class FormulaGetResponse {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public float getLoss() {
+        return loss;
+    }
+
+    public void setLoss(float loss) {
+        this.loss = loss;
     }
 
 }

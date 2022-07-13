@@ -26,11 +26,8 @@ public class NotificationService {
             Notification notification = listNotifications.get(i);
             NotificationGetResponse response = new NotificationGetResponse();
             response.setNotification_id(notification.getNotification_id());
-            response.setFrom_user_id(notification.getFrom_user_id());
-            response.setFrom_user_fullname(
-                    userRepository.getUserByUser_id(notification.getFrom_user_id()).getFullname());
-            response.setTo_user_id(notification.getTo_user_id());
-            response.setTo_user_fullname(userRepository.getUserByUser_id(notification.getTo_user_id()).getFullname());
+            response.setUser_id(notification.getUser_id());
+            response.setUser_fullname(userRepository.getUserByUser_id(notification.getUser_id()).getFullname());
             response.setTitle(notification.getTitle());
             response.setMessage(notification.getMessage());
             listResponse.add(response);
@@ -45,11 +42,8 @@ public class NotificationService {
             Notification notification = listNotifications.get(i);
             NotificationGetResponse response = new NotificationGetResponse();
             response.setNotification_id(notification.getNotification_id());
-            response.setFrom_user_id(notification.getFrom_user_id());
-            response.setFrom_user_fullname(
-                    userRepository.getUserByUser_id(notification.getFrom_user_id()).getFullname());
-            response.setTo_user_id(notification.getTo_user_id());
-            response.setTo_user_fullname(userRepository.getUserByUser_id(notification.getTo_user_id()).getFullname());
+            response.setUser_id(notification.getUser_id());
+            response.setUser_fullname(userRepository.getUserByUser_id(notification.getUser_id()).getFullname());
             response.setTitle(notification.getTitle());
             response.setMessage(notification.getMessage());
             listResponse.add(response);
@@ -61,11 +55,8 @@ public class NotificationService {
         Notification notification = notificationRepository.getNotificationById(notification_id);
         NotificationGetResponse response = new NotificationGetResponse();
         response.setNotification_id(notification.getNotification_id());
-        response.setFrom_user_id(notification.getFrom_user_id());
-        response.setFrom_user_fullname(
-                userRepository.getUserByUser_id(notification.getFrom_user_id()).getFullname());
-        response.setTo_user_id(notification.getTo_user_id());
-        response.setTo_user_fullname(userRepository.getUserByUser_id(notification.getTo_user_id()).getFullname());
+        response.setUser_id(notification.getUser_id());
+        response.setUser_fullname(userRepository.getUserByUser_id(notification.getUser_id()).getFullname());
         response.setTitle(notification.getTitle());
         response.setMessage(notification.getMessage());
         return response;

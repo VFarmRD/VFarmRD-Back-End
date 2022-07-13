@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Log;
+import com.example.vfarmrdbackend.model.Notification;
 import com.example.vfarmrdbackend.model.Task;
 import com.example.vfarmrdbackend.model.User;
 import com.example.vfarmrdbackend.payload.TaskCreateRequest;
@@ -28,15 +29,36 @@ public class TaskService {
     @Autowired
     LogService logService;
 
+    @Autowired
+    ProjectService projectService;
+
+    @Autowired
+    NotificationService notificationService;
+
+    private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
+
     @Scheduled(cron = "0 0 0 * * ?")
     public void setTask_statusIfOvertime() {
         Date date = new Date();
         List<Task> listTasks = taskRepository.findAll();
         for (int i = 0; i < listTasks.size(); i++) {
             Task task = listTasks.get(i);
+            Date beforeDeadline1Day = new Date(task.getEstimated_date().getTime() - MILLIS_IN_A_DAY);
+            if (!task.getTask_status().equals("done") &&
+                    date == beforeDeadline1Day) {
+                notificationService.createNotification(new Notification(
+                        task.getUser_id(),
+                        "Thông báo",
+                        "Còn 1 ngày nữa là tới deadline!",
+                        new Date()));
+            }
             if (date.after(task.getEstimated_date()) &&
                     !task.getTask_status().equals("done")) {
                 task.setTask_status("overtime");
+            }
+            if (date == task.getStart_date()) {
+                projectService.assignUserFromTaskToProject(
+                        task.getProject_id(), task.getUser_id());
             }
             taskRepository.save(task);
         }

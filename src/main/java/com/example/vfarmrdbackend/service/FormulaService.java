@@ -77,6 +77,7 @@ public class FormulaService {
             formulaGetAllResponse.setProduct_weight(formula.getProduct_weight());
             formulaGetAllResponse.setDensity(formula.getDensity());
             formulaGetAllResponse.setDescription(formula.getDescription());
+            formulaGetAllResponse.setLoss(formula.getLoss());
             User user = userService.getUserInfo(formula.getCreated_user_id());
             formulaGetAllResponse.setUser_name(user.getFullname());
             listFormulasGetAll.add(formulaGetAllResponse);
@@ -96,6 +97,7 @@ public class FormulaService {
         formulaGetResponse.setProduct_weight(formula.getProduct_weight());
         formulaGetResponse.setDensity(formula.getDensity());
         formulaGetResponse.setDescription(formula.getDescription());
+        formulaGetResponse.setLoss(formula.getLoss());
         User user = userService.getUserInfo(formula.getCreated_user_id());
         formulaGetResponse.setUser_name(user.getFullname());
         List<Phase> listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
@@ -153,6 +155,7 @@ public class FormulaService {
         formula.setProduct_weight(formulaCreateRequest.getProduct_weight());
         formula.setDensity(formulaCreateRequest.getDensity());
         formula.setDescription(formulaCreateRequest.getDescription());
+        formula.setLoss(formulaCreateRequest.getLoss());
         formula.setCreated_time(new Date());
         formulaRepository.save(formula);
         for (int i = 0; i < formulaCreateRequest.getPhaseCreateRequest().size(); i++) {
@@ -184,6 +187,7 @@ public class FormulaService {
             updateFormula.setProduct_weight(formulaUpdateRequest.getProduct_weight());
             updateFormula.setDensity(formulaUpdateRequest.getDensity());
             updateFormula.setDescription(formulaUpdateRequest.getDescription());
+            updateFormula.setLoss(formulaUpdateRequest.getLoss());
             List<PhaseUpdateRequest> listPhaseUpdate = formulaUpdateRequest.getPhaseUpdateRequest();
             List<Integer> listOldPhase_id = phaseRepository.getAllPhase_idOfFormula(formula_id);
             for (int i = 0; i < listPhaseUpdate.size(); i++) {
@@ -242,7 +246,6 @@ public class FormulaService {
             formulaRepository.save(formula);
             if (status.equals("approved")) {
                 notificationService.createNotification(new Notification(
-                        JwtService.getUser_idFromToken(jwt),
                         formula.getCreated_user_id(),
                         "Thông báo",
                         "Công thức đã được thông qua!",
@@ -254,7 +257,6 @@ public class FormulaService {
                         new Date()));
             } else if (status.equals("pending")) {
                 notificationService.createNotification(new Notification(
-                        JwtService.getUser_idFromToken(jwt),
                         formula.getCreated_user_id(),
                         "Thông báo",
                         "Công thức đã bị từ chối!",
@@ -284,12 +286,13 @@ public class FormulaService {
             newFormula.setVolume(formulaUpgradeRequest.getVolume());
             newFormula.setProduct_weight(formulaUpgradeRequest.getProduct_weight());
             newFormula.setDensity(formulaUpgradeRequest.getDensity());
-            newFormula.setDescription(formulaUpgradeRequest.getDescription());
             newFormula.setFormula_cost(formulaUpgradeRequest.getFormula_cost());
             newFormula.setFormula_weight(formulaUpgradeRequest.getFormula_weight());
             newFormula.setFormula_status("on process");
             newFormula.setCreated_time(formula.getCreated_time());
             newFormula.setModified_time(new Date());
+            newFormula.setDescription(formulaUpgradeRequest.getDescription());
+            newFormula.setLoss(formulaUpgradeRequest.getLoss());
             formulaRepository.save(newFormula);
             for (int i = 0; i < formulaUpgradeRequest.getPhaseCreateRequest().size(); i++) {
                 PhaseCreateRequest phaseCreateRequest = formulaUpgradeRequest.getPhaseCreateRequest().get(i);
