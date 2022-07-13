@@ -56,6 +56,10 @@ public class ProductService {
         return productRepository.getProductHaveFormula_status(formula_status);
     }
 
+    public List<Product> getProductByFormula_id(int formula_id) {
+        return productRepository.getProductByFormula_id(formula_id);
+    }
+
     public String generateProductCode() {
         while (true) {
             StringBuilder sb = new StringBuilder();
