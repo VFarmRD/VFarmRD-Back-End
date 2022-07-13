@@ -41,6 +41,18 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/projects/users/{user_id}")
+    @PreAuthorize("hasAuthority('staff') " +
+            "or hasAuthority('manager')")
+    public ResponseEntity<?> getProjectByAssigned_user_id(@PathVariable("user_id") int user_id) {
+        try {
+            return projectService.getProjectByAssigned_user_id(user_id);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
     @GetMapping("/projects/{project_id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")

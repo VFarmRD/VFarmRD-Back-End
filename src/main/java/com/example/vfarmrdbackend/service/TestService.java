@@ -1,5 +1,6 @@
 package com.example.vfarmrdbackend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,15 +83,37 @@ public class TestService {
         }
     }
 
-    public void updateTest(List<TestUpdateRequest> listRequest, String jwt) {
+    public void updateTest(TestUpdateRequest request, String jwt) {
+        Test test = testRepository.getTestByTest_id(request.getTest_id());
+        if (test != null) {
+            test.setTest_content(request.getTest_content());
+            test.setTest_expect(request.getTest_expect());
+            test.setTest_result(request.isTest_result());
+            testRepository.save(test);
+        }
+    }
+
+    public void updateMultipleTest(int formula_id, List<TestUpdateRequest> listRequest, String jwt) {
+        TestCreateRequest createRequest = new TestCreateRequest();
+        createRequest.setFormula_id(formula_id);
+        List<TestCreateValue> listTestCreateValues = new ArrayList<>();
+        List<Integer> listTest_id = testRepository.getTest_idWithFormula_id(formula_id);
         for (int i = 0; i < listRequest.size(); i++) {
-            Test test = testRepository.getTestByTest_id(listRequest.get(i).getTest_id());
-            if (test != null) {
-                test.setTest_content(listRequest.get(i).getTest_content());
-                test.setTest_expect(listRequest.get(i).getTest_expect());
-                test.setTest_result(listRequest.get(i).isTest_result());
-                testRepository.save(test);
+            TestUpdateRequest request = listRequest.get(i);
+            if (request.getTest_id() != 0) {
+                updateTest(request, jwt);
+                listTest_id.remove(Integer.valueOf(request.getTest_id()));
+            } else if (request.getTest_id() == 0) {
+                TestCreateValue createValue = new TestCreateValue();
+                createValue.setTest_content(request.getTest_content());
+                createValue.setTest_expect(request.getTest_expect());
+                createValue.setTest_result(request.isTest_result());
+                listTestCreateValues.add(createValue);
             }
+        }
+        createTest(createRequest, jwt);
+        for (int i = 0; i < listTest_id.size(); i++) {
+            deleteTest(listTest_id.get(i), jwt);
         }
     }
 

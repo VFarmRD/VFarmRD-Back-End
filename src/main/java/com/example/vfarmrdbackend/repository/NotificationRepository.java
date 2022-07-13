@@ -9,8 +9,8 @@ import org.springframework.data.repository.query.Param;
 import com.example.vfarmrdbackend.model.Notification;
 
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
-    @Query(value = "select * from notifications n where n.to_user_id = :to_user_id", nativeQuery = true)
-    List<Notification> getAllNotificationByTo_user_id(@Param("to_user_id") int to_user_id);
+    @Query(value = "select * from notifications n where n.user_id = :user_id", nativeQuery = true)
+    List<Notification> getAllNotificationByUser_id(@Param("user_id") int user_id);
 
     @Query(value = "select * from notifications n where n.notification_id = :notification_id", nativeQuery = true)
     Notification getNotificationById(@Param("notification_id") int notification_id);
