@@ -67,6 +67,19 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/products/formulas/{formula_id}")
+    @PreAuthorize("hasAuthority('staff') " +
+            "or hasAuthority('manager')")
+    public ResponseEntity<?> getProductByFormula_id(@PathVariable("formula_id") int formula_id) {
+        List<Product> products = productService.getProductByFormula_id(formula_id);
+        if (products != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(products);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    "Product not found!");
+        }
+    }
+
     @GetMapping("/products/have-formula-status")
     @PreAuthorize("hasAuthority('staff') " + "or hasAuthority('manager')")
     public ResponseEntity<?> getProductHasFormulaIsPending(
