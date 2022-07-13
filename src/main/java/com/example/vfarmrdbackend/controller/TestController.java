@@ -84,9 +84,22 @@ public class TestController {
     @PutMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> updateTest(@PathVariable("test_id") int test_id,
-            @RequestBody List<TestUpdateRequest> listRequest, @RequestHeader("Authorization") String jwt) {
+            @RequestBody TestUpdateRequest listRequest, @RequestHeader("Authorization") String jwt) {
         try {
             testService.updateTest(listRequest, jwt);
+            return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    e.getMessage());
+        }
+    }
+
+    @PutMapping("/tests/formulas/{formula_id}")
+    @PreAuthorize("hasAuthority('staff')")
+    public ResponseEntity<?> updateMultipleTestInFormula(@PathVariable("formula_id") int formula_id,
+            @RequestBody List<TestUpdateRequest> listRequest, @RequestHeader("Authorization") String jwt) {
+        try {
+            testService.updateMultipleTest(formula_id, listRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

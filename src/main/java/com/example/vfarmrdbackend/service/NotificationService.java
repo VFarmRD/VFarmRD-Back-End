@@ -37,7 +37,7 @@ public class NotificationService {
 
     public List<NotificationGetResponse> getAllNotificationsOfUser(int user_id) {
         List<NotificationGetResponse> listResponse = new ArrayList<>();
-        List<Notification> listNotifications = notificationRepository.getAllNotificationByTo_user_id(user_id);
+        List<Notification> listNotifications = notificationRepository.getAllNotificationByUser_id(user_id);
         for (int i = 0; i < listNotifications.size(); i++) {
             Notification notification = listNotifications.get(i);
             NotificationGetResponse response = new NotificationGetResponse();
