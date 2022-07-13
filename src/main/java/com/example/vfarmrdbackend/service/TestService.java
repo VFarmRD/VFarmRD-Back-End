@@ -17,8 +17,6 @@ import com.example.vfarmrdbackend.payload.TestGetResponse;
 import com.example.vfarmrdbackend.payload.TestUpdateRequest;
 import com.example.vfarmrdbackend.repository.FileRepository;
 import com.example.vfarmrdbackend.repository.TestRepository;
-import com.example.vfarmrdbackend.repository.TestStandardRepository;
-import com.example.vfarmrdbackend.repository.TestStandardSetRepository;
 import com.example.vfarmrdbackend.repository.UserRepository;
 
 @Service
@@ -31,12 +29,6 @@ public class TestService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    TestStandardSetRepository testStandardSetRepository;
-
-    @Autowired
-    TestStandardRepository testStandardRepository;
 
     public List<Test> getAllTestWithFormula_id(int formula_id) {
         return testRepository.getTestWithFormula_id(formula_id);
@@ -97,6 +89,7 @@ public class TestService {
         TestCreateRequest createRequest = new TestCreateRequest();
         createRequest.setFormula_id(formula_id);
         List<TestCreateValue> listTestCreateValues = new ArrayList<>();
+        createRequest.setListTestCreateValues(listTestCreateValues);
         List<Integer> listTest_id = testRepository.getTest_idWithFormula_id(formula_id);
         for (int i = 0; i < listRequest.size(); i++) {
             TestUpdateRequest request = listRequest.get(i);
