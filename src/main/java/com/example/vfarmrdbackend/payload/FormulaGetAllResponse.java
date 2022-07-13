@@ -18,6 +18,7 @@ public class FormulaGetAllResponse {
     private Date created_time;
     private Date modified_time;
     private String description;
+    private float loss;
 
     public FormulaGetAllResponse() {
     }
@@ -140,6 +141,14 @@ public class FormulaGetAllResponse {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public float getLoss() {
+        return loss;
+    }
+
+    public void setLoss(float loss) {
+        this.loss = loss;
     }
 
 }

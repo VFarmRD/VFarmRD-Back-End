@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Log;
+import com.example.vfarmrdbackend.model.Notification;
 import com.example.vfarmrdbackend.model.Project;
 import com.example.vfarmrdbackend.payload.MessageResponse;
 import com.example.vfarmrdbackend.payload.ProjectGetResponse;
@@ -26,6 +27,9 @@ public class ProjectService {
 
     @Autowired
     LogService logService;
+
+    @Autowired
+    NotificationService notificationService;
 
     public ResponseEntity<?> getAllProjects() {
         List<Project> listProjects = projectRepository.findAll();
@@ -127,4 +131,16 @@ public class ProjectService {
                     new MessageResponse("Lỗi", "Không tìm thấy Dự Án!"));
         }
     }
+
+    public void assignUserFromTaskToProject(int project_id, int user_id) {
+        Project project = projectRepository.getProjectByProject_id(project_id);
+        project.setAssigned_user_id(user_id);
+        projectRepository.save(project);
+        notificationService.createNotification(new Notification(
+                user_id,
+                "Thông báo",
+                "Bạn đã được phân công vào 1 dự án!",
+                new Date()));
+    }
+
 }

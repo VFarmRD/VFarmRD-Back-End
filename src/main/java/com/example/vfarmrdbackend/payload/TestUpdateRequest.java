@@ -1,6 +1,7 @@
 package com.example.vfarmrdbackend.payload;
 
 public class TestUpdateRequest {
+    private int test_id;
     private String test_content;
     private String test_expect;
     private boolean test_result;
@@ -39,6 +40,14 @@ public class TestUpdateRequest {
 
     public void setTeststandardset_id(int teststandardset_id) {
         this.teststandardset_id = teststandardset_id;
+    }
+
+    public int getTest_id() {
+        return test_id;
+    }
+
+    public void setTest_id(int test_id) {
+        this.test_id = test_id;
     }
 
 }

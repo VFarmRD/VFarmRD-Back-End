@@ -14,8 +14,7 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int notification_id;
-    private int from_user_id;
-    private int to_user_id;
+    private int user_id;
     private String title;
     private String message;
     private Date created_date;
@@ -23,9 +22,8 @@ public class Notification {
     public Notification() {
     }
 
-    public Notification(int from_user_id, int to_user_id, String title, String message, Date created_date) {
-        this.from_user_id = from_user_id;
-        this.to_user_id = to_user_id;
+    public Notification(int user_id, String title, String message, Date created_date) {
+        this.user_id = user_id;
         this.title = title;
         this.message = message;
         this.created_date = created_date;
@@ -37,22 +35,6 @@ public class Notification {
 
     public void setNotification_id(int notification_id) {
         this.notification_id = notification_id;
-    }
-
-    public int getFrom_user_id() {
-        return from_user_id;
-    }
-
-    public void setFrom_user_id(int from_user_id) {
-        this.from_user_id = from_user_id;
-    }
-
-    public int getTo_user_id() {
-        return to_user_id;
-    }
-
-    public void setTo_user_id(int to_user_id) {
-        this.to_user_id = to_user_id;
     }
 
     public String getTitle() {
@@ -77,6 +59,14 @@ public class Notification {
 
     public void setCreated_date(Date created_date) {
         this.created_date = created_date;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
 }

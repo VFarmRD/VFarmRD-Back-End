@@ -84,13 +84,10 @@ public class TestController {
     @PutMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> updateTest(@PathVariable("test_id") int test_id,
-            @RequestBody TestUpdateRequest testUpdateRequest, @RequestHeader("Authorization") String jwt) {
+            @RequestBody List<TestUpdateRequest> listRequest, @RequestHeader("Authorization") String jwt) {
         try {
-            if (testService.updateTest(testUpdateRequest, test_id, jwt)) {
-                return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Test not found!");
-            }
+            testService.updateTest(listRequest, jwt);
+            return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     e.getMessage());
