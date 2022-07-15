@@ -34,6 +34,20 @@ public class ToolService {
         return listResponse;
     }
 
+    public List<ToolResponse> getAllToolsWithToolCategory_id(int toolcategory_id) {
+        List<Tool> listTools = toolRepository.getAllToolsWithToolCategory_id(toolcategory_id);
+        List<ToolResponse> listResponse = new ArrayList<>();
+        for (int i = 0; i < listTools.size(); i++) {
+            listResponse.add(new ToolResponse(
+                    listTools.get(i).getTool_id(),
+                    listTools.get(i).getTool_name(),
+                    listTools.get(i).getToolcategory_id(),
+                    toolCategoryService.getToolCategory(listTools.get(i).getToolcategory_id()).getToolcategory_name(),
+                    listTools.get(i).getDescription()));
+        }
+        return listResponse;
+    }
+
     public Tool getTool(int tool_id) {
         return toolRepository.getToolByTool_id(tool_id);
     }
