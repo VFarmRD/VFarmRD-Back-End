@@ -1,5 +1,6 @@
 package com.example.vfarmrdbackend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Tool;
 import com.example.vfarmrdbackend.payload.ToolRequest;
+import com.example.vfarmrdbackend.payload.ToolResponse;
 import com.example.vfarmrdbackend.repository.ToolRepository;
 
 @Service
@@ -15,8 +17,21 @@ public class ToolService {
     @Autowired
     ToolRepository toolRepository;
 
-    public List<Tool> getAllTools() {
-        return toolRepository.findAll();
+    @Autowired
+    ToolCategoryService toolCategoryService;
+
+    public List<ToolResponse> getAllTools() {
+        List<Tool> listTools = toolRepository.findAll();
+        List<ToolResponse> listResponse = new ArrayList<>();
+        for (int i = 0; i < listTools.size(); i++) {
+            listResponse.add(new ToolResponse(
+                    listTools.get(i).getTool_id(),
+                    listTools.get(i).getTool_name(),
+                    listTools.get(i).getToolcategory_id(),
+                    toolCategoryService.getToolCategory(listTools.get(i).getToolcategory_id()).getToolcategory_name(),
+                    listTools.get(i).getDescription()));
+        }
+        return listResponse;
     }
 
     public Tool getTool(int tool_id) {
