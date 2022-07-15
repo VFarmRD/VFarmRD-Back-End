@@ -41,6 +41,18 @@ public class ToolController {
         }
     }
 
+    @GetMapping("/tools/toolcategories/{toolcategory_id}")
+    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    public ResponseEntity<?> getAllToolsWithToolCategory_id(@PathVariable("toolcategory_id") int toolcategory_id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    toolService.getAllToolsWithToolCategory_id(toolcategory_id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
     @GetMapping("/tools/{tool_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> getTool(@PathVariable("tool_id") int tool_id) {
