@@ -5,7 +5,7 @@ import java.util.List;
 public class FormulaCreateRequest {
     private String project_id;
     private float formula_cost;
-    private int formula_weight;
+    private float formula_weight;
     private float volume;
     private float product_weight;
     private float density;
@@ -38,14 +38,6 @@ public class FormulaCreateRequest {
 
     public void setDensity(float density) {
         this.density = density;
-    }
-
-    public int getFormula_weight() {
-        return formula_weight;
-    }
-
-    public void setFormula_weight(int formula_weight) {
-        this.formula_weight = formula_weight;
     }
 
     public String getProject_id() {
@@ -86,6 +78,14 @@ public class FormulaCreateRequest {
 
     public void setLoss(float loss) {
         this.loss = loss;
+    }
+
+    public float getFormula_weight() {
+        return formula_weight;
+    }
+
+    public void setFormula_weight(float formula_weight) {
+        this.formula_weight = formula_weight;
     }
 
 }

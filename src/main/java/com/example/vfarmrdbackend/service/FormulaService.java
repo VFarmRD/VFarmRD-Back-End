@@ -103,6 +103,7 @@ public class FormulaService {
         formulaGetResponse.setDensity(formula.getDensity());
         formulaGetResponse.setDescription(formula.getDescription());
         formulaGetResponse.setLoss(formula.getLoss());
+        formulaGetResponse.setDeny_reason(formula.getDeny_reason());
         User user = userService.getUserInfo(formula.getCreated_user_id());
         formulaGetResponse.setUser_name(user.getFullname());
         List<Phase> listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
@@ -345,4 +346,28 @@ public class FormulaService {
             return 0;
         }
     }
+
+    public boolean denyFormulaWithReason(int formula_id, String deny_reason, String jwt) {
+        Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
+        if (formula != null) {
+            formula.setDeny_reason(deny_reason);
+            formula.setFormula_status("pending");
+            formula.setModified_time(new Date());
+            formulaRepository.save(formula);
+            notificationService.createNotification(new Notification(
+                    formula.getCreated_user_id(),
+                    "Thông báo",
+                    "Công thức đã bị từ chối!",
+                    new Date()));
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "FORMULA",
+                    "DENY",
+                    String.valueOf(formula_id),
+                    new Date()));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

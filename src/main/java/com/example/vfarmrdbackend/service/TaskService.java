@@ -1,5 +1,7 @@
 package com.example.vfarmrdbackend.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -112,6 +114,14 @@ public class TaskService {
         newTask.setDescription(taskCreateRequest.getDescription());
         newTask.setTask_status("doing");
         taskRepository.save(newTask);
+        String pattern = "dd/MM/yyyy";
+        DateFormat df = new SimpleDateFormat(pattern);
+        String dateString = df.format(taskCreateRequest.getStart_date());
+        notificationService.createNotification(new Notification(
+                taskCreateRequest.getUser_id(),
+                "Thông báo",
+                "Bạn đã được phân công để làm 1 công thúc vào " + dateString,
+                new Date()));
         logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                 "TASK",
                 "CREATE",
