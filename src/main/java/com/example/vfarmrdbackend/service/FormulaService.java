@@ -228,17 +228,19 @@ public class FormulaService {
                         materialOfPhaseCreate.setMaterial_weight(materialOfPhaseUpdate.getMaterial_weight());
                         materialOfPhaseService.createMaterialOfPhase(phase_id, materialOfPhaseCreate, jwt);
                     }
-                    for (int j = 0; j < listPhaseUpdate.get(i).getListTool_id().size(); j++) {
-                        toolInPhaseService.createToolInPhase(
-                                new ToolInPhaseRequest(
-                                        listPhaseUpdate.get(i).getListTool_id().get(j),
-                                        phase_id),
-                                jwt);
-                    }
+                }
+                for (int j = 0; j < listPhaseUpdate.get(i).getListTool_id().size(); j++) {
+                    toolInPhaseService.createToolInPhase(
+                            new ToolInPhaseRequest(
+                                    listPhaseUpdate.get(i).getListTool_id().get(j),
+                                    phase_id),
+                            jwt);
                 }
             }
-            for (int i = 0; i < listOldPhase_id.size(); i++) {
-                phaseService.deletePhase(listOldPhase_id.get(i), jwt);
+            if (listOldPhase_id.size() > 0) {
+                for (int i = 0; i < listOldPhase_id.size(); i++) {
+                    phaseService.deletePhase(listOldPhase_id.get(i), jwt);
+                }
             }
             formulaRepository.save(updateFormula);
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
