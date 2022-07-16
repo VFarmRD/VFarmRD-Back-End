@@ -203,6 +203,7 @@ public class FormulaService {
                 PhaseUpdateRequest phaseUpdateRequest = listPhaseUpdate.get(i);
                 if (phaseUpdateRequest.getPhase_id() != 0) {
                     phaseService.updatePhase(phaseUpdateRequest, jwt);
+                    toolInPhaseService.updateMultipleToolInPhase(listPhaseUpdate.get(i).getToolInPhaseRequest(), jwt);
                     listOldPhase_id.remove(Integer.valueOf(phaseUpdateRequest.getPhase_id()));
                 } else if (phaseUpdateRequest.getPhase_id() == 0) {
                     PhaseCreateRequest phaseCreateRequest = new PhaseCreateRequest();
@@ -220,6 +221,13 @@ public class FormulaService {
                         materialOfPhaseCreate.setMaterial_percent(materialOfPhaseUpdate.getMaterial_percent());
                         materialOfPhaseCreate.setMaterial_weight(materialOfPhaseUpdate.getMaterial_weight());
                         materialOfPhaseService.createMaterialOfPhase(newest_phase_id, materialOfPhaseCreate, jwt);
+                    }
+                    for (int j = 0; j < listPhaseUpdate.get(i).getToolInPhaseRequest().size(); j++) {
+                        toolInPhaseService.createToolInPhase(
+                                new ToolInPhaseRequest(
+                                        listPhaseUpdate.get(i).getToolInPhaseRequest().get(j).getTool_id(),
+                                        newest_phase_id),
+                                jwt);
                     }
                 }
             }

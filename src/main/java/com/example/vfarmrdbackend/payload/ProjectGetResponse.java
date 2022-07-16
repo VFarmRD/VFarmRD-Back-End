@@ -3,6 +3,7 @@ package com.example.vfarmrdbackend.payload;
 import java.util.Date;
 
 public class ProjectGetResponse {
+    private int project_id;
     private String project_name;
     private String client_id;
     private int created_user_id;
@@ -122,6 +123,14 @@ public class ProjectGetResponse {
 
     public void setEstimated_weight(float estimated_weight) {
         this.estimated_weight = estimated_weight;
+    }
+
+    public int getProject_id() {
+        return project_id;
+    }
+
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
     }
 
 }

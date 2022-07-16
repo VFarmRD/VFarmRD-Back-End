@@ -2,11 +2,14 @@ package com.example.vfarmrdbackend.payload;
 
 import java.util.List;
 
+import com.example.vfarmrdbackend.model.ToolInPhase;
+
 public class PhaseUpdateRequest {
     private int phase_id;
     private int phase_index;
     private String phase_description;
     private List<MaterialOfPhaseUpdateRequest> materialOfPhaseUpdateRequest;
+    private List<ToolInPhase> toolInPhaseRequest;
 
     public PhaseUpdateRequest() {
     }
@@ -41,6 +44,14 @@ public class PhaseUpdateRequest {
 
     public void setPhase_description(String phase_description) {
         this.phase_description = phase_description;
+    }
+
+    public List<ToolInPhase> getToolInPhaseRequest() {
+        return toolInPhaseRequest;
+    }
+
+    public void setToolInPhaseRequest(List<ToolInPhase> toolInPhaseRequest) {
+        this.toolInPhaseRequest = toolInPhaseRequest;
     }
 
 }

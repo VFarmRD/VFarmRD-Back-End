@@ -68,30 +68,6 @@ public class ToolService {
         toolRepository.save(updateTool);
     }
 
-    public void updateMultipleTool(List<Tool> listRequest, String jwt) {
-        List<Integer> listTool_id = toolRepository.getAllTool_id();
-        for (int i = 0; i < listRequest.size(); i++) {
-            if (listRequest.get(i).getTool_id() != 0) {
-                updateTool(listRequest.get(i).getTool_id(),
-                        new ToolRequest(
-                                listRequest.get(i).getTool_name(),
-                                listRequest.get(i).getToolcategory_id(),
-                                listRequest.get(i).getDescription()),
-                        jwt);
-                listTool_id.remove(Integer.valueOf(listRequest.get(i).getTool_id()));
-            } else if (listRequest.get(i).getTool_id() == 0) {
-                createTool(new ToolRequest(
-                        listRequest.get(i).getTool_name(),
-                        listRequest.get(i).getToolcategory_id(),
-                        listRequest.get(i).getDescription()),
-                        jwt);
-            }
-        }
-        for (int i = 0; i < listTool_id.size(); i++) {
-            deleteTool(listTool_id.get(i), jwt);
-        }
-    }
-
     public void deleteTool(int tool_id, String jwt) {
         toolRepository.delete(toolRepository.getToolByTool_id(tool_id));
     }
