@@ -26,6 +26,7 @@ import com.example.vfarmrdbackend.payload.PhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.PhaseGetResponse;
 import com.example.vfarmrdbackend.payload.PhaseUpdateRequest;
 import com.example.vfarmrdbackend.payload.TestGetResponse;
+import com.example.vfarmrdbackend.payload.ToolInPhaseRequest;
 import com.example.vfarmrdbackend.repository.FormulaRepository;
 import com.example.vfarmrdbackend.repository.PhaseRepository;
 import com.example.vfarmrdbackend.repository.TestRepository;
@@ -58,6 +59,9 @@ public class FormulaService {
 
     @Autowired
     LogService logService;
+
+    @Autowired
+    ToolInPhaseService toolInPhaseService;
 
     public List<FormulaGetAllResponse> getAllFormulaByProject_id(String project_id, String formula_status) {
         List<Formula> listFormulas = formulaRepository.getAllFormulaByProject_idAndStatus(project_id, formula_status);
@@ -167,6 +171,11 @@ public class FormulaService {
                 materialOfPhaseService.createMaterialOfPhase(phaseRepository.getLatestPhase_id(), phaseCreateRequest
                         .getMaterialOfPhaseCreateRequest().get(j), jwt);
 
+            }
+            for (int j = 0; j < phaseCreateRequest.getListTool_id().size(); j++) {
+                toolInPhaseService
+                        .createToolInPhase(new ToolInPhaseRequest(phaseCreateRequest.getListTool_id().get(j),
+                                phaseRepository.getLatestPhase_id()), jwt);
             }
         }
         logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),

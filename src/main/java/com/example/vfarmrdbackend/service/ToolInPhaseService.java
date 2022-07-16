@@ -33,6 +33,31 @@ public class ToolInPhaseService {
         toolInPhaseRepository.save(updateToolInPhase);
     }
 
+    public void updateMultipleToolInPhase(List<ToolInPhase> listRequest, String jwt) {
+        List<Integer> listToolinphase_idInPhase = toolInPhaseRepository
+                .getToolInPhase_idByPhase_id(listRequest.get(0).getPhase_id());
+        for (int i = 0; i < listRequest.size(); i++) {
+            if (listRequest.get(i).getTool_id() != 0) {
+                updateToolInPhase(listRequest.get(i).getToolinphase_id(),
+                        new ToolInPhaseRequest(
+                                listRequest.get(i).getTool_id(),
+                                listRequest.get(i).getPhase_id()),
+                        jwt);
+                listToolinphase_idInPhase.remove(Integer.valueOf(listRequest.get(i).getToolinphase_id()));
+            } else if (listRequest.get(i).getTool_id() == 0) {
+                createToolInPhase(
+                        new ToolInPhaseRequest(
+                                listRequest.get(i).getTool_id(),
+                                listRequest.get(i).getPhase_id()),
+                        jwt);
+            }
+        }
+
+        for (int i = 0; i < listToolinphase_idInPhase.size(); i++) {
+            deleteToolInPhase(listToolinphase_idInPhase.get(i), jwt);
+        }
+    }
+
     public void deleteToolInPhase(int toolinphase_id, String jwt) {
         toolInPhaseRepository.delete(toolInPhaseRepository.getToolInPhaseByToolinphase_id(toolinphase_id));
     }

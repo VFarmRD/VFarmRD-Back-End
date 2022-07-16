@@ -14,4 +14,7 @@ public interface ToolRepository extends JpaRepository<Tool, Integer> {
 
     @Query(value = "select * from tools t where t.toolcategory_id = :toolcategory_id", nativeQuery = true)
     List<Tool> getAllToolsWithToolCategory_id(@Param("toolcategory_id") int toolcategory_id);
+
+    @Query(value = "select t.tool_id from tools t", nativeQuery = true)
+    List<Integer> getAllTool_id();
 }

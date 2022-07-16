@@ -6,6 +6,7 @@ public class PhaseCreateRequest {
     private int phase_index;
     private String phase_description;
     private List<MaterialOfPhaseCreateRequest> materialOfPhaseCreateRequest;
+    private List<Integer> listTool_id;
 
     public PhaseCreateRequest() {
     }
@@ -32,6 +33,14 @@ public class PhaseCreateRequest {
 
     public void setPhase_description(String phase_description) {
         this.phase_description = phase_description;
+    }
+
+    public List<Integer> getListTool_id() {
+        return listTool_id;
+    }
+
+    public void setListTool_id(List<Integer> listTool_id) {
+        this.listTool_id = listTool_id;
     }
 
 }
