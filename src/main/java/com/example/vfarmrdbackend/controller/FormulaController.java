@@ -165,4 +165,23 @@ public class FormulaController {
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
+
+    @PutMapping("/formulas/{formula_id}/deny-with-reason")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
+    public ResponseEntity<?> denyWithReason(@PathVariable("formula_id") int formula_id,
+            @RequestParam("deny_reason") String deny_reason,
+            @RequestHeader("Authorization") String jwt) {
+        try {
+            if (formulaService.denyFormulaWithReason(formula_id, deny_reason, jwt)) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new MessageResponse("Thành công", "Công thức đã bị từ chối!"));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                        new MessageResponse("Lỗi", "Công thức này chưa được gửi!"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
 }

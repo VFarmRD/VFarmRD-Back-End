@@ -151,6 +151,21 @@ public class ProductService {
         }
     }
 
+    public boolean deleteProductFromSystem(String product_id, String jwt) {
+        Product product = productRepository.getProductByProduct_id(product_id);
+        if (product != null) {
+            productRepository.delete(product);
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "PRODUCT",
+                    "DELETE",
+                    product_id,
+                    new Date()));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean checkProduct_codeExisted(String product_code) {
         Product product = productRepository.getProductByProduct_code(product_code);
         if (product != null) {
