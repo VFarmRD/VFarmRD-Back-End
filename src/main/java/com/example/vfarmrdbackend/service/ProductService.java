@@ -52,10 +52,6 @@ public class ProductService {
         return productRepository.getProductByProduct_id(product_id);
     }
 
-    public List<Product> getProductHaveFormula_status(String formula_status) {
-        return productRepository.getProductHaveFormula_status(formula_status);
-    }
-
     public List<Product> getProductByFormula_id(int formula_id) {
         return productRepository.getProductByFormula_id(formula_id);
     }

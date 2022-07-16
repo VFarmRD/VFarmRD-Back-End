@@ -96,8 +96,8 @@ public class ProjectService {
         }
     }
 
-    public ResponseEntity<?> getProjectByStatus(String project_status) {
-        List<Project> listProject = projectRepository.getProjectByStatus("%" + project_status + "%");
+    public ResponseEntity<?> getProjectByFormula_status(String formula_status) {
+        List<Project> listProject = projectRepository.getProjectByFormula_status("%" + formula_status + "%");
         List<ProjectGetResponse> listResponse = new ArrayList<>();
         if (listProject != null) {
             for (int i = 0; i < listProject.size(); i++) {
