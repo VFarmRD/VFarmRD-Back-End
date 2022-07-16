@@ -25,6 +25,9 @@ public class PhaseService {
     @Autowired
     MaterialOfPhaseService materialOfPhaseService;
 
+    @Autowired
+    ToolInPhaseService toolInPhaseService;
+
     public List<Phase> getAllPhaseByFormula_id(int formula_id) {
         return phaseRepository.getAllPhaseByFormula_id(formula_id);
     }
@@ -33,7 +36,7 @@ public class PhaseService {
         return phaseRepository.getPhaseByPhase_id(phase_id);
     }
 
-    public void createPhase(int formula_id, PhaseCreateRequest phaseCreateRequest,String jwt) {
+    public void createPhase(int formula_id, PhaseCreateRequest phaseCreateRequest, String jwt) {
         Phase phase = new Phase();
         phase.setFormula_id(formula_id);
         phase.setPhase_index(phaseCreateRequest.getPhase_index());
@@ -41,7 +44,7 @@ public class PhaseService {
         phaseRepository.save(phase);
     }
 
-    public boolean updatePhase(PhaseUpdateRequest phaseUpdateRequest,String jwt) {
+    public boolean updatePhase(PhaseUpdateRequest phaseUpdateRequest, String jwt) {
         Phase phase = phaseRepository.getPhaseByPhase_id(phaseUpdateRequest.getPhase_id());
         if (phase != null) {
             phase.setPhase_index(phaseUpdateRequest.getPhase_index());
@@ -52,7 +55,7 @@ public class PhaseService {
             for (int i = 0; i < listMaterial.size(); i++) {
                 MaterialOfPhaseUpdateRequest materialUpdate = listMaterial.get(i);
                 if (materialUpdate.getMop_id() != 0) {
-                    materialOfPhaseService.updateMaterialOfPhase(materialUpdate,jwt);
+                    materialOfPhaseService.updateMaterialOfPhase(materialUpdate, jwt);
                     listOldMaterial.remove(Integer.valueOf(materialUpdate.getMop_id()));
                 } else if (materialUpdate.getMop_id() == 0) {
                     MaterialOfPhaseCreateRequest materialCreate = new MaterialOfPhaseCreateRequest();
@@ -61,11 +64,11 @@ public class PhaseService {
                     materialCreate.setMaterial_percent(materialUpdate.getMaterial_percent());
                     materialCreate.setMaterial_weight(materialUpdate.getMaterial_weight());
                     materialOfPhaseService.createMaterialOfPhase(phaseUpdateRequest.getPhase_id(),
-                            materialCreate,jwt);
+                            materialCreate, jwt);
                 }
             }
             for (int i = 0; i < listOldMaterial.size(); i++) {
-                materialOfPhaseService.deleteMaterialOfPhase(listOldMaterial.get(i),jwt);
+                materialOfPhaseService.deleteMaterialOfPhase(listOldMaterial.get(i), jwt);
             }
             phaseRepository.save(phase);
             return true;
@@ -74,12 +77,13 @@ public class PhaseService {
         }
     }
 
-    public boolean deletePhase(int phase_id,String jwt) {
+    public boolean deletePhase(int phase_id, String jwt) {
         Phase phase = phaseRepository.getPhaseByPhase_id(phase_id);
         if (phase != null) {
+            toolInPhaseService.deleteAllToolInPhaseByPhase_id(phase_id, jwt);
             List<MaterialOfPhase> listMaterialOfPhases = materialOfPhaseService.getAllMaterialOfPhase(phase_id);
             for (int i = 0; i < listMaterialOfPhases.size(); i++) {
-                materialOfPhaseService.deleteMaterialOfPhase(listMaterialOfPhases.get(i).getMop_id(),jwt);
+                materialOfPhaseService.deleteMaterialOfPhase(listMaterialOfPhases.get(i).getMop_id(), jwt);
             }
             phaseRepository.delete(phase);
             return true;

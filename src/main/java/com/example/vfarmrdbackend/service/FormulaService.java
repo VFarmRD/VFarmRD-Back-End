@@ -204,14 +204,13 @@ public class FormulaService {
             updateFormula.setLoss(formulaUpdateRequest.getLoss());
             List<PhaseUpdateRequest> listPhaseUpdate = formulaUpdateRequest.getPhaseUpdateRequest();
             List<Integer> listOldPhase_id = phaseRepository.getAllPhase_idOfFormula(formula_id);
-            for (int i = 0; i < listOldPhase_id.size(); i++) {
-                phaseService.deletePhase(listOldPhase_id.get(i), jwt);
-            }
             for (int i = 0; i < listPhaseUpdate.size(); i++) {
                 PhaseUpdateRequest phaseUpdateRequest = listPhaseUpdate.get(i);
                 int phase_id = phaseUpdateRequest.getPhase_id();
                 if (phase_id != 0) {
                     phaseService.updatePhase(phaseUpdateRequest, jwt);
+                    listOldPhase_id.remove(Integer.valueOf(phase_id));
+                    toolInPhaseService.deleteAllToolInPhaseByPhase_id(phase_id, jwt);
                 } else if (phase_id == 0) {
                     PhaseCreateRequest phaseCreateRequest = new PhaseCreateRequest();
                     phaseCreateRequest.setPhase_description(phaseUpdateRequest.getPhase_description());
@@ -238,7 +237,11 @@ public class FormulaService {
                             jwt);
                 }
             }
-
+            if (listOldPhase_id.size() > 0) {
+                for (int i = 0; i < listOldPhase_id.size(); i++) {
+                    phaseService.deletePhase(listOldPhase_id.get(i), jwt);
+                }
+            }
             formulaRepository.save(updateFormula);
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                     "FORMULA",

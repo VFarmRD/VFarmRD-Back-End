@@ -80,4 +80,13 @@ public class ToolInPhaseService {
         toolInPhaseRepository.delete(toolInPhaseRepository.getToolInPhaseByToolinphase_id(toolinphase_id));
     }
 
+    public void deleteAllToolInPhaseByPhase_id(int phase_id, String jwt) {
+        List<ToolInPhase> listToolinphase = toolInPhaseRepository.getToolInPhaseByPhase_id(phase_id);
+        for (int i = 0; i < listToolinphase.size(); i++) {
+            toolInPhaseRepository.delete(
+                    toolInPhaseRepository.getToolInPhaseByToolinphase_id(listToolinphase.get(i).getToolinphase_id()));
+            ;
+        }
+    }
+
 }

@@ -57,4 +57,11 @@ public class MaterialOfPhaseService {
         }
         return false;
     }
+
+    public void deleteAllMaterialsOfPhaseByPhase_id(int phase_id) {
+        List<MaterialOfPhase> listMOP = materialOfPhaseRepository.getAllMaterialOfOnePhase(phase_id);
+        for (int i = 0; i < listMOP.size(); i++) {
+            materialOfPhaseRepository.delete(listMOP.get(i));
+        }
+    }
 }
