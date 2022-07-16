@@ -54,12 +54,13 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/projects/have-project-status")
+    @GetMapping("/projects/have-formula-status")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getProjectByStatus(@RequestParam(defaultValue = "", required = false) String status) {
+    public ResponseEntity<?> getProjectByStatus(
+            @RequestParam(defaultValue = "", required = false) String formula_status) {
         try {
-            return projectService.getProjectByStatus(status);
+            return projectService.getProjectByFormula_status(formula_status);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

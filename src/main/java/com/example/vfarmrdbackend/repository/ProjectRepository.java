@@ -18,6 +18,6 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     @Query(value = "select * from projects p where p.assigned_user_id = :assigned_user_id", nativeQuery = true)
     List<Project> getProjectByAssigned_user_id(@Param("assigned_user_id") int assigned_user_id);
 
-    @Query(value = "select * from projects p where p.project_status LIKE :project_status", nativeQuery = true)
-    List<Project> getProjectByStatus(@Param("project_status") String project_status);
+    @Query(value = "select * from projects p where p.project_id in (select distinct p.project_id from projects p, formulas f where p.project_id = f.project_id and f.formula_status like :formula_status)", nativeQuery = true)
+    List<Project> getProjectByFormula_status(@Param("formula_status") String formula_status);
 }
