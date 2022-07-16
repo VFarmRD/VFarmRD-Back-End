@@ -46,6 +46,7 @@ public class ProjectService {
         Project project = projectRepository.getProjectByProject_id(project_id);
         if (project != null) {
             ProjectGetResponse response = new ProjectGetResponse();
+            response.setProject_id(project.getProject_id());
             response.setProject_name(project.getProject_name());
             response.setClient_id(project.getClient_id());
             response.setCreated_user_id(project.getCreated_user_id());
@@ -73,6 +74,7 @@ public class ProjectService {
             for (int i = 0; i < listProject.size(); i++) {
                 Project project = listProject.get(i);
                 ProjectGetResponse response = new ProjectGetResponse();
+                response.setProject_id(project.getProject_id());
                 response.setProject_name(project.getProject_name());
                 response.setClient_id(project.getClient_id());
                 response.setCreated_user_id(project.getCreated_user_id());
@@ -103,6 +105,7 @@ public class ProjectService {
             for (int i = 0; i < listProject.size(); i++) {
                 Project project = listProject.get(i);
                 ProjectGetResponse response = new ProjectGetResponse();
+                response.setProject_id(project.getProject_id());
                 response.setProject_name(project.getProject_name());
                 response.setClient_id(project.getClient_id());
                 response.setCreated_user_id(project.getCreated_user_id());

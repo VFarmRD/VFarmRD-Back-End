@@ -7,6 +7,11 @@ public class ToolInPhaseRequest {
     public ToolInPhaseRequest() {
     }
 
+    public ToolInPhaseRequest(int tool_id, int phase_id) {
+        this.tool_id = tool_id;
+        this.phase_id = phase_id;
+    }
+
     public int getTool_id() {
         return tool_id;
     }

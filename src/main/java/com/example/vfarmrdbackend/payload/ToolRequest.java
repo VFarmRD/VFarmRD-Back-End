@@ -8,6 +8,12 @@ public class ToolRequest {
     public ToolRequest() {
     }
 
+    public ToolRequest(String tool_name, int toolcategory_id, String description) {
+        this.tool_name = tool_name;
+        this.toolcategory_id = toolcategory_id;
+        this.description = description;
+    }
+
     public String getTool_name() {
         return tool_name;
     }

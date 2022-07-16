@@ -26,6 +26,7 @@ import com.example.vfarmrdbackend.payload.PhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.PhaseGetResponse;
 import com.example.vfarmrdbackend.payload.PhaseUpdateRequest;
 import com.example.vfarmrdbackend.payload.TestGetResponse;
+import com.example.vfarmrdbackend.payload.ToolInPhaseRequest;
 import com.example.vfarmrdbackend.repository.FormulaRepository;
 import com.example.vfarmrdbackend.repository.PhaseRepository;
 import com.example.vfarmrdbackend.repository.TestRepository;
@@ -58,6 +59,9 @@ public class FormulaService {
 
     @Autowired
     LogService logService;
+
+    @Autowired
+    ToolInPhaseService toolInPhaseService;
 
     public List<FormulaGetAllResponse> getAllFormulaByProject_id(String project_id, String formula_status) {
         List<Formula> listFormulas = formulaRepository.getAllFormulaByProject_idAndStatus(project_id, formula_status);
@@ -168,6 +172,11 @@ public class FormulaService {
                         .getMaterialOfPhaseCreateRequest().get(j), jwt);
 
             }
+            for (int j = 0; j < phaseCreateRequest.getListTool_id().size(); j++) {
+                toolInPhaseService
+                        .createToolInPhase(new ToolInPhaseRequest(phaseCreateRequest.getListTool_id().get(j),
+                                phaseRepository.getLatestPhase_id()), jwt);
+            }
         }
         logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                 "FORMULA",
@@ -194,6 +203,7 @@ public class FormulaService {
                 PhaseUpdateRequest phaseUpdateRequest = listPhaseUpdate.get(i);
                 if (phaseUpdateRequest.getPhase_id() != 0) {
                     phaseService.updatePhase(phaseUpdateRequest, jwt);
+                    toolInPhaseService.updateMultipleToolInPhase(listPhaseUpdate.get(i).getToolInPhaseRequest(), jwt);
                     listOldPhase_id.remove(Integer.valueOf(phaseUpdateRequest.getPhase_id()));
                 } else if (phaseUpdateRequest.getPhase_id() == 0) {
                     PhaseCreateRequest phaseCreateRequest = new PhaseCreateRequest();
@@ -211,6 +221,13 @@ public class FormulaService {
                         materialOfPhaseCreate.setMaterial_percent(materialOfPhaseUpdate.getMaterial_percent());
                         materialOfPhaseCreate.setMaterial_weight(materialOfPhaseUpdate.getMaterial_weight());
                         materialOfPhaseService.createMaterialOfPhase(newest_phase_id, materialOfPhaseCreate, jwt);
+                    }
+                    for (int j = 0; j < listPhaseUpdate.get(i).getToolInPhaseRequest().size(); j++) {
+                        toolInPhaseService.createToolInPhase(
+                                new ToolInPhaseRequest(
+                                        listPhaseUpdate.get(i).getToolInPhaseRequest().get(j).getTool_id(),
+                                        newest_phase_id),
+                                jwt);
                     }
                 }
             }
