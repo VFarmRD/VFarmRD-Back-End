@@ -7,6 +7,7 @@ public class PhaseGetResponse {
     private String phase_name;
     private String phase_description;
     private List<MaterialOfPhaseGetResponse> materialOfPhaseGetResponse;
+    private List<ToolInPhaseResponse> listToolInPhaseResponse;
 
     public PhaseGetResponse() {
     }
@@ -41,6 +42,14 @@ public class PhaseGetResponse {
 
     public void setMaterialOfPhaseGetResponse(List<MaterialOfPhaseGetResponse> materialOfPhaseGetResponse) {
         this.materialOfPhaseGetResponse = materialOfPhaseGetResponse;
+    }
+
+    public List<ToolInPhaseResponse> getListToolInPhaseResponse() {
+        return listToolInPhaseResponse;
+    }
+
+    public void setListToolInPhaseResponse(List<ToolInPhaseResponse> listToolInPhaseResponse) {
+        this.listToolInPhaseResponse = listToolInPhaseResponse;
     }
 
 }

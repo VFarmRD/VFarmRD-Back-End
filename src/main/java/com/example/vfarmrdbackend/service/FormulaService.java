@@ -27,6 +27,7 @@ import com.example.vfarmrdbackend.payload.PhaseGetResponse;
 import com.example.vfarmrdbackend.payload.PhaseUpdateRequest;
 import com.example.vfarmrdbackend.payload.TestGetResponse;
 import com.example.vfarmrdbackend.payload.ToolInPhaseRequest;
+import com.example.vfarmrdbackend.payload.ToolInPhaseResponse;
 import com.example.vfarmrdbackend.repository.FormulaRepository;
 import com.example.vfarmrdbackend.repository.PhaseRepository;
 import com.example.vfarmrdbackend.repository.TestRepository;
@@ -124,6 +125,9 @@ public class FormulaService {
                 listMaterialOfPhasesResponse.add(materialOfPhaseResponse);
             }
             phaseGetResponse.setMaterialOfPhaseGetResponse(listMaterialOfPhasesResponse);
+            List<ToolInPhaseResponse> listToolInPhaseResponse = toolInPhaseService
+                    .getAllToolInPhaseWithPhase_id(listPhases.get(i).getPhase_id());
+            phaseGetResponse.setListToolInPhaseResponse(listToolInPhaseResponse);
             listPhaseGetResponse.add(phaseGetResponse);
         }
         formulaGetResponse.setPhaseGetResponse(listPhaseGetResponse);
@@ -167,15 +171,16 @@ public class FormulaService {
             phaseService.createPhase(
                     formulaRepository.getLatestFormula_idOfProject(formulaCreateRequest.getProject_id()),
                     phaseCreateRequest, jwt);
+            int newest_phase_id = phaseRepository.getLatestPhase_id();
             for (int j = 0; j < phaseCreateRequest.getMaterialOfPhaseCreateRequest().size(); j++) {
-                materialOfPhaseService.createMaterialOfPhase(phaseRepository.getLatestPhase_id(), phaseCreateRequest
+                materialOfPhaseService.createMaterialOfPhase(newest_phase_id, phaseCreateRequest
                         .getMaterialOfPhaseCreateRequest().get(j), jwt);
 
             }
             for (int j = 0; j < phaseCreateRequest.getListTool_id().size(); j++) {
                 toolInPhaseService
                         .createToolInPhase(new ToolInPhaseRequest(phaseCreateRequest.getListTool_id().get(j),
-                                phaseRepository.getLatestPhase_id()), jwt);
+                                newest_phase_id), jwt);
             }
         }
         logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
@@ -315,14 +320,15 @@ public class FormulaService {
                 PhaseCreateRequest phaseCreateRequest = formulaUpgradeRequest.getPhaseCreateRequest().get(i);
                 phaseService.createPhase(formulaRepository.getLatestFormula_idOfProject(formula.getProject_id()),
                         phaseCreateRequest, jwt);
+                int newest_phase_id = phaseRepository.getLatestPhase_id();
                 for (int j = 0; j < phaseCreateRequest.getMaterialOfPhaseCreateRequest().size(); j++) {
-                    materialOfPhaseService.createMaterialOfPhase(phaseRepository.getLatestPhase_id(),
+                    materialOfPhaseService.createMaterialOfPhase(newest_phase_id,
                             phaseCreateRequest.getMaterialOfPhaseCreateRequest().get(j), jwt);
                 }
                 for (int j = 0; j < phaseCreateRequest.getListTool_id().size(); j++) {
                     toolInPhaseService
                             .createToolInPhase(new ToolInPhaseRequest(phaseCreateRequest.getListTool_id().get(j),
-                                    phaseRepository.getLatestPhase_id()), jwt);
+                                    newest_phase_id), jwt);
                 }
             }
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),

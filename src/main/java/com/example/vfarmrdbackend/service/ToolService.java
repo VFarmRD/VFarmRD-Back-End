@@ -48,8 +48,14 @@ public class ToolService {
         return listResponse;
     }
 
-    public Tool getTool(int tool_id) {
-        return toolRepository.getToolByTool_id(tool_id);
+    public ToolResponse getTool(int tool_id) {
+        Tool tool = toolRepository.getToolByTool_id(tool_id);
+        return new ToolResponse(
+                tool.getTool_id(),
+                tool.getTool_name(),
+                tool.getToolcategory_id(),
+                toolCategoryService.getToolCategory(tool.getToolcategory_id()).getToolcategory_name(),
+                tool.getDescription());
     }
 
     public void createTool(ToolRequest request, String jwt) {

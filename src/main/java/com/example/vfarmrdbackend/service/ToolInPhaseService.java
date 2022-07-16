@@ -1,5 +1,6 @@
 package com.example.vfarmrdbackend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.ToolInPhase;
 import com.example.vfarmrdbackend.payload.ToolInPhaseRequest;
+import com.example.vfarmrdbackend.payload.ToolInPhaseResponse;
 import com.example.vfarmrdbackend.repository.ToolInPhaseRepository;
 
 @Service
@@ -14,8 +16,24 @@ public class ToolInPhaseService {
     @Autowired
     ToolInPhaseRepository toolInPhaseRepository;
 
+    @Autowired
+    ToolService toolService;
+
     public List<ToolInPhase> getAllToolInPhase() {
         return toolInPhaseRepository.findAll();
+    }
+
+    public List<ToolInPhaseResponse> getAllToolInPhaseWithPhase_id(int phase_id) {
+        List<ToolInPhaseResponse> listResponse = new ArrayList<>();
+        List<ToolInPhase> listToolinphase = toolInPhaseRepository.getToolInPhaseByPhase_id(phase_id);
+        for (int i = 0; i < listToolinphase.size(); i++) {
+            ToolInPhaseResponse response = new ToolInPhaseResponse();
+            response.setToolinphase_id(listToolinphase.get(i).getToolinphase_id());
+            response.setPhase_id(phase_id);
+            response.setToolResponse(toolService.getTool(listToolinphase.get(i).getTool_id()));
+            listResponse.add(response);
+        }
+        return listResponse;
     }
 
     public ToolInPhase getToolInPhase(int toolinphase_id) {
@@ -23,7 +41,7 @@ public class ToolInPhaseService {
     }
 
     public void createToolInPhase(ToolInPhaseRequest request, String jwt) {
-        toolInPhaseRepository.save(new ToolInPhase(request.getTool_id(), request.getTool_id()));
+        toolInPhaseRepository.save(new ToolInPhase(request.getTool_id(), request.getPhase_id()));
     }
 
     public void updateToolInPhase(int toolinphase_id, ToolInPhaseRequest request, String jwt) {
