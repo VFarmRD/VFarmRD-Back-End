@@ -319,6 +319,11 @@ public class FormulaService {
                     materialOfPhaseService.createMaterialOfPhase(phaseRepository.getLatestPhase_id(),
                             phaseCreateRequest.getMaterialOfPhaseCreateRequest().get(j), jwt);
                 }
+                for (int j = 0; j < phaseCreateRequest.getListTool_id().size(); j++) {
+                    toolInPhaseService
+                            .createToolInPhase(new ToolInPhaseRequest(phaseCreateRequest.getListTool_id().get(j),
+                                    phaseRepository.getLatestPhase_id()), jwt);
+                }
             }
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                     "FORMULA",
