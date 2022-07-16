@@ -204,20 +204,22 @@ public class FormulaService {
             updateFormula.setLoss(formulaUpdateRequest.getLoss());
             List<PhaseUpdateRequest> listPhaseUpdate = formulaUpdateRequest.getPhaseUpdateRequest();
             List<Integer> listOldPhase_id = phaseRepository.getAllPhase_idOfFormula(formula_id);
+            for (int i = 0; i < listOldPhase_id.size(); i++) {
+                phaseService.deletePhase(listOldPhase_id.get(i), jwt);
+            }
             for (int i = 0; i < listPhaseUpdate.size(); i++) {
                 PhaseUpdateRequest phaseUpdateRequest = listPhaseUpdate.get(i);
-                if (phaseUpdateRequest.getPhase_id() != 0) {
+                int phase_id = phaseUpdateRequest.getPhase_id();
+                if (phase_id != 0) {
                     phaseService.updatePhase(phaseUpdateRequest, jwt);
-                    toolInPhaseService.updateMultipleToolInPhase(listPhaseUpdate.get(i).getToolInPhaseRequest(), jwt);
-                    listOldPhase_id.remove(Integer.valueOf(phaseUpdateRequest.getPhase_id()));
-                } else if (phaseUpdateRequest.getPhase_id() == 0) {
+                } else if (phase_id == 0) {
                     PhaseCreateRequest phaseCreateRequest = new PhaseCreateRequest();
                     phaseCreateRequest.setPhase_description(phaseUpdateRequest.getPhase_description());
                     phaseCreateRequest.setPhase_index(phaseCreateRequest.getPhase_index());
                     List<MaterialOfPhaseUpdateRequest> listMaterialUpdateInput = phaseUpdateRequest
                             .getMaterialOfPhaseUpdateRequest();
                     phaseService.createPhase(formula_id, phaseCreateRequest, jwt);
-                    int newest_phase_id = phaseRepository.getLatestPhase_id();
+                    phase_id = phaseRepository.getLatestPhase_id();
                     for (int j = 0; j < listMaterialUpdateInput.size(); j++) {
                         MaterialOfPhaseUpdateRequest materialOfPhaseUpdate = listMaterialUpdateInput.get(j);
                         MaterialOfPhaseCreateRequest materialOfPhaseCreate = new MaterialOfPhaseCreateRequest();
@@ -225,20 +227,18 @@ public class FormulaService {
                         materialOfPhaseCreate.setMaterial_cost(materialOfPhaseUpdate.getMaterial_cost());
                         materialOfPhaseCreate.setMaterial_percent(materialOfPhaseUpdate.getMaterial_percent());
                         materialOfPhaseCreate.setMaterial_weight(materialOfPhaseUpdate.getMaterial_weight());
-                        materialOfPhaseService.createMaterialOfPhase(newest_phase_id, materialOfPhaseCreate, jwt);
-                    }
-                    for (int j = 0; j < listPhaseUpdate.get(i).getToolInPhaseRequest().size(); j++) {
-                        toolInPhaseService.createToolInPhase(
-                                new ToolInPhaseRequest(
-                                        listPhaseUpdate.get(i).getToolInPhaseRequest().get(j).getTool_id(),
-                                        newest_phase_id),
-                                jwt);
+                        materialOfPhaseService.createMaterialOfPhase(phase_id, materialOfPhaseCreate, jwt);
                     }
                 }
+                for (int j = 0; j < listPhaseUpdate.get(i).getToolInPhaseRequest().size(); j++) {
+                    toolInPhaseService.createToolInPhase(
+                            new ToolInPhaseRequest(
+                                    listPhaseUpdate.get(i).getToolInPhaseRequest().get(j).getTool_id(),
+                                    phase_id),
+                            jwt);
+                }
             }
-            for (int i = 0; i < listOldPhase_id.size(); i++) {
-                phaseService.deletePhase(listOldPhase_id.get(i), jwt);
-            }
+
             formulaRepository.save(updateFormula);
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                     "FORMULA",
