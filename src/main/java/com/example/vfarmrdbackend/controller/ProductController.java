@@ -122,12 +122,12 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("/products/{product_id}/remove-from-system")
+    @DeleteMapping("/products/{product_code}/remove-from-system")
     @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> removeProductFromSystem(@PathVariable("product_id") String product_id,
+    public ResponseEntity<?> removeProductFromSystem(@PathVariable("product_code") String product_code,
             @RequestHeader("Authorization") String jwt) {
         try {
-            productService.deleteProductFromSystem(product_id, jwt);
+            productService.deleteProductFromSystem(product_code, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Delete product successfully!");
         } catch (Exception e) {
