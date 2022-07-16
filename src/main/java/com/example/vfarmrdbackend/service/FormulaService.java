@@ -230,10 +230,10 @@ public class FormulaService {
                         materialOfPhaseService.createMaterialOfPhase(phase_id, materialOfPhaseCreate, jwt);
                     }
                 }
-                for (int j = 0; j < listPhaseUpdate.get(i).getToolInPhaseRequest().size(); j++) {
+                for (int j = 0; j < listPhaseUpdate.get(i).getListTool_id().size(); j++) {
                     toolInPhaseService.createToolInPhase(
                             new ToolInPhaseRequest(
-                                    listPhaseUpdate.get(i).getToolInPhaseRequest().get(j).getTool_id(),
+                                    listPhaseUpdate.get(i).getListTool_id().get(j),
                                     phase_id),
                             jwt);
                 }
