@@ -14,4 +14,7 @@ public interface ToolInPhaseRepository extends JpaRepository<ToolInPhase, Intege
 
     @Query(value = "select t.toolinphase_id from toolinphases t where t.phase_id = :phase_id", nativeQuery = true)
     List<Integer> getToolInPhase_idByPhase_id(@Param("phase_id") int phase_id);
+
+    @Query(value = "select * from toolinphases t where t.phase_id = :phase_id", nativeQuery = true)
+    List<ToolInPhase> getToolInPhaseByPhase_id(@Param("phase_id") int phase_id);
 }
