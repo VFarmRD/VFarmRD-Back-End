@@ -1,5 +1,6 @@
 package com.example.vfarmrdbackend.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.vfarmrdbackend.model.ErrorModel;
 import com.example.vfarmrdbackend.model.MaterialStandardPercent;
 import com.example.vfarmrdbackend.payload.MaterialStandardPercentRequest;
 import com.example.vfarmrdbackend.payload.MessageResponse;
+import com.example.vfarmrdbackend.service.ErrorService;
+import com.example.vfarmrdbackend.service.JwtService;
 import com.example.vfarmrdbackend.service.MaterialStandardPercentService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -32,6 +36,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class MaterialStandardPercentController {
     @Autowired
     MaterialStandardPercentService materialStandardPercentService;
+
+    @Autowired
+    ErrorService errorService;
 
     @GetMapping("/materialstandardpercents")
     @PreAuthorize("hasAuthority('staff')")
@@ -100,6 +107,11 @@ public class MaterialStandardPercentController {
                         new MessageResponse("Lỗi", "Tiêu chuẩn phần trăm nguyên liệu này đã tồn tại!"));
             }
         } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "MSP CREATE",
+                    e.getMessage(),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -119,6 +131,11 @@ public class MaterialStandardPercentController {
                         new MessageResponse("Lỗi", "Không tìm thấy tiêu chuẩn phần trăm nguyên liệu nào!"));
             }
         } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "MSP UPDATE",
+                    e.getMessage(),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -138,6 +155,11 @@ public class MaterialStandardPercentController {
                         new MessageResponse("Lỗi", "Không tìm thấy tiêu chuẩn phần trăm nguyên liệu nào!"));
             }
         } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "MSP DELETE",
+                    e.getMessage(),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }

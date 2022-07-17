@@ -125,7 +125,7 @@ public class TaskService {
         logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                 "TASK",
                 "CREATE",
-                String.valueOf(taskRepository.getNewestTaskByProject_id(newTask.getProject_id())),
+                String.valueOf(taskRepository.getNewestTaskByProject_id(newTask.getProject_id()).getTask_id()),
                 new Date()));
     }
 

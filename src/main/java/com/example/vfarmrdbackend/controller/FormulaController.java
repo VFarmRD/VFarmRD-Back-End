@@ -1,14 +1,18 @@
 package com.example.vfarmrdbackend.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import com.example.vfarmrdbackend.payload.FormulaUpgradeRequest;
 import com.example.vfarmrdbackend.payload.MessageResponse;
+import com.example.vfarmrdbackend.model.ErrorModel;
 import com.example.vfarmrdbackend.payload.FormulaCreateRequest;
 import com.example.vfarmrdbackend.payload.FormulaGetAllResponse;
 import com.example.vfarmrdbackend.payload.FormulaGetResponse;
 import com.example.vfarmrdbackend.payload.FormulaUpdateRequest;
+import com.example.vfarmrdbackend.service.ErrorService;
 import com.example.vfarmrdbackend.service.FormulaService;
+import com.example.vfarmrdbackend.service.JwtService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,6 +39,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class FormulaController {
     @Autowired
     public FormulaService formulaService;
+
+    @Autowired
+    ErrorService errorService;
 
     @GetMapping("/formulas")
     @PreAuthorize("hasAuthority('staff') " +
@@ -82,6 +89,11 @@ public class FormulaController {
             return ResponseEntity.status(HttpStatus.OK).body(
                     formulaService.createFormula(formulaCreateRequest, jwt));
         } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FORMULA CREATE",
+                    e.getMessage(),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -100,6 +112,11 @@ public class FormulaController {
                         new MessageResponse("Lỗi", "Công thức không tồn tại!"));
             }
         } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FORMULA DELETE",
+                    e.getMessage(),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -114,13 +131,16 @@ public class FormulaController {
         try {
             int id = formulaService.updateFormula(formula_id, formulaUpdateRequest, jwt);
             if (id != 0) {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        id);
+                return ResponseEntity.status(HttpStatus.OK).body(id);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        id);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(id);
             }
         } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FORMULA UPDATE",
+                    e.getMessage(),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -135,13 +155,16 @@ public class FormulaController {
         try {
             int id = formulaService.upgradeFormula(formula_id, formulaUpgradeRequest, jwt);
             if (id != 0) {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        id);
+                return ResponseEntity.status(HttpStatus.OK).body(id);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        id);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(id);
             }
         } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FORMULA UPGRADE",
+                    e.getMessage(),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -161,6 +184,11 @@ public class FormulaController {
                         new MessageResponse("Lỗi", "Công thức này chưa được gửi!"));
             }
         } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FORMULA UPDATE STATUS",
+                    e.getMessage(),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -180,6 +208,11 @@ public class FormulaController {
                         new MessageResponse("Lỗi", "Công thức này chưa được gửi!"));
             }
         } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FORMULA DENY",
+                    e.getMessage(),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
