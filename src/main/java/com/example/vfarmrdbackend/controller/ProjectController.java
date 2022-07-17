@@ -1,5 +1,7 @@
 package com.example.vfarmrdbackend.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.vfarmrdbackend.model.ErrorModel;
 import com.example.vfarmrdbackend.payload.MessageResponse;
 import com.example.vfarmrdbackend.payload.ProjectRequest;
+import com.example.vfarmrdbackend.service.ErrorService;
+import com.example.vfarmrdbackend.service.JwtService;
 import com.example.vfarmrdbackend.service.ProjectService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -29,6 +34,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class ProjectController {
     @Autowired
     ProjectService projectService;
+
+    @Autowired
+    ErrorService errorService;
 
     @GetMapping("/projects/")
     @PreAuthorize("hasAuthority('staff') " +
@@ -86,6 +94,11 @@ public class ProjectController {
         try {
             return projectService.createProject(request, jwt);
         } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PROJECT CREATE",
+                    e.getMessage(),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -98,6 +111,11 @@ public class ProjectController {
         try {
             return projectService.updateProject(project_id, request, jwt);
         } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PROJECT UPDATE",
+                    e.getMessage(),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -110,6 +128,11 @@ public class ProjectController {
         try {
             return projectService.deleteProject(project_id, jwt);
         } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PROJECT DELETE",
+                    e.getMessage(),
+                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }

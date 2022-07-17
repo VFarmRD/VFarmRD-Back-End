@@ -1,7 +1,9 @@
 package com.example.vfarmrdbackend.controller;
 
+import com.example.vfarmrdbackend.model.ErrorModel;
 import com.example.vfarmrdbackend.model.File;
 import com.example.vfarmrdbackend.payload.FileResponse;
+import com.example.vfarmrdbackend.service.ErrorService;
 import com.example.vfarmrdbackend.service.FileService;
 import com.example.vfarmrdbackend.service.JwtService;
 
@@ -36,7 +38,8 @@ public class FileController {
         @Autowired
         FileService fileService;
 
-        Date date = new Date();
+        @Autowired
+        ErrorService errorService;
 
         @PostMapping("/files/upload")
         @PreAuthorize("hasAuthority('staff') " +
@@ -50,6 +53,11 @@ public class FileController {
                                         fileService.store(listFile, JwtService.getUser_idFromToken(jwt), object_type,
                                                         object_id));
                 } catch (Exception e) {
+                        errorService.createError(new ErrorModel(
+                                        JwtService.getUser_idFromToken(jwt),
+                                        "FILE CREATE",
+                                        e.getMessage(),
+                                        new Date()));
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                                         e.getMessage());
                 }
@@ -119,6 +127,7 @@ public class FileController {
                                         }).collect(Collectors.toList());
                         return ResponseEntity.status(HttpStatus.OK).body(files);
                 } catch (Exception e) {
+
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                                         e.getMessage());
                 }
@@ -130,10 +139,15 @@ public class FileController {
         public ResponseEntity<?> deleteFile(@PathVariable("file_id") int file_id,
                         @RequestHeader("Authorization") String jwt) {
                 try {
-                        fileService.deleteFile(file_id,jwt);
+                        fileService.deleteFile(file_id, jwt);
                         return ResponseEntity.status(HttpStatus.OK).body(
                                         "Delete File successfully!");
                 } catch (Exception e) {
+                        errorService.createError(new ErrorModel(
+                                        JwtService.getUser_idFromToken(jwt),
+                                        "FILE DELETE",
+                                        e.getMessage(),
+                                        new Date()));
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                                         e.getMessage());
 
