@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class FormulaGetAllResponse {
     private int formula_id;
-    private String project_id;
+    private int project_id;
     private String formula_pre_version;
     private String formula_version;
     private String formula_status;
@@ -61,14 +61,6 @@ public class FormulaGetAllResponse {
 
     public void setFormula_status(String formula_status) {
         this.formula_status = formula_status;
-    }
-
-    public String getProject_id() {
-        return project_id;
-    }
-
-    public void setProject_id(String project_id) {
-        this.project_id = project_id;
     }
 
     public String getFormula_version() {
@@ -149,6 +141,14 @@ public class FormulaGetAllResponse {
 
     public void setLoss(float loss) {
         this.loss = loss;
+    }
+
+    public int getProject_id() {
+        return project_id;
+    }
+
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
     }
 
 }
