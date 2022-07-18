@@ -14,6 +14,7 @@ import com.example.vfarmrdbackend.payload.FileResponse;
 import com.example.vfarmrdbackend.payload.TestCreateRequest;
 import com.example.vfarmrdbackend.payload.TestCreateValue;
 import com.example.vfarmrdbackend.payload.TestGetResponse;
+import com.example.vfarmrdbackend.payload.TestUpdateMultipleRequest;
 import com.example.vfarmrdbackend.payload.TestUpdateRequest;
 import com.example.vfarmrdbackend.repository.FileRepository;
 import com.example.vfarmrdbackend.repository.TestRepository;
@@ -75,8 +76,8 @@ public class TestService {
         }
     }
 
-    public void updateTest(TestUpdateRequest request, String jwt) {
-        Test test = testRepository.getTestByTest_id(request.getTest_id());
+    public void updateTest(int test_id, TestUpdateRequest request, String jwt) {
+        Test test = testRepository.getTestByTest_id(test_id);
         if (test != null) {
             test.setTest_content(request.getTest_content());
             test.setTest_expect(request.getTest_expect());
@@ -85,16 +86,20 @@ public class TestService {
         }
     }
 
-    public void updateMultipleTest(int formula_id, List<TestUpdateRequest> listRequest, String jwt) {
+    public void updateMultipleTest(int formula_id, List<TestUpdateMultipleRequest> listRequest, String jwt) {
         TestCreateRequest createRequest = new TestCreateRequest();
         createRequest.setFormula_id(formula_id);
         List<TestCreateValue> listTestCreateValues = new ArrayList<>();
         createRequest.setListTestCreateValues(listTestCreateValues);
         List<Integer> listTest_id = testRepository.getTest_idWithFormula_id(formula_id);
         for (int i = 0; i < listRequest.size(); i++) {
-            TestUpdateRequest request = listRequest.get(i);
+            TestUpdateMultipleRequest request = listRequest.get(i);
             if (request.getTest_id() != 0) {
-                updateTest(request, jwt);
+                updateTest(request.getTest_id(),
+                        new TestUpdateRequest(request.getTest_content(),
+                                request.getTest_expect(),
+                                request.isTest_result()),
+                        jwt);
                 listTest_id.remove(Integer.valueOf(request.getTest_id()));
             } else if (request.getTest_id() == 0) {
                 TestCreateValue createValue = new TestCreateValue();
