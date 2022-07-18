@@ -31,7 +31,7 @@ public class ToolService {
                     toolCategoryService.getToolCategory(listTools.get(i).getToolcategory_id()).getToolcategory_name(),
                     listTools.get(i).getDescription(),
                     listTools.get(i).getParameter(),
-                    listTools.get(i).getMeasure()));
+                    listTools.get(i).getUnit()));
         }
         return listResponse;
     }
@@ -47,7 +47,7 @@ public class ToolService {
                     toolCategoryService.getToolCategory(listTools.get(i).getToolcategory_id()).getToolcategory_name(),
                     listTools.get(i).getDescription(),
                     listTools.get(i).getParameter(),
-                    listTools.get(i).getMeasure()));
+                    listTools.get(i).getUnit()));
         }
         return listResponse;
     }
@@ -61,7 +61,7 @@ public class ToolService {
                 toolCategoryService.getToolCategory(tool.getToolcategory_id()).getToolcategory_name(),
                 tool.getDescription(),
                 tool.getParameter(),
-                tool.getMeasure());
+                tool.getUnit());
     }
 
     public void createTool(ToolRequest request, String jwt) {
@@ -70,7 +70,7 @@ public class ToolService {
                 request.getToolcategory_id(),
                 request.getDescription(),
                 request.getParameter(),
-                request.getMeasure());
+                request.getUnit());
         toolRepository.save(newTool);
     }
 
