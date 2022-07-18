@@ -79,6 +79,8 @@ public class ToolService {
         updateTool.setTool_name(request.getTool_name());
         updateTool.setToolcategory_id(request.getToolcategory_id());
         updateTool.setDescription(request.getDescription());
+        updateTool.setParameter(request.getParameter());
+        updateTool.setUnit(request.getUnit());
         toolRepository.save(updateTool);
     }
 
