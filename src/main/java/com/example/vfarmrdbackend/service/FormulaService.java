@@ -30,6 +30,7 @@ import com.example.vfarmrdbackend.payload.ToolInPhaseRequest;
 import com.example.vfarmrdbackend.payload.ToolInPhaseResponse;
 import com.example.vfarmrdbackend.repository.FormulaRepository;
 import com.example.vfarmrdbackend.repository.PhaseRepository;
+import com.example.vfarmrdbackend.repository.ProjectRepository;
 import com.example.vfarmrdbackend.repository.TestRepository;
 
 @Service
@@ -63,6 +64,9 @@ public class FormulaService {
 
     @Autowired
     ToolInPhaseService toolInPhaseService;
+
+    @Autowired
+    ProjectRepository projectRepository;
 
     public List<FormulaGetAllResponse> getAllFormulaByProject_id(int project_id, String formula_status) {
         List<Formula> listFormulas = formulaRepository.getAllFormulaByProject_idAndStatus(project_id, formula_status);
@@ -277,8 +281,10 @@ public class FormulaService {
             if (status.equals("approved")) {
                 notificationService.createNotification(new Notification(
                         formula.getCreated_user_id(),
-                        "Thông báo",
-                        "Công thức đã được thông qua!",
+                        "Thông qua!",
+                        "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án" +
+                                projectRepository.getProjectByProject_id(formula.getProject_id()).getProject_name() +
+                                " đã được chấp thuận!",
                         new Date()));
                 logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                         "FORMULA",
@@ -288,8 +294,10 @@ public class FormulaService {
             } else if (status.equals("pending")) {
                 notificationService.createNotification(new Notification(
                         formula.getCreated_user_id(),
-                        "Thông báo",
-                        "Công thức đã bị từ chối!",
+                        "Từ chối!",
+                        "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án" +
+                                projectRepository.getProjectByProject_id(formula.getProject_id()).getProject_name() +
+                                " đã bị từ chối!",
                         new Date()));
                 logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                         "FORMULA",
@@ -360,8 +368,10 @@ public class FormulaService {
             formulaRepository.save(formula);
             notificationService.createNotification(new Notification(
                     formula.getCreated_user_id(),
-                    "Thông báo",
-                    "Công thức đã bị từ chối!",
+                    "Từ chối!",
+                    "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án" +
+                            projectRepository.getProjectByProject_id(formula.getProject_id()).getProject_name() +
+                            " đã bị từ chối!",
                     new Date()));
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                     "FORMULA",
