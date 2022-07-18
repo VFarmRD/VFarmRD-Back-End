@@ -186,10 +186,12 @@ public class FormulaService {
                         .getMaterialOfPhaseCreateRequest().get(j), jwt);
 
             }
-            for (int j = 0; j < phaseCreateRequest.getListTool_id().size(); j++) {
-                toolInPhaseService
-                        .createToolInPhase(new ToolInPhaseRequest(phaseCreateRequest.getListTool_id().get(j),
-                                newest_phase_id), jwt);
+            if (phaseCreateRequest.getListTool_id().size() != 0) {
+                for (int j = 0; j < phaseCreateRequest.getListTool_id().size(); j++) {
+                    toolInPhaseService
+                            .createToolInPhase(new ToolInPhaseRequest(phaseCreateRequest.getListTool_id().get(j),
+                                    newest_phase_id), jwt);
+                }
             }
         }
         logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
@@ -238,12 +240,14 @@ public class FormulaService {
                         materialOfPhaseService.createMaterialOfPhase(phase_id, materialOfPhaseCreate, jwt);
                     }
                 }
-                for (int j = 0; j < listPhaseUpdate.get(i).getListTool_id().size(); j++) {
-                    toolInPhaseService.createToolInPhase(
-                            new ToolInPhaseRequest(
-                                    listPhaseUpdate.get(i).getListTool_id().get(j),
-                                    phase_id),
-                            jwt);
+                if (listPhaseUpdate.get(i).getListTool_id().size() != 0) {
+                    for (int j = 0; j < listPhaseUpdate.get(i).getListTool_id().size(); j++) {
+                        toolInPhaseService.createToolInPhase(
+                                new ToolInPhaseRequest(
+                                        listPhaseUpdate.get(i).getListTool_id().get(j),
+                                        phase_id),
+                                jwt);
+                    }
                 }
             }
             if (listOldPhase_id.size() > 0) {
@@ -341,10 +345,12 @@ public class FormulaService {
                     materialOfPhaseService.createMaterialOfPhase(newest_phase_id,
                             phaseCreateRequest.getMaterialOfPhaseCreateRequest().get(j), jwt);
                 }
-                for (int j = 0; j < phaseCreateRequest.getListTool_id().size(); j++) {
-                    toolInPhaseService
-                            .createToolInPhase(new ToolInPhaseRequest(phaseCreateRequest.getListTool_id().get(j),
-                                    newest_phase_id), jwt);
+                if (phaseCreateRequest.getListTool_id().size() != 0) {
+                    for (int j = 0; j < phaseCreateRequest.getListTool_id().size(); j++) {
+                        toolInPhaseService
+                                .createToolInPhase(new ToolInPhaseRequest(phaseCreateRequest.getListTool_id().get(j),
+                                        newest_phase_id), jwt);
+                    }
                 }
             }
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
