@@ -1,9 +1,10 @@
 package com.example.vfarmrdbackend.payload;
 
+import java.util.Date;
 import java.util.List;
 
 public class FormulaGetResponse {
-    private String project_id;
+    private int project_id;
     private String formula_version;
     private float formula_cost;
     private float formula_weight;
@@ -18,6 +19,8 @@ public class FormulaGetResponse {
     private List<PhaseGetResponse> phaseGetResponse;
     private String test_status;
     private List<TestGetResponse> listTestResponse;
+    private Date created_time;
+    private Date modified_time;
 
     public FormulaGetResponse() {
     }
@@ -60,14 +63,6 @@ public class FormulaGetResponse {
 
     public void setListTestResponse(List<TestGetResponse> listTestResponse) {
         this.listTestResponse = listTestResponse;
-    }
-
-    public String getProject_id() {
-        return project_id;
-    }
-
-    public void setProject_id(String project_id) {
-        this.project_id = project_id;
     }
 
     public float getFormula_cost() {
@@ -140,6 +135,30 @@ public class FormulaGetResponse {
 
     public void setDeny_reason(String deny_reason) {
         this.deny_reason = deny_reason;
+    }
+
+    public int getProject_id() {
+        return project_id;
+    }
+
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
+    }
+
+    public Date getCreated_time() {
+        return created_time;
+    }
+
+    public void setCreated_time(Date created_time) {
+        this.created_time = created_time;
+    }
+
+    public Date getModified_time() {
+        return modified_time;
+    }
+
+    public void setModified_time(Date modified_time) {
+        this.modified_time = modified_time;
     }
 
 }

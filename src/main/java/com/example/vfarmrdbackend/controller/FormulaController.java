@@ -46,7 +46,7 @@ public class FormulaController {
     @GetMapping("/formulas")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllFormulaByProject_id(@RequestParam("project_id") String project_id,
+    public ResponseEntity<?> getAllFormulaByProject_id(@RequestParam("project_id") int project_id,
             @RequestParam(defaultValue = "", required = false) String formula_status) {
         try {
             List<FormulaGetAllResponse> listFormulas = formulaService.getAllFormulaByProject_id(project_id,

@@ -64,7 +64,7 @@ public class FormulaService {
     @Autowired
     ToolInPhaseService toolInPhaseService;
 
-    public List<FormulaGetAllResponse> getAllFormulaByProject_id(String project_id, String formula_status) {
+    public List<FormulaGetAllResponse> getAllFormulaByProject_id(int project_id, String formula_status) {
         List<Formula> listFormulas = formulaRepository.getAllFormulaByProject_idAndStatus(project_id, formula_status);
         List<FormulaGetAllResponse> listFormulasGetAll = new ArrayList<>();
         for (int i = 0; i < listFormulas.size(); i++) {
@@ -83,6 +83,8 @@ public class FormulaService {
             formulaGetAllResponse.setDensity(formula.getDensity());
             formulaGetAllResponse.setDescription(formula.getDescription());
             formulaGetAllResponse.setLoss(formula.getLoss());
+            formulaGetAllResponse.setCreated_time(formula.getCreated_time());
+            formulaGetAllResponse.setModified_time(formula.getModified_time());
             User user = userService.getUserInfo(formula.getCreated_user_id());
             formulaGetAllResponse.setUser_name(user.getFullname());
             listFormulasGetAll.add(formulaGetAllResponse);
@@ -106,6 +108,8 @@ public class FormulaService {
         formulaGetResponse.setDeny_reason(formula.getDeny_reason());
         User user = userService.getUserInfo(formula.getCreated_user_id());
         formulaGetResponse.setUser_name(user.getFullname());
+        formulaGetResponse.setCreated_time(formula.getCreated_time());
+        formulaGetResponse.setModified_time(formula.getModified_time());
         List<Phase> listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
         List<PhaseGetResponse> listPhaseGetResponse = new ArrayList<>();
         for (int i = 0; i < listPhases.size(); i++) {

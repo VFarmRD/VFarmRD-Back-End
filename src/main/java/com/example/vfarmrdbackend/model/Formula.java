@@ -13,7 +13,7 @@ public class Formula {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int formula_id;
-    private String project_id;
+    private int project_id;
     private int created_user_id;
     private String formula_pre_version;
     private String formula_version;
@@ -38,14 +38,6 @@ public class Formula {
 
     public void setFormula_id(int formula_id) {
         this.formula_id = formula_id;
-    }
-
-    public String getProject_id() {
-        return project_id;
-    }
-
-    public void setProject_id(String project_id) {
-        this.project_id = project_id;
     }
 
     public int getCreated_user_id() {
@@ -158,6 +150,14 @@ public class Formula {
 
     public void setDeny_reason(String deny_reason) {
         this.deny_reason = deny_reason;
+    }
+
+    public int getProject_id() {
+        return project_id;
+    }
+
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
     }
 
 }

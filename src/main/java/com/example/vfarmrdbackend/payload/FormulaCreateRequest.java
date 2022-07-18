@@ -3,7 +3,7 @@ package com.example.vfarmrdbackend.payload;
 import java.util.List;
 
 public class FormulaCreateRequest {
-    private String project_id;
+    private int project_id;
     private float formula_cost;
     private float formula_weight;
     private float volume;
@@ -38,14 +38,6 @@ public class FormulaCreateRequest {
 
     public void setDensity(float density) {
         this.density = density;
-    }
-
-    public String getProject_id() {
-        return project_id;
-    }
-
-    public void setProject_id(String project_id) {
-        this.project_id = project_id;
     }
 
     public float getFormula_cost() {
@@ -86,6 +78,14 @@ public class FormulaCreateRequest {
 
     public void setFormula_weight(float formula_weight) {
         this.formula_weight = formula_weight;
+    }
+
+    public int getProject_id() {
+        return project_id;
+    }
+
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
     }
 
 }
