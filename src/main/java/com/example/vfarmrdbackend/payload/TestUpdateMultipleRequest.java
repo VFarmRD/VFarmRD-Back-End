@@ -1,17 +1,20 @@
 package com.example.vfarmrdbackend.payload;
 
-public class TestUpdateRequest {
+public class TestUpdateMultipleRequest {
+    private int test_id;
     private String test_content;
     private String test_expect;
     private boolean test_result;
 
-    public TestUpdateRequest() {
+    public TestUpdateMultipleRequest() {
     }
 
-    public TestUpdateRequest(String test_content, String test_expect, boolean test_result) {
-        this.test_content = test_content;
-        this.test_expect = test_expect;
-        this.test_result = test_result;
+    public int getTest_id() {
+        return test_id;
+    }
+
+    public void setTest_id(int test_id) {
+        this.test_id = test_id;
     }
 
     public String getTest_content() {

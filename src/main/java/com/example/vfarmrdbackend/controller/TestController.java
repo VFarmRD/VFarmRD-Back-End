@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.vfarmrdbackend.model.Test;
 import com.example.vfarmrdbackend.payload.TestCreateRequest;
 import com.example.vfarmrdbackend.payload.TestGetResponse;
+import com.example.vfarmrdbackend.payload.TestUpdateMultipleRequest;
 import com.example.vfarmrdbackend.payload.TestUpdateRequest;
 import com.example.vfarmrdbackend.service.TestService;
 
@@ -84,9 +85,9 @@ public class TestController {
     @PutMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> updateTest(@PathVariable("test_id") int test_id,
-            @RequestBody TestUpdateRequest listRequest, @RequestHeader("Authorization") String jwt) {
+            @RequestBody TestUpdateRequest request, @RequestHeader("Authorization") String jwt) {
         try {
-            testService.updateTest(listRequest, jwt);
+            testService.updateTest(test_id, request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -97,7 +98,7 @@ public class TestController {
     @PutMapping("/tests/formulas/{formula_id}")
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> updateMultipleTestInFormula(@PathVariable("formula_id") int formula_id,
-            @RequestBody List<TestUpdateRequest> listRequest, @RequestHeader("Authorization") String jwt) {
+            @RequestBody List<TestUpdateMultipleRequest> listRequest, @RequestHeader("Authorization") String jwt) {
         try {
             testService.updateMultipleTest(formula_id, listRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
