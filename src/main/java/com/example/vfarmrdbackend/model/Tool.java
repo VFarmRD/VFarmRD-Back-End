@@ -16,17 +16,17 @@ public class Tool {
     private int toolcategory_id;
     private String description;
     private String parameter;
-    private String measure;
+    private String unit;
 
     public Tool() {
     }
 
-    public Tool(String tool_name, int toolcategory_id, String description, String parameter, String measure) {
+    public Tool(String tool_name, int toolcategory_id, String description, String parameter, String unit) {
         this.tool_name = tool_name;
         this.toolcategory_id = toolcategory_id;
         this.description = description;
         this.parameter = parameter;
-        this.measure = measure;
+        this.unit = unit;
     }
 
     public int getTool_id() {
@@ -69,12 +69,12 @@ public class Tool {
         this.parameter = parameter;
     }
 
-    public String getMeasure() {
-        return measure;
+    public String getUnit() {
+        return unit;
     }
 
-    public void setMeasure(String measure) {
-        this.measure = measure;
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
 }
