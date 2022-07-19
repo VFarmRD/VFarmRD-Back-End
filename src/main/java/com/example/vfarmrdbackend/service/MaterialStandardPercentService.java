@@ -33,7 +33,7 @@ public class MaterialStandardPercentService {
 
     public boolean createMaterialStandardPercent(MaterialStandardPercentRequest request, String jwt) {
         if (materialStandardPercentRepository
-                .getMaterialStandardPercentByMaterial_id(request.getMaterial_id()) != null) {
+                .getMaterialStandardPercentByMaterial_id(request.getMaterial_id()) == null) {
             MaterialStandardPercent newMaterialStandardPercent = new MaterialStandardPercent();
             newMaterialStandardPercent.setMaterial_id(request.getMaterial_id());
             newMaterialStandardPercent.setMax_percent(request.getMax_percent());
