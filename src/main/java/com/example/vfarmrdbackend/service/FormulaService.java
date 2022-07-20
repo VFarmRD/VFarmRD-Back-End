@@ -131,6 +131,7 @@ public class FormulaService {
                 materialOfPhaseResponse.setMaterial_percent(listMaterialOfPhases.get(j).getMaterial_percent());
                 materialOfPhaseResponse.setMaterial_cost(listMaterialOfPhases.get(j).getMaterial_cost());
                 materialOfPhaseResponse.setMaterial_weight(listMaterialOfPhases.get(j).getMaterial_weight());
+                materialOfPhaseResponse.setMaterial_description(listMaterialOfPhases.get(j).getMaterial_description());
                 listMaterialOfPhasesResponse.add(materialOfPhaseResponse);
             }
             phaseGetResponse.setMaterialOfPhaseGetResponse(listMaterialOfPhasesResponse);
@@ -238,6 +239,7 @@ public class FormulaService {
                         materialOfPhaseCreate.setMaterial_cost(materialOfPhaseUpdate.getMaterial_cost());
                         materialOfPhaseCreate.setMaterial_percent(materialOfPhaseUpdate.getMaterial_percent());
                         materialOfPhaseCreate.setMaterial_weight(materialOfPhaseUpdate.getMaterial_weight());
+                        materialOfPhaseCreate.setMaterial_description(materialOfPhaseUpdate.getMaterial_description());
                         materialOfPhaseService.createMaterialOfPhase(phase_id, materialOfPhaseCreate, jwt);
                     }
                 }

@@ -17,6 +17,7 @@ public class MaterialOfPhase {
     private float material_cost;
     private int material_weight;
     private float material_percent;
+    private String material_description;
 
     public MaterialOfPhase() {
     }
@@ -67,6 +68,14 @@ public class MaterialOfPhase {
 
     public void setMaterial_percent(float material_percent) {
         this.material_percent = material_percent;
+    }
+
+    public String getMaterial_description() {
+        return material_description;
+    }
+
+    public void setMaterial_description(String material_description) {
+        this.material_description = material_description;
     }
 
 }
