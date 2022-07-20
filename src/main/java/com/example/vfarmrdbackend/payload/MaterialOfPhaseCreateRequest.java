@@ -5,6 +5,7 @@ public class MaterialOfPhaseCreateRequest {
     private float material_cost;
     private int material_weight;
     private float material_percent;
+    private String material_description;
 
     public MaterialOfPhaseCreateRequest() {
     }
@@ -39,6 +40,14 @@ public class MaterialOfPhaseCreateRequest {
 
     public void setMaterial_percent(float material_percent) {
         this.material_percent = material_percent;
+    }
+
+    public String getMaterial_description() {
+        return material_description;
+    }
+
+    public void setMaterial_description(String material_description) {
+        this.material_description = material_description;
     }
 
 }

@@ -63,6 +63,7 @@ public class PhaseService {
                     materialCreate.setMaterial_cost(materialUpdate.getMaterial_cost());
                     materialCreate.setMaterial_percent(materialUpdate.getMaterial_percent());
                     materialCreate.setMaterial_weight(materialUpdate.getMaterial_weight());
+                    materialCreate.setMaterial_description(materialUpdate.getMaterial_description());
                     materialOfPhaseService.createMaterialOfPhase(phaseUpdateRequest.getPhase_id(),
                             materialCreate, jwt);
                 }
