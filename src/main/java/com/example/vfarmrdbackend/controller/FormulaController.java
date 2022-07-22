@@ -50,7 +50,27 @@ public class FormulaController {
             @RequestParam(defaultValue = "", required = false) String formula_status) {
         try {
             List<FormulaGetAllResponse> listFormulas = formulaService.getAllFormulaByProject_id(project_id,
-                    "%" + formula_status + "%");
+                    formula_status);
+            if (listFormulas != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(listFormulas);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new MessageResponse("Lỗi", "Không tìm thấy công thức nào!"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
+    @GetMapping("/formulas/users/{user_id}")
+    @PreAuthorize("hasAuthority('staff') " +
+            "or hasAuthority('manager')")
+    public ResponseEntity<?> getAllFormulaByUser_idAndFormula_status(@PathVariable("user_id") int user_id,
+            @RequestParam(defaultValue = "", required = false) String formula_status) {
+        try {
+            List<FormulaGetAllResponse> listFormulas = formulaService.getAllFormulaByUser_idAndFormula_status(user_id,
+                    formula_status);
             if (listFormulas != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(listFormulas);
             } else {

@@ -69,7 +69,37 @@ public class FormulaService {
     ProjectRepository projectRepository;
 
     public List<FormulaGetAllResponse> getAllFormulaByProject_id(int project_id, String formula_status) {
-        List<Formula> listFormulas = formulaRepository.getAllFormulaByProject_idAndStatus(project_id, formula_status);
+        List<Formula> listFormulas = formulaRepository.getAllFormulaByProject_idAndStatus(project_id,
+                "%" + formula_status + "%");
+        List<FormulaGetAllResponse> listFormulasGetAll = new ArrayList<>();
+        for (int i = 0; i < listFormulas.size(); i++) {
+            Formula formula = listFormulas.get(i);
+            FormulaGetAllResponse formulaGetAllResponse = new FormulaGetAllResponse();
+            formulaGetAllResponse.setFormula_id(formula.getFormula_id());
+            formulaGetAllResponse.setProject_id(formula.getProject_id());
+            formulaGetAllResponse.setFormula_pre_version(formula.getFormula_pre_version());
+            formulaGetAllResponse.setFormula_status(formula.getFormula_status());
+            formulaGetAllResponse.setFormula_version(formula.getFormula_version());
+            formulaGetAllResponse.setFormula_weight(formula.getFormula_weight());
+            formulaGetAllResponse.setFormula_cost(formula.getFormula_cost());
+            formulaGetAllResponse.setUser_id(formula.getCreated_user_id());
+            formulaGetAllResponse.setVolume(formula.getVolume());
+            formulaGetAllResponse.setProduct_weight(formula.getProduct_weight());
+            formulaGetAllResponse.setDensity(formula.getDensity());
+            formulaGetAllResponse.setDescription(formula.getDescription());
+            formulaGetAllResponse.setLoss(formula.getLoss());
+            formulaGetAllResponse.setCreated_time(formula.getCreated_time());
+            formulaGetAllResponse.setModified_time(formula.getModified_time());
+            User user = userService.getUserInfo(formula.getCreated_user_id());
+            formulaGetAllResponse.setUser_name(user.getFullname());
+            listFormulasGetAll.add(formulaGetAllResponse);
+        }
+        return listFormulasGetAll;
+    }
+
+    public List<FormulaGetAllResponse> getAllFormulaByUser_idAndFormula_status(int user_id, String formula_status) {
+        List<Formula> listFormulas = formulaRepository.getAllFormulaByUser_idAndFormula_status(user_id,
+                "%" + formula_status + "%");
         List<FormulaGetAllResponse> listFormulasGetAll = new ArrayList<>();
         for (int i = 0; i < listFormulas.size(); i++) {
             Formula formula = listFormulas.get(i);
