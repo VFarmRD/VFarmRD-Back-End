@@ -77,6 +77,8 @@ public class FormulaService {
             FormulaGetAllResponse formulaGetAllResponse = new FormulaGetAllResponse();
             formulaGetAllResponse.setFormula_id(formula.getFormula_id());
             formulaGetAllResponse.setProject_id(formula.getProject_id());
+            formulaGetAllResponse
+                    .setProject_name(projectRepository.getProjectByProject_id(project_id).getProject_name());
             formulaGetAllResponse.setFormula_pre_version(formula.getFormula_pre_version());
             formulaGetAllResponse.setFormula_status(formula.getFormula_status());
             formulaGetAllResponse.setFormula_version(formula.getFormula_version());
@@ -106,6 +108,9 @@ public class FormulaService {
             FormulaGetAllResponse formulaGetAllResponse = new FormulaGetAllResponse();
             formulaGetAllResponse.setFormula_id(formula.getFormula_id());
             formulaGetAllResponse.setProject_id(formula.getProject_id());
+            formulaGetAllResponse
+                    .setProject_name(
+                            projectRepository.getProjectByProject_id(formula.getProject_id()).getProject_name());
             formulaGetAllResponse.setFormula_pre_version(formula.getFormula_pre_version());
             formulaGetAllResponse.setFormula_status(formula.getFormula_status());
             formulaGetAllResponse.setFormula_version(formula.getFormula_version());
