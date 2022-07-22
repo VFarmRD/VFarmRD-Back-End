@@ -70,7 +70,7 @@ public class ProjectController {
             @RequestParam(defaultValue = "", required = false) String formula_status,
             @RequestParam(defaultValue = "", required = false) String user_id) {
         try {
-            return projectService.getProjectByFormula_status(formula_status,user_id);
+            return projectService.getProjectByFormula_status(formula_status, user_id);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -134,6 +134,24 @@ public class ProjectController {
                     JwtService.getUser_idFromToken(jwt),
                     "PROJECT DELETE",
                     e.getMessage(),
+                    new Date()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
+    @PutMapping("/projects/{project_id}/recover-project")
+    @PreAuthorize("hasAuthority('manager')")
+    public ResponseEntity<?> recoverProject(@PathVariable("project_id") int project_id,
+            @RequestHeader("Authorization") String jwt) {
+        try {
+            return projectService.deleteProject(project_id, jwt);
+        } catch (Exception e) {
+            String error = e.getMessage();
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PROJECT DELETE",
+                    error,
                     new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

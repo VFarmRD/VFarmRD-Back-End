@@ -198,6 +198,25 @@ public class ProjectService {
         }
     }
 
+    public ResponseEntity<?> recoverProject(int project_id, String jwt) {
+        Project project = projectRepository.getProjectByProject_id(project_id);
+        if (project != null) {
+            project.setProject_status("running");
+            project.setModified_time(new Date());
+            projectRepository.save(project);
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "PROJECT",
+                    "RECOVER",
+                    String.valueOf(project_id),
+                    new Date()));
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new MessageResponse("Thành công", "Hôi phục Dự Án thành công!"));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new MessageResponse("Lỗi", "Không tìm thấy Dự Án!"));
+        }
+    }
+
     public void assignUserFromTaskToProject(int project_id, int user_id) {
         Project project = projectRepository.getProjectByProject_id(project_id);
         project.setAssigned_user_id(user_id);
