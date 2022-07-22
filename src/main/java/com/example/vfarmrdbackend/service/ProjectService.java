@@ -67,8 +67,9 @@ public class ProjectService {
         }
     }
 
-    public ResponseEntity<?> getProjectByAssigned_user_id(int assigned_user_id) {
-        List<Project> listProject = projectRepository.getProjectByAssigned_user_id(assigned_user_id);
+    public ResponseEntity<?> getProjectByAssigned_user_id(int assigned_user_id, String project_status) {
+        List<Project> listProject = projectRepository.getProjectByAssigned_user_id(assigned_user_id,
+                "%" + project_status + "%");
         List<ProjectGetResponse> listResponse = new ArrayList<>();
         if (listProject != null) {
             for (int i = 0; i < listProject.size(); i++) {
