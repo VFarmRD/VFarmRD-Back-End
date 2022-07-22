@@ -67,9 +67,10 @@ public class ProjectController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getProjectByStatus(
-            @RequestParam(defaultValue = "", required = false) String formula_status) {
+            @RequestParam(defaultValue = "", required = false) String formula_status,
+            @RequestParam(defaultValue = "", required = false) String user_id) {
         try {
-            return projectService.getProjectByFormula_status(formula_status);
+            return projectService.getProjectByFormula_status(formula_status,user_id);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
