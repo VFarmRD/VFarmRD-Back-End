@@ -17,6 +17,10 @@ public interface FormulaRepository extends JpaRepository<Formula, Integer> {
         List<Formula> getAllFormulaByProject_idAndStatus(@Param("project_id") int project_id,
                         @Param("formula_status") String formula_status);
 
+        @Query(value = "select * from formulas f where f.created_user_id = :created_user_id and f.formula_status like :formula_status", nativeQuery = true)
+        List<Formula> getAllFormulaByUser_idAndFormula_status(@Param("created_user_id") int created_user_id,
+                        @Param("formula_status") String formula_status);
+
         @Query(value = "select * from formulas f where f.project_id = :project_id", nativeQuery = true)
         List<Formula> getAllFormulaByProject_id(@Param("project_id") int project_id);
 
