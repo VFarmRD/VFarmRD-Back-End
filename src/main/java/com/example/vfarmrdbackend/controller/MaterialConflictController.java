@@ -1,6 +1,5 @@
 package com.example.vfarmrdbackend.controller;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.vfarmrdbackend.model.ErrorModel;
 import com.example.vfarmrdbackend.model.MaterialConflict;
-import com.example.vfarmrdbackend.payload.MaterialConflictCreateRequest;
-import com.example.vfarmrdbackend.payload.MaterialConflictUpdateRequest;
-import com.example.vfarmrdbackend.payload.MessageResponse;
-import com.example.vfarmrdbackend.service.ErrorService;
-import com.example.vfarmrdbackend.service.JwtService;
+import com.example.vfarmrdbackend.payload.request.MaterialConflictCreateRequest;
+import com.example.vfarmrdbackend.payload.request.MaterialConflictUpdateRequest;
+import com.example.vfarmrdbackend.payload.response.MessageResponse;
 import com.example.vfarmrdbackend.service.MaterialConflictService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -37,9 +33,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class MaterialConflictController {
     @Autowired
     MaterialConflictService materialConflictService;
-
-    @Autowired
-    ErrorService errorService;
 
     @GetMapping("/materialconflicts")
     @PreAuthorize("hasAuthority('staff')")
@@ -79,14 +72,8 @@ public class MaterialConflictController {
     @PreAuthorize("hasAuthority('staff')")
     public ResponseEntity<?> getMaterialConflictByFirstMaterialId(@RequestParam("material_id") String material_id) {
         try {
-            List<MaterialConflict> materialconflicts = materialConflictService
-                    .getMaterialConflictByFirstMaterialId(material_id);
-            if (materialconflicts != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(materialconflicts);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new MessageResponse("Lỗi", "Không tìm thấy nguyên liệu xung đột nào!"));
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(materialConflictService
+                    .getMaterialConflictByFirstMaterialId(material_id));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -102,11 +89,6 @@ public class MaterialConflictController {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Tạo nguyên liệu xung đột thành công!"));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "MAT CONFLICT CREATE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -121,11 +103,6 @@ public class MaterialConflictController {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Cập nhật nguyên liệu xung đột thành công!"));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "MAT CONFLICT UPDATE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -145,11 +122,6 @@ public class MaterialConflictController {
                         new MessageResponse("Lỗi", "Không tìm thấy nguyên liệu xung đột nào!"));
             }
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "MAT CONFLICT DELETE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }

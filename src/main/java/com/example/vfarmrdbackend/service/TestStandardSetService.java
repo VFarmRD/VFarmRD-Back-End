@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.TestStandard;
 import com.example.vfarmrdbackend.model.TestStandardSet;
-import com.example.vfarmrdbackend.payload.MessageResponse;
-import com.example.vfarmrdbackend.payload.TestStandardRequest;
-import com.example.vfarmrdbackend.payload.TestStandardSetCreateRequest;
-import com.example.vfarmrdbackend.payload.TestStandardSetGetResponse;
-import com.example.vfarmrdbackend.payload.TestStandardSetUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.TestStandardRequest;
+import com.example.vfarmrdbackend.payload.request.TestStandardSetCreateRequest;
+import com.example.vfarmrdbackend.payload.request.TestStandardSetUpdateRequest;
+import com.example.vfarmrdbackend.payload.response.MessageResponse;
+import com.example.vfarmrdbackend.payload.response.TestStandardSetGetResponse;
 import com.example.vfarmrdbackend.repository.TestStandardRepository;
 import com.example.vfarmrdbackend.repository.TestStandardSetRepository;
 

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Log;
 import com.example.vfarmrdbackend.model.MaterialConflict;
-import com.example.vfarmrdbackend.payload.MaterialConflictCreateRequest;
-import com.example.vfarmrdbackend.payload.MaterialConflictUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.MaterialConflictCreateRequest;
+import com.example.vfarmrdbackend.payload.request.MaterialConflictUpdateRequest;
 import com.example.vfarmrdbackend.repository.MaterialConflictRepository;
 
 @Service

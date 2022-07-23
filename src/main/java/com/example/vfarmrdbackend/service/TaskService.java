@@ -14,9 +14,9 @@ import com.example.vfarmrdbackend.model.Log;
 import com.example.vfarmrdbackend.model.Notification;
 import com.example.vfarmrdbackend.model.Task;
 import com.example.vfarmrdbackend.model.User;
-import com.example.vfarmrdbackend.payload.TaskCreateRequest;
-import com.example.vfarmrdbackend.payload.TaskGetResponse;
-import com.example.vfarmrdbackend.payload.TaskUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.TaskCreateRequest;
+import com.example.vfarmrdbackend.payload.request.TaskUpdateRequest;
+import com.example.vfarmrdbackend.payload.response.TaskGetResponse;
 import com.example.vfarmrdbackend.repository.TaskRepository;
 import com.example.vfarmrdbackend.repository.UserRepository;
 

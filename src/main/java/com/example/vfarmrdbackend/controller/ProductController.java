@@ -1,14 +1,11 @@
 package com.example.vfarmrdbackend.controller;
 
-import java.util.Date;
 import java.util.List;
 
-import com.example.vfarmrdbackend.model.ErrorModel;
 import com.example.vfarmrdbackend.model.Product;
-import com.example.vfarmrdbackend.payload.ProductCreateRequest;
-import com.example.vfarmrdbackend.payload.ProductUpdateRequest;
-import com.example.vfarmrdbackend.service.ErrorService;
-import com.example.vfarmrdbackend.service.JwtService;
+import com.example.vfarmrdbackend.payload.request.ProductCreateRequest;
+import com.example.vfarmrdbackend.payload.request.ProductUpdateRequest;
+import com.example.vfarmrdbackend.payload.response.MessageResponse;
 import com.example.vfarmrdbackend.service.ProductService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,9 +35,6 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    @Autowired
-    ErrorService errorService;
-
     @GetMapping("/products")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
@@ -58,7 +52,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK).body(listProducts);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -96,13 +90,8 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK).body(
                     productService.createProduct(productCreateRequest, jwt));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PRODUCT CREATE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -115,13 +104,8 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Update product successfully!");
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PRODUCT UPDATE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -134,13 +118,8 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Delete product successfully!");
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PRODUCT DELETE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -153,13 +132,8 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Delete product successfully!");
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PRODUCT REMOVE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 }

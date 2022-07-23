@@ -1,7 +1,5 @@
 package com.example.vfarmrdbackend.controller;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.vfarmrdbackend.model.ErrorModel;
-import com.example.vfarmrdbackend.payload.MessageResponse;
-import com.example.vfarmrdbackend.payload.ProjectRequest;
-import com.example.vfarmrdbackend.service.ErrorService;
-import com.example.vfarmrdbackend.service.JwtService;
+import com.example.vfarmrdbackend.payload.request.ProjectRequest;
+import com.example.vfarmrdbackend.payload.response.MessageResponse;
 import com.example.vfarmrdbackend.service.ProjectService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -35,15 +30,12 @@ public class ProjectController {
     @Autowired
     ProjectService projectService;
 
-    @Autowired
-    ErrorService errorService;
-
     @GetMapping("/projects/")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllProject() {
+    public ResponseEntity<?> getAllProject(@RequestHeader("Authorization") String jwt) {
         try {
-            return projectService.getAllProjects();
+            return ResponseEntity.status(HttpStatus.OK).body(projectService.getAllProjects(jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -54,9 +46,11 @@ public class ProjectController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getProjectByAssigned_user_id(@PathVariable("user_id") int user_id,
-            @RequestParam(defaultValue = "", required = false) String project_status) {
+            @RequestParam(defaultValue = "", required = false) String project_status,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            return projectService.getProjectByAssigned_user_id(user_id, project_status);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(projectService.getProjectByAssigned_user_id(user_id, project_status, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -68,9 +62,11 @@ public class ProjectController {
             "or hasAuthority('manager')")
     public ResponseEntity<?> getProjectByStatus(
             @RequestParam(defaultValue = "", required = false) String formula_status,
-            @RequestParam(defaultValue = "", required = false) String user_id) {
+            @RequestParam(defaultValue = "", required = false) String user_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            return projectService.getProjectByFormula_status(formula_status, user_id);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(projectService.getProjectByFormula_status(formula_status, user_id, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -80,9 +76,10 @@ public class ProjectController {
     @GetMapping("/projects/{project_id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getProjectByProject_id(@PathVariable("project_id") int project_id) {
+    public ResponseEntity<?> getProjectByProject_id(@PathVariable("project_id") int project_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            return projectService.getProjectByProject_id(project_id);
+            return ResponseEntity.status(HttpStatus.OK).body(projectService.getProjectByProject_id(project_id, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -94,13 +91,10 @@ public class ProjectController {
     public ResponseEntity<?> createProject(@RequestBody ProjectRequest request,
             @RequestHeader("Authorization") String jwt) {
         try {
-            return projectService.createProject(request, jwt);
+            projectService.createProject(request, jwt);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new MessageResponse("Thành công", "Tạo Dự Án mới thành công!"));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT CREATE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -111,13 +105,10 @@ public class ProjectController {
     public ResponseEntity<?> updateProjects(@PathVariable("project_id") int project_id,
             @RequestBody ProjectRequest request, @RequestHeader("Authorization") String jwt) {
         try {
-            return projectService.updateProject(project_id, request, jwt);
+            projectService.updateProject(project_id, request, jwt);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new MessageResponse("Thành công", "Cập nhật Dự Án thành công!"));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT UPDATE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -128,13 +119,10 @@ public class ProjectController {
     public ResponseEntity<?> deleteProject(@PathVariable("project_id") int project_id,
             @RequestHeader("Authorization") String jwt) {
         try {
-            return projectService.deleteProject(project_id, jwt);
+            projectService.deleteProject(project_id, jwt);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new MessageResponse("Thành công", "Xóa Dự Án thành công!"));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT DELETE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -145,14 +133,10 @@ public class ProjectController {
     public ResponseEntity<?> recoverProject(@PathVariable("project_id") int project_id,
             @RequestHeader("Authorization") String jwt) {
         try {
-            return projectService.deleteProject(project_id, jwt);
+            projectService.recoverProject(project_id, jwt);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new MessageResponse("Thành công", "Khôi phục Dự Án thành công!"));
         } catch (Exception e) {
-            String error = e.getMessage();
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT DELETE",
-                    error,
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }

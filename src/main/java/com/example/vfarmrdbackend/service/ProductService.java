@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Log;
 import com.example.vfarmrdbackend.model.Product;
-import com.example.vfarmrdbackend.payload.ProductCreateRequest;
-import com.example.vfarmrdbackend.payload.ProductUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.ProductCreateRequest;
+import com.example.vfarmrdbackend.payload.request.ProductUpdateRequest;
 import com.example.vfarmrdbackend.repository.ProductRepository;
 
 @Service

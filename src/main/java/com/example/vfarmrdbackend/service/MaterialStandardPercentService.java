@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Log;
 import com.example.vfarmrdbackend.model.MaterialStandardPercent;
-import com.example.vfarmrdbackend.payload.MaterialStandardPercentRequest;
+import com.example.vfarmrdbackend.payload.request.MaterialStandardPercentRequest;
 import com.example.vfarmrdbackend.repository.MaterialStandardPercentRepository;
 
 @Service

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.Notification;
-import com.example.vfarmrdbackend.payload.NotificationGetResponse;
+import com.example.vfarmrdbackend.payload.response.NotificationGetResponse;
 import com.example.vfarmrdbackend.repository.NotificationRepository;
 import com.example.vfarmrdbackend.repository.UserRepository;
 

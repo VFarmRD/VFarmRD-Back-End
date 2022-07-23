@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.ToolInPhase;
-import com.example.vfarmrdbackend.payload.ToolInPhaseRequest;
-import com.example.vfarmrdbackend.payload.ToolInPhaseResponse;
+import com.example.vfarmrdbackend.payload.request.ToolInPhaseRequest;
+import com.example.vfarmrdbackend.payload.response.ToolInPhaseResponse;
 import com.example.vfarmrdbackend.repository.ToolInPhaseRepository;
 
 @Service

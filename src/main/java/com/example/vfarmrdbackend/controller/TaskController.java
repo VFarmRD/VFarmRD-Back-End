@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.vfarmrdbackend.model.Task;
-import com.example.vfarmrdbackend.payload.TaskCreateRequest;
-import com.example.vfarmrdbackend.payload.TaskGetResponse;
-import com.example.vfarmrdbackend.payload.TaskUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.TaskCreateRequest;
+import com.example.vfarmrdbackend.payload.request.TaskUpdateRequest;
+import com.example.vfarmrdbackend.payload.response.MessageResponse;
+import com.example.vfarmrdbackend.payload.response.TaskGetResponse;
 import com.example.vfarmrdbackend.service.JwtService;
 import com.example.vfarmrdbackend.service.TaskService;
 
@@ -47,7 +48,7 @@ public class TaskController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -64,7 +65,7 @@ public class TaskController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -77,7 +78,7 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.OK).body("Create Task successfully!!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -93,7 +94,7 @@ public class TaskController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -109,7 +110,7 @@ public class TaskController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 }
