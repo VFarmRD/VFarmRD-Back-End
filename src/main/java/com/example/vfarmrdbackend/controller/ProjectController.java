@@ -142,4 +142,18 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/projects/materials/{material_id}")
+    @PreAuthorize("hasAuthority('staff') " +
+            "or hasAuthority('manager')")
+    public ResponseEntity<?> getProjectByMaterial_id(@PathVariable("material_id") String material_id,
+            @RequestHeader("Authorization") String jwt) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(projectService.getProjectByMaterial_id(material_id, jwt));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
 }

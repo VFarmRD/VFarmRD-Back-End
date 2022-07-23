@@ -11,6 +11,7 @@ public class FormulaCreateRequest {
     private float density;
     private String description;
     private float loss;
+    private String produce_description;
     private List<PhaseCreateRequest> phaseCreateRequest;
 
     public FormulaCreateRequest() {
@@ -86,6 +87,14 @@ public class FormulaCreateRequest {
 
     public void setProject_id(int project_id) {
         this.project_id = project_id;
+    }
+
+    public String getProduce_description() {
+        return produce_description;
+    }
+
+    public void setProduce_description(String produce_description) {
+        this.produce_description = produce_description;
     }
 
 }

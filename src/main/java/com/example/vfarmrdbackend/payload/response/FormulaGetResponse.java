@@ -21,6 +21,7 @@ public class FormulaGetResponse {
     private List<TestGetResponse> listTestResponse;
     private Date created_time;
     private Date modified_time;
+    private String produce_description;
 
     public FormulaGetResponse() {
     }
@@ -159,6 +160,14 @@ public class FormulaGetResponse {
 
     public void setModified_time(Date modified_time) {
         this.modified_time = modified_time;
+    }
+
+    public String getProduce_description() {
+        return produce_description;
+    }
+
+    public void setProduce_description(String produce_description) {
+        this.produce_description = produce_description;
     }
 
 }

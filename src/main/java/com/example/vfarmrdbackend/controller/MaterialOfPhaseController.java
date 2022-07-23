@@ -90,13 +90,26 @@ public class MaterialOfPhaseController {
     public ResponseEntity<?> deleteMaterialOfPhase(@PathVariable("mop_id") int mop_id,
             @RequestHeader("Authorization") String jwt) {
         try {
-            if (materialOfPhaseService.deleteMaterialOfPhase(mop_id,jwt)) {
+            if (materialOfPhaseService.deleteMaterialOfPhase(mop_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         "Delete Material Of Phase successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                         "Material Of Phase not found!");
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
+    @GetMapping("/materialofphase/projects/{project_id}")
+    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    public ResponseEntity<?> getAllMaterial_idWithProject_id(@PathVariable("project_id") int project_id,
+            @RequestHeader("Authorization") String jwt) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(materialOfPhaseService.getAllMaterial_idWithProject_id(project_id, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

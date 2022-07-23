@@ -88,6 +88,7 @@ public class FormulaService {
                 formulaGetAllResponse.setLoss(formula.getLoss());
                 formulaGetAllResponse.setCreated_time(formula.getCreated_time());
                 formulaGetAllResponse.setModified_time(formula.getModified_time());
+                formulaGetAllResponse.setProduce_description(formula.getProduce_description());
                 User user = userService.getUserInfo(formula.getCreated_user_id());
                 formulaGetAllResponse.setUser_name(user.getFullname());
                 listFormulasGetAll.add(formulaGetAllResponse);
@@ -130,6 +131,7 @@ public class FormulaService {
                 formulaGetAllResponse.setLoss(formula.getLoss());
                 formulaGetAllResponse.setCreated_time(formula.getCreated_time());
                 formulaGetAllResponse.setModified_time(formula.getModified_time());
+                formulaGetAllResponse.setProduce_description(formula.getProduce_description());
                 User user = userService.getUserInfo(formula.getCreated_user_id());
                 formulaGetAllResponse.setUser_name(user.getFullname());
                 listFormulasGetAll.add(formulaGetAllResponse);
@@ -164,6 +166,7 @@ public class FormulaService {
             formulaGetResponse.setUser_name(user.getFullname());
             formulaGetResponse.setCreated_time(formula.getCreated_time());
             formulaGetResponse.setModified_time(formula.getModified_time());
+            formulaGetResponse.setProduce_description(formula.getProduce_description());
             List<Phase> listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
             List<PhaseGetResponse> listPhaseGetResponse = new ArrayList<>();
             for (int i = 0; i < listPhases.size(); i++) {
@@ -234,6 +237,7 @@ public class FormulaService {
         formula.setDescription(formulaCreateRequest.getDescription());
         formula.setLoss(formulaCreateRequest.getLoss());
         formula.setCreated_time(new Date());
+        formula.setProduce_description(formulaCreateRequest.getProduce_description());
         formulaRepository.save(formula);
         for (int i = 0; i < formulaCreateRequest.getPhaseCreateRequest().size(); i++) {
             PhaseCreateRequest phaseCreateRequest = formulaCreateRequest.getPhaseCreateRequest().get(i);
@@ -274,6 +278,7 @@ public class FormulaService {
             updateFormula.setDensity(formulaUpdateRequest.getDensity());
             updateFormula.setDescription(formulaUpdateRequest.getDescription());
             updateFormula.setLoss(formulaUpdateRequest.getLoss());
+            updateFormula.setProduce_description(formulaUpdateRequest.getProduce_description());
             List<PhaseUpdateRequest> listPhaseUpdate = formulaUpdateRequest.getPhaseUpdateRequest();
             List<Integer> listOldPhase_id = phaseService.getAllPhase_idOfFormula(formula_id, jwt);
             for (int i = 0; i < listPhaseUpdate.size(); i++) {
@@ -398,6 +403,7 @@ public class FormulaService {
             newFormula.setModified_time(new Date());
             newFormula.setDescription(formulaUpgradeRequest.getDescription());
             newFormula.setLoss(formulaUpgradeRequest.getLoss());
+            newFormula.setProduce_description(formulaUpgradeRequest.getProduce_description());
             formulaRepository.save(newFormula);
             for (int i = 0; i < formulaUpgradeRequest.getPhaseCreateRequest().size(); i++) {
                 PhaseCreateRequest phaseCreateRequest = formulaUpgradeRequest.getPhaseCreateRequest().get(i);
