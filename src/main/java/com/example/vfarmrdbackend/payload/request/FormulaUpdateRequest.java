@@ -10,7 +10,6 @@ public class FormulaUpdateRequest {
     private float density;
     private String description;
     private float loss;
-    private String produce_description;
     private List<PhaseUpdateRequest> phaseUpdateRequest;
 
     public FormulaUpdateRequest() {
@@ -78,14 +77,6 @@ public class FormulaUpdateRequest {
 
     public void setFormula_weight(float formula_weight) {
         this.formula_weight = formula_weight;
-    }
-
-    public String getProduce_description() {
-        return produce_description;
-    }
-
-    public void setProduce_description(String produce_description) {
-        this.produce_description = produce_description;
     }
 
 }

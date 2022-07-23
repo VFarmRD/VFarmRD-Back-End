@@ -20,7 +20,6 @@ public class FormulaGetAllResponse {
     private Date modified_time;
     private String description;
     private float loss;
-    private String produce_description;
 
     public FormulaGetAllResponse() {
     }
@@ -159,14 +158,6 @@ public class FormulaGetAllResponse {
 
     public void setProject_name(String project_name) {
         this.project_name = project_name;
-    }
-
-    public String getProduce_description() {
-        return produce_description;
-    }
-
-    public void setProduce_description(String produce_description) {
-        this.produce_description = produce_description;
     }
 
 }
