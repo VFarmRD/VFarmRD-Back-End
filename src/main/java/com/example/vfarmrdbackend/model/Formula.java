@@ -28,6 +28,7 @@ public class Formula {
     private String description;
     private float loss;
     private String deny_reason;
+    private String produce_description;
 
     public Formula() {
     }
@@ -158,6 +159,14 @@ public class Formula {
 
     public void setProject_id(int project_id) {
         this.project_id = project_id;
+    }
+
+    public String getProduce_description() {
+        return produce_description;
+    }
+
+    public void setProduce_description(String produce_description) {
+        this.produce_description = produce_description;
     }
 
 }

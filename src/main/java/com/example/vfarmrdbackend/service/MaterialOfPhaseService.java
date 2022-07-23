@@ -1,10 +1,12 @@
 package com.example.vfarmrdbackend.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.vfarmrdbackend.model.ErrorModel;
 import com.example.vfarmrdbackend.model.MaterialOfPhase;
 import com.example.vfarmrdbackend.payload.request.MaterialOfPhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.request.MaterialOfPhaseUpdateRequest;
@@ -13,7 +15,10 @@ import com.example.vfarmrdbackend.repository.MaterialOfPhaseRepository;
 @Service
 public class MaterialOfPhaseService {
     @Autowired
-    private MaterialOfPhaseRepository materialOfPhaseRepository;
+    MaterialOfPhaseRepository materialOfPhaseRepository;
+
+    @Autowired
+    ErrorService errorService;
 
     public List<MaterialOfPhase> getAllMaterialOfPhase(int phase_id) {
         return materialOfPhaseRepository.getAllMaterialOfOnePhase(phase_id);
@@ -64,6 +69,19 @@ public class MaterialOfPhaseService {
         List<MaterialOfPhase> listMOP = materialOfPhaseRepository.getAllMaterialOfOnePhase(phase_id);
         for (int i = 0; i < listMOP.size(); i++) {
             materialOfPhaseRepository.delete(listMOP.get(i));
+        }
+    }
+
+    public List<String> getAllMaterial_idWithProject_id(int project_id, String jwt) {
+        try {
+            return materialOfPhaseRepository.getAllMaterial_idWithProject_id(project_id);
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "MATERIAL GET ALL WITH PROJECT ID",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
         }
     }
 }

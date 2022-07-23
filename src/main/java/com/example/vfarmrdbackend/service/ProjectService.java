@@ -261,4 +261,36 @@ public class ProjectService {
         }
     }
 
+    public List<ProjectGetResponse> getProjectByMaterial_id(String material_id, String jwt) {
+        try {
+            List<Project> listProject = projectRepository.getProjectByMaterial_id(material_id);
+            List<ProjectGetResponse> listResponse = new ArrayList<>();
+            for (int i = 0; i < listProject.size(); i++) {
+                Project project = listProject.get(i);
+                ProjectGetResponse response = new ProjectGetResponse();
+                response.setProject_id(project.getProject_id());
+                response.setProject_name(project.getProject_name());
+                response.setClient_id(project.getClient_id());
+                response.setCreated_user_id(project.getCreated_user_id());
+                response.setCreated_user_name(userService.getUserInfo(project.getCreated_user_id()).getFullname());
+                response.setAssigned_user_id(project.getAssigned_user_id());
+                response.setAssigned_user_name(userService.getUserInfo(project.getAssigned_user_id()).getFullname());
+                response.setProject_code(project.getProject_code());
+                response.setCreated_time(new Date());
+                response.setComplete_date(project.getComplete_date());
+                response.setProject_status(project.getProject_status());
+                response.setRequirement(project.getRequirement());
+                response.setEstimated_weight(project.getEstimated_weight());
+                listResponse.add(response);
+            }
+            return listResponse;
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PROJECT GET ALL BY MATERIAL ID",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
 }
