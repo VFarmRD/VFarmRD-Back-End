@@ -3,7 +3,8 @@ package com.example.vfarmrdbackend.controller;
 import java.util.List;
 
 import com.example.vfarmrdbackend.model.MaterialOfPhase;
-import com.example.vfarmrdbackend.payload.MaterialOfPhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.MaterialOfPhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.response.MessageResponse;
 import com.example.vfarmrdbackend.service.MaterialOfPhaseService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -44,7 +45,7 @@ public class MaterialOfPhaseController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -61,7 +62,7 @@ public class MaterialOfPhaseController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -80,7 +81,7 @@ public class MaterialOfPhaseController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -98,7 +99,7 @@ public class MaterialOfPhaseController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 

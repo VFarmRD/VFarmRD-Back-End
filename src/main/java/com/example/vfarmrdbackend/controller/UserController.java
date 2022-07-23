@@ -7,10 +7,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.example.vfarmrdbackend.model.User;
-import com.example.vfarmrdbackend.payload.LoginRequest;
-import com.example.vfarmrdbackend.payload.MessageResponse;
-import com.example.vfarmrdbackend.payload.SignupRequest;
-import com.example.vfarmrdbackend.payload.UserRequest;
+import com.example.vfarmrdbackend.payload.request.UserRequest;
+import com.example.vfarmrdbackend.payload.request.LoginRequest;
+import com.example.vfarmrdbackend.payload.request.SignupRequest;
+import com.example.vfarmrdbackend.payload.response.MessageResponse;
 import com.example.vfarmrdbackend.repository.UserRepository;
 import com.example.vfarmrdbackend.service.JwtService;
 import com.example.vfarmrdbackend.service.UserService;
@@ -70,7 +70,7 @@ public class UserController {
         } catch (Exception e) {
             System.err.println(e.getLocalizedMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -95,7 +95,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body("Create account completed!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -125,7 +125,7 @@ public class UserController {
             return new ResponseEntity<>(listUsers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
-                    e.getMessage(),
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -141,7 +141,7 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -158,7 +158,7 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -174,7 +174,7 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -190,7 +190,7 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -208,7 +208,7 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 }

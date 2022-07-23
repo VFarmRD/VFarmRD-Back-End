@@ -2,11 +2,10 @@ package com.example.vfarmrdbackend.controller;
 
 import java.util.List;
 
-import com.example.vfarmrdbackend.model.Test;
-import com.example.vfarmrdbackend.payload.TestCreateRequest;
-import com.example.vfarmrdbackend.payload.TestGetResponse;
-import com.example.vfarmrdbackend.payload.TestUpdateMultipleRequest;
-import com.example.vfarmrdbackend.payload.TestUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.TestCreateRequest;
+import com.example.vfarmrdbackend.payload.request.TestUpdateMultipleRequest;
+import com.example.vfarmrdbackend.payload.request.TestUpdateRequest;
+import com.example.vfarmrdbackend.payload.response.MessageResponse;
 import com.example.vfarmrdbackend.service.TestService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -37,35 +36,25 @@ public class TestController {
 
     @GetMapping("/tests")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> getAllTestWithFormula_id(@RequestParam("formula_id") int formula_id) {
+    public ResponseEntity<?> getAllTestWithFormula_id(@RequestParam("formula_id") int formula_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            List<Test> listTests = testService.getAllTestWithFormula_id(formula_id);
-            if (listTests != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(listTests);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        "Can't found any test!");
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(testService.getAllTestWithFormula_id(formula_id, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
     @GetMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('staff')")
-    public ResponseEntity<?> getTestByTest_id(@PathVariable("test_id") int test_id) {
+    public ResponseEntity<?> getTestByTest_id(@PathVariable("test_id") int test_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            TestGetResponse test = testService.getTestWithTest_id(test_id);
-            if (test != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(test);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        "Can't found test!");
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(testService.getTestWithTest_id(test_id, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -78,7 +67,7 @@ public class TestController {
             return ResponseEntity.status(HttpStatus.OK).body("Create new test completed!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -91,7 +80,7 @@ public class TestController {
             return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -104,7 +93,7 @@ public class TestController {
             return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -120,7 +109,7 @@ public class TestController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 

@@ -1,18 +1,10 @@
 package com.example.vfarmrdbackend.controller;
 
-import java.util.Date;
-import java.util.List;
-
-import com.example.vfarmrdbackend.payload.FormulaUpgradeRequest;
-import com.example.vfarmrdbackend.payload.MessageResponse;
-import com.example.vfarmrdbackend.model.ErrorModel;
-import com.example.vfarmrdbackend.payload.FormulaCreateRequest;
-import com.example.vfarmrdbackend.payload.FormulaGetAllResponse;
-import com.example.vfarmrdbackend.payload.FormulaGetResponse;
-import com.example.vfarmrdbackend.payload.FormulaUpdateRequest;
-import com.example.vfarmrdbackend.service.ErrorService;
+import com.example.vfarmrdbackend.payload.request.FormulaCreateRequest;
+import com.example.vfarmrdbackend.payload.request.FormulaUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.FormulaUpgradeRequest;
+import com.example.vfarmrdbackend.payload.response.MessageResponse;
 import com.example.vfarmrdbackend.service.FormulaService;
-import com.example.vfarmrdbackend.service.JwtService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,25 +30,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api")
 public class FormulaController {
     @Autowired
-    public FormulaService formulaService;
-
-    @Autowired
-    ErrorService errorService;
+    FormulaService formulaService;
 
     @GetMapping("/formulas")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getAllFormulaByProject_id(@RequestParam("project_id") int project_id,
-            @RequestParam(defaultValue = "", required = false) String formula_status) {
+            @RequestParam(defaultValue = "", required = false) String formula_status,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            List<FormulaGetAllResponse> listFormulas = formulaService.getAllFormulaByProject_id(project_id,
-                    formula_status);
-            if (listFormulas != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(listFormulas);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new MessageResponse("Lỗi", "Không tìm thấy công thức nào!"));
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(formulaService.getAllFormulaByProject_id(project_id,
+                    formula_status, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -67,16 +51,12 @@ public class FormulaController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getAllFormulaByUser_idAndFormula_status(@PathVariable("user_id") int user_id,
-            @RequestParam(defaultValue = "", required = false) String formula_status) {
+            @RequestParam(defaultValue = "", required = false) String formula_status,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            List<FormulaGetAllResponse> listFormulas = formulaService.getAllFormulaByUser_idAndFormula_status(user_id,
-                    formula_status);
-            if (listFormulas != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(listFormulas);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new MessageResponse("Lỗi", "Không tìm thấy công thức nào!"));
-            }
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(formulaService.getAllFormulaByUser_idAndFormula_status(user_id,
+                            formula_status, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -86,15 +66,10 @@ public class FormulaController {
     @GetMapping("/formulas/{formula_id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getFormulaByFormula_id(@PathVariable("formula_id") int formula_id) {
+    public ResponseEntity<?> getFormulaByFormula_id(@PathVariable("formula_id") int formula_id,
+            @RequestHeader("Authorization") String jwt) {
         try {
-            FormulaGetResponse formulaGetResponse = formulaService.getFormulaByFormula_id(formula_id);
-            if (formulaGetResponse != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(formulaGetResponse);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new MessageResponse("Lỗi", "Công thức không tồn tại!"));
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(formulaService.getFormulaByFormula_id(formula_id, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -109,11 +84,6 @@ public class FormulaController {
             return ResponseEntity.status(HttpStatus.OK).body(
                     formulaService.createFormula(formulaCreateRequest, jwt));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FORMULA CREATE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -132,11 +102,6 @@ public class FormulaController {
                         new MessageResponse("Lỗi", "Công thức không tồn tại!"));
             }
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FORMULA DELETE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -156,11 +121,6 @@ public class FormulaController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(id);
             }
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FORMULA UPDATE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -180,11 +140,6 @@ public class FormulaController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(id);
             }
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FORMULA UPGRADE",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -204,11 +159,6 @@ public class FormulaController {
                         new MessageResponse("Lỗi", "Công thức này chưa được gửi!"));
             }
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FORMULA UPDATE STATUS",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
@@ -228,11 +178,6 @@ public class FormulaController {
                         new MessageResponse("Lỗi", "Công thức này chưa được gửi!"));
             }
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FORMULA DENY",
-                    e.getMessage(),
-                    new Date()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }

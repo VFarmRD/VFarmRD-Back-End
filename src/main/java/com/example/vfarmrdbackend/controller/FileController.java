@@ -1,9 +1,8 @@
 package com.example.vfarmrdbackend.controller;
 
-import com.example.vfarmrdbackend.model.ErrorModel;
 import com.example.vfarmrdbackend.model.File;
-import com.example.vfarmrdbackend.payload.FileResponse;
-import com.example.vfarmrdbackend.service.ErrorService;
+import com.example.vfarmrdbackend.payload.response.FileResponse;
+import com.example.vfarmrdbackend.payload.response.MessageResponse;
 import com.example.vfarmrdbackend.service.FileService;
 import com.example.vfarmrdbackend.service.JwtService;
 
@@ -26,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,9 +36,6 @@ public class FileController {
         @Autowired
         FileService fileService;
 
-        @Autowired
-        ErrorService errorService;
-
         @PostMapping("/files/upload")
         @PreAuthorize("hasAuthority('staff') " +
                         "or hasAuthority('manager')")
@@ -50,16 +45,11 @@ public class FileController {
                         @RequestHeader("Authorization") String jwt) {
                 try {
                         return ResponseEntity.status(HttpStatus.OK).body(
-                                        fileService.store(listFile, JwtService.getUser_idFromToken(jwt), object_type,
-                                                        object_id));
+                                        fileService.uploadFile(listFile, object_type,
+                                                        object_id, jwt));
                 } catch (Exception e) {
-                        errorService.createError(new ErrorModel(
-                                        JwtService.getUser_idFromToken(jwt),
-                                        "FILE CREATE",
-                                        e.getMessage(),
-                                        new Date()));
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                                        e.getMessage());
+                                        new MessageResponse("Lỗi", "Hệ thống gặp sự cố!"));
                 }
         }
 
@@ -85,7 +75,7 @@ public class FileController {
                         return ResponseEntity.status(HttpStatus.OK).body(files);
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                                        e.getMessage());
+                                        new MessageResponse("Lỗi", "Hệ thống gặp sự cố!"));
                 }
         }
 
@@ -93,14 +83,11 @@ public class FileController {
         public ResponseEntity<?> getFile(@PathVariable("file_id") int file_id,
                         @RequestHeader("Authorization") String jwt) {
                 try {
-                        FileResponse response = fileService.getFile(file_id, JwtService.getUser_idFromToken(jwt));
-                        if (response != null) {
-                                return ResponseEntity.status(HttpStatus.OK).body(response);
-                        }
-                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File không tồn tại!");
+                        return ResponseEntity.status(HttpStatus.OK)
+                                        .body(fileService.getFile(file_id, JwtService.getUser_idFromToken(jwt)));
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                                        e.getMessage());
+                                        new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
                 }
         }
 
@@ -127,9 +114,8 @@ public class FileController {
                                         }).collect(Collectors.toList());
                         return ResponseEntity.status(HttpStatus.OK).body(files);
                 } catch (Exception e) {
-
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                                        e.getMessage());
+                                        new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
                 }
         }
 
@@ -143,28 +129,23 @@ public class FileController {
                         return ResponseEntity.status(HttpStatus.OK).body(
                                         "Delete File successfully!");
                 } catch (Exception e) {
-                        errorService.createError(new ErrorModel(
-                                        JwtService.getUser_idFromToken(jwt),
-                                        "FILE DELETE",
-                                        e.getMessage(),
-                                        new Date()));
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                                        e.getMessage());
-
+                                        new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
                 }
         }
 
         @GetMapping("/files/download/{file_id}")
-        public ResponseEntity<?> downloadFile(@PathVariable("file_id") int file_id) {
+        public ResponseEntity<?> downloadFile(@PathVariable("file_id") int file_id,
+                        @RequestHeader("Authorization") String jwt) {
                 try {
-                        File file = fileService.getFileDownload(file_id);
+                        File file = fileService.getFileDownload(file_id, jwt);
                         return ResponseEntity.ok()
                                         .header(HttpHeaders.CONTENT_DISPOSITION,
                                                         "attachment; filename=\"" + file.getFile_name() + "\"")
                                         .body(file.getFile_data());
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                                        e.getMessage());
+                                        new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
 
                 }
         }

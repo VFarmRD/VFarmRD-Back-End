@@ -1,8 +1,6 @@
 package com.example.vfarmrdbackend.controller;
 
-import java.util.List;
-
-import com.example.vfarmrdbackend.model.Role;
+import com.example.vfarmrdbackend.payload.response.MessageResponse;
 import com.example.vfarmrdbackend.service.RoleService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -29,15 +27,10 @@ public class RoleController {
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> getAllRoles() {
         try {
-            List<Role> listRoles = roleService.getAllRoles();
-            if (listRoles.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-                        "Can't found any role!");
-            }
-            return ResponseEntity.status(HttpStatus.OK).body(listRoles);
+            return ResponseEntity.status(HttpStatus.OK).body(roleService.getAllRoles());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -45,15 +38,10 @@ public class RoleController {
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> getRoleByRole_id(@PathVariable("role_id") int role_id) {
         try {
-            Role role = roleService.getRoleByRole_id(role_id);
-            if (role != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(role);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role not found!");
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(roleService.getRoleByRole_id(role_id));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    e.getMessage());
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -68,7 +56,7 @@ public class RoleController {
 
     // } catch (Exception e) {
     // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-    // e.getMessage());
+    // new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
     // }
     // }
 
@@ -93,7 +81,7 @@ public class RoleController {
     // return new ResponseEntity<>("Delete role successfully!", HttpStatus.OK);
     // } catch (Exception e) {
     // return new ResponseEntity<>(
-    // e.getMessage(),
+    // new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"),
     // HttpStatus.INTERNAL_SERVER_ERROR);
     // }
     // }

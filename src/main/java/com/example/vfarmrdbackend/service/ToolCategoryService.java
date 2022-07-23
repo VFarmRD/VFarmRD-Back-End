@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.ToolCategory;
-import com.example.vfarmrdbackend.payload.ToolCategoryRequest;
+import com.example.vfarmrdbackend.payload.request.ToolCategoryRequest;
 import com.example.vfarmrdbackend.repository.ToolCategoryRepository;
 
 @Service

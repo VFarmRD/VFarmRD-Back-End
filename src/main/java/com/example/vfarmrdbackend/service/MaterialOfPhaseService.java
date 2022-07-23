@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.MaterialOfPhase;
-import com.example.vfarmrdbackend.payload.MaterialOfPhaseCreateRequest;
-import com.example.vfarmrdbackend.payload.MaterialOfPhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.MaterialOfPhaseCreateRequest;
+import com.example.vfarmrdbackend.payload.request.MaterialOfPhaseUpdateRequest;
 import com.example.vfarmrdbackend.repository.MaterialOfPhaseRepository;
 
 @Service

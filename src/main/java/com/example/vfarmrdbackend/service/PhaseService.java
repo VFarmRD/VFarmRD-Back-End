@@ -1,16 +1,18 @@
 package com.example.vfarmrdbackend.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.vfarmrdbackend.model.ErrorModel;
 import com.example.vfarmrdbackend.model.MaterialOfPhase;
 import com.example.vfarmrdbackend.model.Phase;
-import com.example.vfarmrdbackend.payload.MaterialOfPhaseCreateRequest;
-import com.example.vfarmrdbackend.payload.MaterialOfPhaseUpdateRequest;
-import com.example.vfarmrdbackend.payload.PhaseCreateRequest;
-import com.example.vfarmrdbackend.payload.PhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.MaterialOfPhaseCreateRequest;
+import com.example.vfarmrdbackend.payload.request.MaterialOfPhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.PhaseCreateRequest;
+import com.example.vfarmrdbackend.payload.request.PhaseUpdateRequest;
 import com.example.vfarmrdbackend.repository.MaterialOfPhaseRepository;
 import com.example.vfarmrdbackend.repository.PhaseRepository;
 
@@ -27,6 +29,9 @@ public class PhaseService {
 
     @Autowired
     ToolInPhaseService toolInPhaseService;
+
+    @Autowired
+    ErrorService errorService;
 
     public List<Phase> getAllPhaseByFormula_id(int formula_id) {
         return phaseRepository.getAllPhaseByFormula_id(formula_id);
@@ -90,6 +95,32 @@ public class PhaseService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public int getNewestPhase_id(String jwt) {
+        try {
+            return phaseRepository.getLatestPhase_id();
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PHASE GENERATE NEW ID",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public List<Integer> getAllPhase_idOfFormula(int formula_id, String jwt) {
+        try {
+            return phaseRepository.getAllPhase_idOfFormula(formula_id);
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PHASE GET ALL ID WITH FORMULA",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
         }
     }
 }

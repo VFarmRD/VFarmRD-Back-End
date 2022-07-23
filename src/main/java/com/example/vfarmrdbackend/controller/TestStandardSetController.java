@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.vfarmrdbackend.payload.MessageResponse;
-import com.example.vfarmrdbackend.payload.TestStandardSetCreateRequest;
-import com.example.vfarmrdbackend.payload.TestStandardSetUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.TestStandardSetCreateRequest;
+import com.example.vfarmrdbackend.payload.request.TestStandardSetUpdateRequest;
+import com.example.vfarmrdbackend.payload.response.MessageResponse;
 import com.example.vfarmrdbackend.service.TestStandardSetService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -73,7 +73,7 @@ public class TestStandardSetController {
             return testStandardSetService.updateStandardSet(request, teststandardset_id, jwt);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new MessageResponse("Lỗi", e.getMessage()));
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 

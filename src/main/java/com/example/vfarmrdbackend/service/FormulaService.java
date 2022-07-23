@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.vfarmrdbackend.model.ErrorModel;
 import com.example.vfarmrdbackend.model.Formula;
 import com.example.vfarmrdbackend.model.Log;
 import com.example.vfarmrdbackend.model.MaterialOfPhase;
@@ -14,35 +15,26 @@ import com.example.vfarmrdbackend.model.Notification;
 import com.example.vfarmrdbackend.model.Phase;
 import com.example.vfarmrdbackend.model.Test;
 import com.example.vfarmrdbackend.model.User;
-import com.example.vfarmrdbackend.payload.FormulaUpgradeRequest;
-import com.example.vfarmrdbackend.payload.MaterialOfPhaseCreateRequest;
-import com.example.vfarmrdbackend.payload.FormulaCreateRequest;
-import com.example.vfarmrdbackend.payload.FormulaGetAllResponse;
-import com.example.vfarmrdbackend.payload.FormulaGetResponse;
-import com.example.vfarmrdbackend.payload.FormulaUpdateRequest;
-import com.example.vfarmrdbackend.payload.MaterialOfPhaseGetResponse;
-import com.example.vfarmrdbackend.payload.MaterialOfPhaseUpdateRequest;
-import com.example.vfarmrdbackend.payload.PhaseCreateRequest;
-import com.example.vfarmrdbackend.payload.PhaseGetResponse;
-import com.example.vfarmrdbackend.payload.PhaseUpdateRequest;
-import com.example.vfarmrdbackend.payload.TestGetResponse;
-import com.example.vfarmrdbackend.payload.ToolInPhaseRequest;
-import com.example.vfarmrdbackend.payload.ToolInPhaseResponse;
+import com.example.vfarmrdbackend.payload.request.FormulaCreateRequest;
+import com.example.vfarmrdbackend.payload.request.FormulaUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.FormulaUpgradeRequest;
+import com.example.vfarmrdbackend.payload.request.MaterialOfPhaseCreateRequest;
+import com.example.vfarmrdbackend.payload.request.MaterialOfPhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.PhaseCreateRequest;
+import com.example.vfarmrdbackend.payload.request.PhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.request.ToolInPhaseRequest;
+import com.example.vfarmrdbackend.payload.response.FormulaGetAllResponse;
+import com.example.vfarmrdbackend.payload.response.FormulaGetResponse;
+import com.example.vfarmrdbackend.payload.response.MaterialOfPhaseGetResponse;
+import com.example.vfarmrdbackend.payload.response.PhaseGetResponse;
+import com.example.vfarmrdbackend.payload.response.TestGetResponse;
+import com.example.vfarmrdbackend.payload.response.ToolInPhaseResponse;
 import com.example.vfarmrdbackend.repository.FormulaRepository;
-import com.example.vfarmrdbackend.repository.PhaseRepository;
-import com.example.vfarmrdbackend.repository.ProjectRepository;
-import com.example.vfarmrdbackend.repository.TestRepository;
 
 @Service
 public class FormulaService {
     @Autowired
-    private FormulaRepository formulaRepository;
-
-    @Autowired
-    private PhaseRepository phaseRepository;
-
-    @Autowired
-    private TestRepository testRepository;
+    FormulaRepository formulaRepository;
 
     @Autowired
     PhaseService phaseService;
@@ -66,132 +58,164 @@ public class FormulaService {
     ToolInPhaseService toolInPhaseService;
 
     @Autowired
-    ProjectRepository projectRepository;
+    ErrorService errorService;
 
-    public List<FormulaGetAllResponse> getAllFormulaByProject_id(int project_id, String formula_status) {
-        List<Formula> listFormulas = formulaRepository.getAllFormulaByProject_idAndStatus(project_id,
-                "%" + formula_status + "%");
-        List<FormulaGetAllResponse> listFormulasGetAll = new ArrayList<>();
-        for (int i = 0; i < listFormulas.size(); i++) {
-            Formula formula = listFormulas.get(i);
-            FormulaGetAllResponse formulaGetAllResponse = new FormulaGetAllResponse();
-            formulaGetAllResponse.setFormula_id(formula.getFormula_id());
-            formulaGetAllResponse.setProject_id(formula.getProject_id());
-            formulaGetAllResponse
-                    .setProject_name(projectRepository.getProjectByProject_id(project_id).getProject_name());
-            formulaGetAllResponse.setFormula_pre_version(formula.getFormula_pre_version());
-            formulaGetAllResponse.setFormula_status(formula.getFormula_status());
-            formulaGetAllResponse.setFormula_version(formula.getFormula_version());
-            formulaGetAllResponse.setFormula_weight(formula.getFormula_weight());
-            formulaGetAllResponse.setFormula_cost(formula.getFormula_cost());
-            formulaGetAllResponse.setUser_id(formula.getCreated_user_id());
-            formulaGetAllResponse.setVolume(formula.getVolume());
-            formulaGetAllResponse.setProduct_weight(formula.getProduct_weight());
-            formulaGetAllResponse.setDensity(formula.getDensity());
-            formulaGetAllResponse.setDescription(formula.getDescription());
-            formulaGetAllResponse.setLoss(formula.getLoss());
-            formulaGetAllResponse.setCreated_time(formula.getCreated_time());
-            formulaGetAllResponse.setModified_time(formula.getModified_time());
-            User user = userService.getUserInfo(formula.getCreated_user_id());
-            formulaGetAllResponse.setUser_name(user.getFullname());
-            listFormulasGetAll.add(formulaGetAllResponse);
-        }
-        return listFormulasGetAll;
-    }
+    @Autowired
+    ProjectService projectService;
 
-    public List<FormulaGetAllResponse> getAllFormulaByUser_idAndFormula_status(int user_id, String formula_status) {
-        List<Formula> listFormulas = formulaRepository.getAllFormulaByUser_idAndFormula_status(user_id,
-                "%" + formula_status + "%");
-        List<FormulaGetAllResponse> listFormulasGetAll = new ArrayList<>();
-        for (int i = 0; i < listFormulas.size(); i++) {
-            Formula formula = listFormulas.get(i);
-            FormulaGetAllResponse formulaGetAllResponse = new FormulaGetAllResponse();
-            formulaGetAllResponse.setFormula_id(formula.getFormula_id());
-            formulaGetAllResponse.setProject_id(formula.getProject_id());
-            formulaGetAllResponse
-                    .setProject_name(
-                            projectRepository.getProjectByProject_id(formula.getProject_id()).getProject_name());
-            formulaGetAllResponse.setFormula_pre_version(formula.getFormula_pre_version());
-            formulaGetAllResponse.setFormula_status(formula.getFormula_status());
-            formulaGetAllResponse.setFormula_version(formula.getFormula_version());
-            formulaGetAllResponse.setFormula_weight(formula.getFormula_weight());
-            formulaGetAllResponse.setFormula_cost(formula.getFormula_cost());
-            formulaGetAllResponse.setUser_id(formula.getCreated_user_id());
-            formulaGetAllResponse.setVolume(formula.getVolume());
-            formulaGetAllResponse.setProduct_weight(formula.getProduct_weight());
-            formulaGetAllResponse.setDensity(formula.getDensity());
-            formulaGetAllResponse.setDescription(formula.getDescription());
-            formulaGetAllResponse.setLoss(formula.getLoss());
-            formulaGetAllResponse.setCreated_time(formula.getCreated_time());
-            formulaGetAllResponse.setModified_time(formula.getModified_time());
-            User user = userService.getUserInfo(formula.getCreated_user_id());
-            formulaGetAllResponse.setUser_name(user.getFullname());
-            listFormulasGetAll.add(formulaGetAllResponse);
-        }
-        return listFormulasGetAll;
-    }
-
-    public FormulaGetResponse getFormulaByFormula_id(int formula_id) {
-        Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
-        FormulaGetResponse formulaGetResponse = new FormulaGetResponse();
-        formulaGetResponse.setProject_id(formula.getProject_id());
-        formulaGetResponse.setFormula_version(formula.getFormula_version());
-        formulaGetResponse.setFormula_weight(formula.getFormula_weight());
-        formulaGetResponse.setFormula_cost(formula.getFormula_cost());
-        formulaGetResponse.setUser_id(formula.getCreated_user_id());
-        formulaGetResponse.setVolume(formula.getVolume());
-        formulaGetResponse.setProduct_weight(formula.getProduct_weight());
-        formulaGetResponse.setDensity(formula.getDensity());
-        formulaGetResponse.setDescription(formula.getDescription());
-        formulaGetResponse.setLoss(formula.getLoss());
-        formulaGetResponse.setDeny_reason(formula.getDeny_reason());
-        User user = userService.getUserInfo(formula.getCreated_user_id());
-        formulaGetResponse.setUser_name(user.getFullname());
-        formulaGetResponse.setCreated_time(formula.getCreated_time());
-        formulaGetResponse.setModified_time(formula.getModified_time());
-        List<Phase> listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
-        List<PhaseGetResponse> listPhaseGetResponse = new ArrayList<>();
-        for (int i = 0; i < listPhases.size(); i++) {
-            PhaseGetResponse phaseGetResponse = new PhaseGetResponse();
-            phaseGetResponse.setPhase_id(listPhases.get(i).getPhase_id());
-            phaseGetResponse.setPhase_name(String.valueOf(i + 1));
-            phaseGetResponse.setPhase_description(listPhases.get(i).getPhase_description());
-            List<MaterialOfPhase> listMaterialOfPhases = materialOfPhaseService
-                    .getAllMaterialOfPhase(listPhases.get(i).getPhase_id());
-            List<MaterialOfPhaseGetResponse> listMaterialOfPhasesResponse = new ArrayList<>();
-            for (int j = 0; j < listMaterialOfPhases.size(); j++) {
-                MaterialOfPhaseGetResponse materialOfPhaseResponse = new MaterialOfPhaseGetResponse();
-                materialOfPhaseResponse.setMop_id(listMaterialOfPhases.get(j).getMop_id());
-                materialOfPhaseResponse.setMaterial_id(listMaterialOfPhases.get(j).getMaterial_id());
-                materialOfPhaseResponse.setMaterial_percent(listMaterialOfPhases.get(j).getMaterial_percent());
-                materialOfPhaseResponse.setMaterial_cost(listMaterialOfPhases.get(j).getMaterial_cost());
-                materialOfPhaseResponse.setMaterial_weight(listMaterialOfPhases.get(j).getMaterial_weight());
-                materialOfPhaseResponse.setMaterial_description(listMaterialOfPhases.get(j).getMaterial_description());
-                listMaterialOfPhasesResponse.add(materialOfPhaseResponse);
+    public List<FormulaGetAllResponse> getAllFormulaByProject_id(int project_id, String formula_status, String jwt) {
+        try {
+            List<Formula> listFormulas = formulaRepository.getAllFormulaByProject_idAndStatus(project_id,
+                    "%" + formula_status + "%");
+            List<FormulaGetAllResponse> listFormulasGetAll = new ArrayList<>();
+            for (int i = 0; i < listFormulas.size(); i++) {
+                Formula formula = listFormulas.get(i);
+                FormulaGetAllResponse formulaGetAllResponse = new FormulaGetAllResponse();
+                formulaGetAllResponse.setFormula_id(formula.getFormula_id());
+                formulaGetAllResponse.setProject_id(formula.getProject_id());
+                formulaGetAllResponse
+                        .setProject_name(projectService.getProjectByProject_id(project_id, jwt).getProject_name());
+                formulaGetAllResponse.setFormula_pre_version(formula.getFormula_pre_version());
+                formulaGetAllResponse.setFormula_status(formula.getFormula_status());
+                formulaGetAllResponse.setFormula_version(formula.getFormula_version());
+                formulaGetAllResponse.setFormula_weight(formula.getFormula_weight());
+                formulaGetAllResponse.setFormula_cost(formula.getFormula_cost());
+                formulaGetAllResponse.setUser_id(formula.getCreated_user_id());
+                formulaGetAllResponse.setVolume(formula.getVolume());
+                formulaGetAllResponse.setProduct_weight(formula.getProduct_weight());
+                formulaGetAllResponse.setDensity(formula.getDensity());
+                formulaGetAllResponse.setDescription(formula.getDescription());
+                formulaGetAllResponse.setLoss(formula.getLoss());
+                formulaGetAllResponse.setCreated_time(formula.getCreated_time());
+                formulaGetAllResponse.setModified_time(formula.getModified_time());
+                User user = userService.getUserInfo(formula.getCreated_user_id());
+                formulaGetAllResponse.setUser_name(user.getFullname());
+                listFormulasGetAll.add(formulaGetAllResponse);
             }
-            phaseGetResponse.setMaterialOfPhaseGetResponse(listMaterialOfPhasesResponse);
-            List<ToolInPhaseResponse> listToolInPhaseResponse = toolInPhaseService
-                    .getAllToolInPhaseWithPhase_id(listPhases.get(i).getPhase_id());
-            phaseGetResponse.setListToolInPhaseResponse(listToolInPhaseResponse);
-            listPhaseGetResponse.add(phaseGetResponse);
+            return listFormulasGetAll;
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FORMULA GET ALL BY PROJECT ID",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
         }
-        formulaGetResponse.setPhaseGetResponse(listPhaseGetResponse);
-        List<TestGetResponse> listTestResponse = new ArrayList<>();
-        List<Test> listTest = testRepository.getTestWithFormula_id(formula_id);
-        for (int i = 0; i < listTest.size(); i++) {
-            Test test = listTest.get(i);
-            listTestResponse.add(testService.getTestWithTest_id(test.getTest_id()));
+    }
+
+    public List<FormulaGetAllResponse> getAllFormulaByUser_idAndFormula_status(int user_id, String formula_status,
+            String jwt) {
+        try {
+            List<FormulaGetAllResponse> listFormulasGetAll = new ArrayList<>();
+            List<Formula> listFormulas = formulaRepository.getAllFormulaByUser_idAndFormula_status(user_id,
+                    "%" + formula_status + "%");
+            for (int i = 0; i < listFormulas.size(); i++) {
+                Formula formula = listFormulas.get(i);
+                FormulaGetAllResponse formulaGetAllResponse = new FormulaGetAllResponse();
+                formulaGetAllResponse.setFormula_id(formula.getFormula_id());
+                formulaGetAllResponse.setProject_id(formula.getProject_id());
+                formulaGetAllResponse
+                        .setProject_name(
+                                projectService.getProjectByProject_id(formula.getProject_id(), jwt).getProject_name());
+                formulaGetAllResponse.setFormula_pre_version(formula.getFormula_pre_version());
+                formulaGetAllResponse.setFormula_status(formula.getFormula_status());
+                formulaGetAllResponse.setFormula_version(formula.getFormula_version());
+                formulaGetAllResponse.setFormula_weight(formula.getFormula_weight());
+                formulaGetAllResponse.setFormula_cost(formula.getFormula_cost());
+                formulaGetAllResponse.setUser_id(formula.getCreated_user_id());
+                formulaGetAllResponse.setVolume(formula.getVolume());
+                formulaGetAllResponse.setProduct_weight(formula.getProduct_weight());
+                formulaGetAllResponse.setDensity(formula.getDensity());
+                formulaGetAllResponse.setDescription(formula.getDescription());
+                formulaGetAllResponse.setLoss(formula.getLoss());
+                formulaGetAllResponse.setCreated_time(formula.getCreated_time());
+                formulaGetAllResponse.setModified_time(formula.getModified_time());
+                User user = userService.getUserInfo(formula.getCreated_user_id());
+                formulaGetAllResponse.setUser_name(user.getFullname());
+                listFormulasGetAll.add(formulaGetAllResponse);
+            }
+            return listFormulasGetAll;
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    user_id,
+                    "GET FORMULA BY USER ID AND FORMULA STATUS",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
         }
-        formulaGetResponse.setListTestResponse(listTestResponse);
-        String test_status = "Not yet!";
-        if (testRepository.getAllPassTestWithFormula_id(formula_id).size() != 0) {
-            test_status = "Passed!";
+    }
+
+    public FormulaGetResponse getFormulaByFormula_id(int formula_id, String jwt) {
+        try {
+            Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
+            FormulaGetResponse formulaGetResponse = new FormulaGetResponse();
+            formulaGetResponse.setProject_id(formula.getProject_id());
+            formulaGetResponse.setFormula_version(formula.getFormula_version());
+            formulaGetResponse.setFormula_weight(formula.getFormula_weight());
+            formulaGetResponse.setFormula_cost(formula.getFormula_cost());
+            formulaGetResponse.setUser_id(formula.getCreated_user_id());
+            formulaGetResponse.setVolume(formula.getVolume());
+            formulaGetResponse.setProduct_weight(formula.getProduct_weight());
+            formulaGetResponse.setDensity(formula.getDensity());
+            formulaGetResponse.setDescription(formula.getDescription());
+            formulaGetResponse.setLoss(formula.getLoss());
+            formulaGetResponse.setDeny_reason(formula.getDeny_reason());
+            User user = userService.getUserInfo(formula.getCreated_user_id());
+            formulaGetResponse.setUser_name(user.getFullname());
+            formulaGetResponse.setCreated_time(formula.getCreated_time());
+            formulaGetResponse.setModified_time(formula.getModified_time());
+            List<Phase> listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
+            List<PhaseGetResponse> listPhaseGetResponse = new ArrayList<>();
+            for (int i = 0; i < listPhases.size(); i++) {
+                PhaseGetResponse phaseGetResponse = new PhaseGetResponse();
+                phaseGetResponse.setPhase_id(listPhases.get(i).getPhase_id());
+                phaseGetResponse.setPhase_name(String.valueOf(i + 1));
+                phaseGetResponse.setPhase_description(listPhases.get(i).getPhase_description());
+                List<MaterialOfPhase> listMaterialOfPhases = materialOfPhaseService
+                        .getAllMaterialOfPhase(listPhases.get(i).getPhase_id());
+                List<MaterialOfPhaseGetResponse> listMaterialOfPhasesResponse = new ArrayList<>();
+                for (int j = 0; j < listMaterialOfPhases.size(); j++) {
+                    MaterialOfPhaseGetResponse materialOfPhaseResponse = new MaterialOfPhaseGetResponse();
+                    materialOfPhaseResponse.setMop_id(listMaterialOfPhases.get(j).getMop_id());
+                    materialOfPhaseResponse.setMaterial_id(listMaterialOfPhases.get(j).getMaterial_id());
+                    materialOfPhaseResponse.setMaterial_percent(listMaterialOfPhases.get(j).getMaterial_percent());
+                    materialOfPhaseResponse.setMaterial_cost(listMaterialOfPhases.get(j).getMaterial_cost());
+                    materialOfPhaseResponse.setMaterial_weight(listMaterialOfPhases.get(j).getMaterial_weight());
+                    materialOfPhaseResponse
+                            .setMaterial_description(listMaterialOfPhases.get(j).getMaterial_description());
+                    listMaterialOfPhasesResponse.add(materialOfPhaseResponse);
+                }
+                phaseGetResponse.setMaterialOfPhaseGetResponse(listMaterialOfPhasesResponse);
+                List<ToolInPhaseResponse> listToolInPhaseResponse = toolInPhaseService
+                        .getAllToolInPhaseWithPhase_id(listPhases.get(i).getPhase_id());
+                phaseGetResponse.setListToolInPhaseResponse(listToolInPhaseResponse);
+                listPhaseGetResponse.add(phaseGetResponse);
+            }
+            formulaGetResponse.setPhaseGetResponse(listPhaseGetResponse);
+            List<TestGetResponse> listTestResponse = new ArrayList<>();
+            List<Test> listTest = testService.getAllTestWithFormula_id(formula_id, jwt);
+            for (int i = 0; i < listTest.size(); i++) {
+                Test test = listTest.get(i);
+                listTestResponse.add(testService.getTestWithTest_id(test.getTest_id(), jwt));
+            }
+            formulaGetResponse.setListTestResponse(listTestResponse);
+            String test_status = "Not yet!";
+            if (testService.getAllPassTestWithFormula_id(formula_id, jwt) != 0) {
+                test_status = "Passed!";
+            }
+            if (testService.getAllNotPassTestWithFormula_id(formula_id, jwt) != 0) {
+                test_status = "Failed!";
+            }
+            formulaGetResponse.setTest_status(test_status);
+            return formulaGetResponse;
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "GET FORMULA BY FORMULA ID",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
         }
-        if (testRepository.getAllNotPassTestWithFormula_id(formula_id).size() != 0) {
-            test_status = "Failed!";
-        }
-        formulaGetResponse.setTest_status(test_status);
-        return formulaGetResponse;
     }
 
     public int createFormula(FormulaCreateRequest formulaCreateRequest, String jwt) {
@@ -216,7 +240,7 @@ public class FormulaService {
             phaseService.createPhase(
                     formulaRepository.getLatestFormula_idOfProject(formulaCreateRequest.getProject_id()),
                     phaseCreateRequest, jwt);
-            int newest_phase_id = phaseRepository.getLatestPhase_id();
+            int newest_phase_id = phaseService.getNewestPhase_id(jwt);
             for (int j = 0; j < phaseCreateRequest.getMaterialOfPhaseCreateRequest().size(); j++) {
                 materialOfPhaseService.createMaterialOfPhase(newest_phase_id, phaseCreateRequest
                         .getMaterialOfPhaseCreateRequest().get(j), jwt);
@@ -251,7 +275,7 @@ public class FormulaService {
             updateFormula.setDescription(formulaUpdateRequest.getDescription());
             updateFormula.setLoss(formulaUpdateRequest.getLoss());
             List<PhaseUpdateRequest> listPhaseUpdate = formulaUpdateRequest.getPhaseUpdateRequest();
-            List<Integer> listOldPhase_id = phaseRepository.getAllPhase_idOfFormula(formula_id);
+            List<Integer> listOldPhase_id = phaseService.getAllPhase_idOfFormula(formula_id, jwt);
             for (int i = 0; i < listPhaseUpdate.size(); i++) {
                 PhaseUpdateRequest phaseUpdateRequest = listPhaseUpdate.get(i);
                 int phase_id = phaseUpdateRequest.getPhase_id();
@@ -266,7 +290,7 @@ public class FormulaService {
                     List<MaterialOfPhaseUpdateRequest> listMaterialUpdateInput = phaseUpdateRequest
                             .getMaterialOfPhaseUpdateRequest();
                     phaseService.createPhase(formula_id, phaseCreateRequest, jwt);
-                    phase_id = phaseRepository.getLatestPhase_id();
+                    phase_id = phaseService.getNewestPhase_id(jwt);
                     for (int j = 0; j < listMaterialUpdateInput.size(); j++) {
                         MaterialOfPhaseUpdateRequest materialOfPhaseUpdate = listMaterialUpdateInput.get(j);
                         MaterialOfPhaseCreateRequest materialOfPhaseCreate = new MaterialOfPhaseCreateRequest();
@@ -326,7 +350,7 @@ public class FormulaService {
                         formula.getCreated_user_id(),
                         "Thông qua!",
                         "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án" +
-                                projectRepository.getProjectByProject_id(formula.getProject_id()).getProject_name() +
+                                projectService.getProjectByProject_id(formula.getProject_id(), jwt).getProject_name() +
                                 " đã được chấp thuận!",
                         new Date()));
                 logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
@@ -339,7 +363,7 @@ public class FormulaService {
                         formula.getCreated_user_id(),
                         "Từ chối!",
                         "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án" +
-                                projectRepository.getProjectByProject_id(formula.getProject_id()).getProject_name() +
+                                projectService.getProjectByProject_id(formula.getProject_id(), jwt).getProject_name() +
                                 " đã bị từ chối!",
                         new Date()));
                 logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
@@ -379,7 +403,7 @@ public class FormulaService {
                 PhaseCreateRequest phaseCreateRequest = formulaUpgradeRequest.getPhaseCreateRequest().get(i);
                 phaseService.createPhase(formulaRepository.getLatestFormula_idOfProject(formula.getProject_id()),
                         phaseCreateRequest, jwt);
-                int newest_phase_id = phaseRepository.getLatestPhase_id();
+                int newest_phase_id = phaseService.getNewestPhase_id(jwt);
                 for (int j = 0; j < phaseCreateRequest.getMaterialOfPhaseCreateRequest().size(); j++) {
                     materialOfPhaseService.createMaterialOfPhase(newest_phase_id,
                             phaseCreateRequest.getMaterialOfPhaseCreateRequest().get(j), jwt);
@@ -416,7 +440,7 @@ public class FormulaService {
                     formula.getCreated_user_id(),
                     "Từ chối!",
                     "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án" +
-                            projectRepository.getProjectByProject_id(formula.getProject_id()).getProject_name() +
+                            projectService.getProjectByProject_id(formula.getProject_id(), jwt).getProject_name() +
                             " đã bị từ chối!",
                     new Date()));
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
