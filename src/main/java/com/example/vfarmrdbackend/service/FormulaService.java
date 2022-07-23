@@ -363,7 +363,7 @@ public class FormulaService {
                         "ACCEPT",
                         String.valueOf(formula_id),
                         new Date()));
-            } else if (status.equals("pending")) {
+            } else if (status.equals("on process")) {
                 notificationService.createNotification(new Notification(
                         formula.getCreated_user_id(),
                         "Từ chối!",
@@ -436,27 +436,67 @@ public class FormulaService {
     }
 
     public boolean denyFormulaWithReason(int formula_id, String deny_reason, String jwt) {
-        Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
-        if (formula != null) {
-            formula.setDeny_reason(deny_reason);
-            formula.setFormula_status("pending");
-            formula.setModified_time(new Date());
-            formulaRepository.save(formula);
-            notificationService.createNotification(new Notification(
-                    formula.getCreated_user_id(),
-                    "Từ chối!",
-                    "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án" +
-                            projectService.getProjectByProject_id(formula.getProject_id(), jwt).getProject_name() +
-                            " đã bị từ chối!",
-                    new Date()));
-            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
-                    "FORMULA",
-                    "DENY",
-                    String.valueOf(formula_id),
-                    new Date()));
-            return true;
-        } else {
+        try {
+            Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
+            if (formula != null) {
+                if (formula.getFormula_status().equals("pending")) {
+                    formula.setDeny_reason(deny_reason);
+                    formula.setFormula_status("on process");
+                    formula.setModified_time(new Date());
+                    formulaRepository.save(formula);
+                    notificationService.createNotification(new Notification(
+                            formula.getCreated_user_id(),
+                            "Từ chối!",
+                            "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án" +
+                                    projectService.getProjectByProject_id(formula.getProject_id(), jwt)
+                                            .getProject_name()
+                                    +
+                                    " đã bị từ chối!",
+                            new Date()));
+                    logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                            "FORMULA",
+                            "DENY",
+                            String.valueOf(formula_id),
+                            new Date()));
+                    return true;
+                }
+            }
             return false;
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FORMULA DENY",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public boolean submitFormulaWithDescription(int formula_id, String produce_description, String jwt) {
+        try {
+            Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
+            if (formula != null) {
+                if (formula.getFormula_status().equals("on process")) {
+                    formula.setProduce_description(produce_description);
+                    formula.setFormula_status("pending");
+                    formula.setModified_time(new Date());
+                    formulaRepository.save(formula);
+                    logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                            "FORMULA",
+                            "SUBMIT",
+                            String.valueOf(formula_id),
+                            new Date()));
+                    return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FORMULA SUBMIT",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
         }
     }
 
