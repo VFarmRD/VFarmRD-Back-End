@@ -4,7 +4,7 @@ public class MaterialOfPhaseGetResponse {
     private int mop_id;
     private String material_id;
     private float material_cost;
-    private int material_weight;
+    private float material_weight;
     private float material_percent;
     private String material_description;
 
@@ -35,14 +35,6 @@ public class MaterialOfPhaseGetResponse {
         this.material_cost = material_cost;
     }
 
-    public int getMaterial_weight() {
-        return material_weight;
-    }
-
-    public void setMaterial_weight(int material_weight) {
-        this.material_weight = material_weight;
-    }
-
     public float getMaterial_percent() {
         return material_percent;
     }
@@ -57,6 +49,14 @@ public class MaterialOfPhaseGetResponse {
 
     public void setMaterial_description(String material_description) {
         this.material_description = material_description;
+    }
+
+    public float getMaterial_weight() {
+        return material_weight;
+    }
+
+    public void setMaterial_weight(float material_weight) {
+        this.material_weight = material_weight;
     }
 
 }
