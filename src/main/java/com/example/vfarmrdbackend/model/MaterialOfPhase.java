@@ -15,19 +15,11 @@ public class MaterialOfPhase {
     private int phase_id;
     private String material_id;
     private float material_cost;
-    private int material_weight;
+    private float material_weight;
     private float material_percent;
     private String material_description;
 
     public MaterialOfPhase() {
-    }
-
-    public int getMaterial_weight() {
-        return material_weight;
-    }
-
-    public void setMaterial_weight(int material_weight) {
-        this.material_weight = material_weight;
     }
 
     public float getMaterial_cost() {
@@ -76,6 +68,14 @@ public class MaterialOfPhase {
 
     public void setMaterial_description(String material_description) {
         this.material_description = material_description;
+    }
+
+    public float getMaterial_weight() {
+        return material_weight;
+    }
+
+    public void setMaterial_weight(float material_weight) {
+        this.material_weight = material_weight;
     }
 
 }
