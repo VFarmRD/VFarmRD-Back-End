@@ -6,7 +6,6 @@ import com.example.vfarmrdbackend.model.product.Product;
 import com.example.vfarmrdbackend.payload.product.ProductCreateRequest;
 import com.example.vfarmrdbackend.payload.product.ProductUpdateRequest;
 import com.example.vfarmrdbackend.payload.others.MessageResponse;
-import com.example.vfarmrdbackend.payload.others.StatisticsRequest;
 import com.example.vfarmrdbackend.service.product.ProductService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -140,15 +139,19 @@ public class ProductController {
 
     @GetMapping("/products/statistics")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
-    public ResponseEntity<?> getProductStatistics(@RequestBody StatisticsRequest request,
+    public ResponseEntity<?> getProductStatistics(
+            @RequestParam(defaultValue = "none", required = false) String from_date,
+            @RequestParam(defaultValue = "none", required = false) String to_date,
+            @RequestParam(defaultValue = "0", required = false) int month,
+            @RequestParam(defaultValue = "0", required = false) int year,
             @RequestHeader("Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     productService.getProductStatistics(jwt,
-                            request.getFrom_date(),
-                            request.getTo_date(),
-                            request.getMonth(),
-                            request.getYear()));
+                            from_date,
+                            to_date,
+                            month,
+                            year));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
