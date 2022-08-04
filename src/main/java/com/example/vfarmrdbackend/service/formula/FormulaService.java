@@ -25,6 +25,7 @@ import com.example.vfarmrdbackend.payload.phase.PhaseUpdateRequest;
 import com.example.vfarmrdbackend.payload.tool.ToolInPhaseRequest;
 import com.example.vfarmrdbackend.payload.formula.FormulaGetAllResponse;
 import com.example.vfarmrdbackend.payload.formula.FormulaGetResponse;
+import com.example.vfarmrdbackend.payload.formula.FormulaStatisticsResponse;
 import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseGetResponse;
 import com.example.vfarmrdbackend.payload.phase.PhaseGetResponse;
 import com.example.vfarmrdbackend.payload.test.TestGetResponse;
@@ -482,4 +483,33 @@ public class FormulaService {
         }
     }
 
+    public FormulaStatisticsResponse getFormulaStatistics(String jwt, Date from_date, Date to_date, int month,
+            int year) {
+        try {
+            if (from_date != null && to_date != null) {
+                return new FormulaStatisticsResponse(
+                        formulaRepository.getTotalFormulaFromDateToDate(from_date, to_date),
+                        formulaRepository.getTotalFormulaPendingFromDateToDate(from_date, to_date),
+                        formulaRepository.getTotalFormulaOnProcessFromDateToDate(from_date, to_date),
+                        formulaRepository.getTotalFormulaApprovedFromDateToDate(from_date, to_date));
+            }
+            if (month != 0 && year != 0) {
+                return new FormulaStatisticsResponse(formulaRepository.getTotalFormulaWithMonthAndYear(month, year),
+                        formulaRepository.getTotalFormulaPendingWithMonthAndYear(month, year),
+                        formulaRepository.getTotalFormulaOnProcessWithMonthAndYear(month, year),
+                        formulaRepository.getTotalFormulaApprovedWithMonthAndYear(month, year));
+            }
+            return new FormulaStatisticsResponse(formulaRepository.getTotalFormula(),
+                    formulaRepository.getTotalFormulaPending(),
+                    formulaRepository.getTotalFormulaOnProcess(),
+                    formulaRepository.getTotalFormulaApproved());
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FORMULA STATISTIC",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
 }

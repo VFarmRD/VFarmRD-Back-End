@@ -13,11 +13,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.vfarmrdbackend.model.error.ErrorModel;
 import com.example.vfarmrdbackend.model.log.Log;
 import com.example.vfarmrdbackend.model.product.Product;
 import com.example.vfarmrdbackend.payload.product.ProductCreateRequest;
+import com.example.vfarmrdbackend.payload.product.ProductStatisticsResponse;
 import com.example.vfarmrdbackend.payload.product.ProductUpdateRequest;
 import com.example.vfarmrdbackend.repository.product.ProductRepository;
+import com.example.vfarmrdbackend.service.error.ErrorService;
 import com.example.vfarmrdbackend.service.log.LogService;
 import com.example.vfarmrdbackend.service.others.JwtService;
 
@@ -28,6 +31,9 @@ public class ProductService {
 
     @Autowired
     LogService logService;
+
+    @Autowired
+    ErrorService errorService;
 
     // Map<String, Object>
     public List<Product> getAllProducts(String product_name,
@@ -174,6 +180,33 @@ public class ProductService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public ProductStatisticsResponse getProductStatistics(String jwt, Date from_date, Date to_date, int month,
+            int year) {
+        try {
+            if (from_date != null && to_date != null) {
+                return new ProductStatisticsResponse(
+                        productRepository.getTotalProductFromDateToDate(from_date, to_date),
+                        productRepository.getTotalProductActivatedFromDateToDate(from_date, to_date),
+                        productRepository.getTotalProductDeactivatedFromDateToDate(from_date, to_date));
+            }
+            if (month != 0 && year != 0) {
+                return new ProductStatisticsResponse(productRepository.getTotalProductWithMonthAndYear(month, year),
+                        productRepository.getTotalProductActivatedWithMonthAndYear(month, year),
+                        productRepository.getTotalProductDeactivatedWithMonthAndYear(month, year));
+            }
+            return new ProductStatisticsResponse(productRepository.getTotalProduct(),
+                    productRepository.getTotalProductActivated(),
+                    productRepository.getTotalProductDeactivated());
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PRODUCT STATISTIC",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
         }
     }
 }

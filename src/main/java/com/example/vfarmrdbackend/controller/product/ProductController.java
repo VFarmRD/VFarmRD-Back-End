@@ -6,6 +6,7 @@ import com.example.vfarmrdbackend.model.product.Product;
 import com.example.vfarmrdbackend.payload.product.ProductCreateRequest;
 import com.example.vfarmrdbackend.payload.product.ProductUpdateRequest;
 import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.others.StatisticsRequest;
 import com.example.vfarmrdbackend.service.product.ProductService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -131,6 +132,23 @@ public class ProductController {
             productService.deleteProductFromSystem(product_code, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
                     "Delete product successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
+    @GetMapping("/products/statistics")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
+    public ResponseEntity<?> getProductStatistics(@RequestBody StatisticsRequest request,
+            @RequestHeader("Authorization") String jwt) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    productService.getProductStatistics(jwt,
+                            request.getFrom_date(),
+                            request.getTo_date(),
+                            request.getMonth(),
+                            request.getYear()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

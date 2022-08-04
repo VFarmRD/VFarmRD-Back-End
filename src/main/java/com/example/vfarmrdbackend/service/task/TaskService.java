@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.example.vfarmrdbackend.model.error.ErrorModel;
 import com.example.vfarmrdbackend.model.log.Log;
 import com.example.vfarmrdbackend.model.notification.Notification;
 import com.example.vfarmrdbackend.model.task.Task;
@@ -18,8 +19,10 @@ import com.example.vfarmrdbackend.model.user.User;
 import com.example.vfarmrdbackend.payload.task.TaskCreateRequest;
 import com.example.vfarmrdbackend.payload.task.TaskUpdateRequest;
 import com.example.vfarmrdbackend.payload.task.TaskGetResponse;
+import com.example.vfarmrdbackend.payload.task.TaskStatisticsResponse;
 import com.example.vfarmrdbackend.repository.task.TaskRepository;
 import com.example.vfarmrdbackend.repository.user.UserRepository;
+import com.example.vfarmrdbackend.service.error.ErrorService;
 import com.example.vfarmrdbackend.service.log.LogService;
 import com.example.vfarmrdbackend.service.notification.NotificationService;
 import com.example.vfarmrdbackend.service.others.JwtService;
@@ -40,6 +43,9 @@ public class TaskService {
 
     @Autowired
     NotificationService notificationService;
+
+    @Autowired
+    ErrorService errorService;
 
     private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
 
@@ -166,5 +172,34 @@ public class TaskService {
             return true;
         }
         return false;
+    }
+
+    public TaskStatisticsResponse getTaskStatistics(String jwt, Date from_date, Date to_date, int month,
+            int year) {
+        try {
+            if (from_date != null && to_date != null) {
+                return new TaskStatisticsResponse(taskRepository.getTotalTaskFromDateToDate(from_date, to_date),
+                        taskRepository.getTotalTaskDoingFromDateToDate(from_date, to_date),
+                        taskRepository.getTotalTaskDoneFromDateToDate(from_date, to_date),
+                        taskRepository.getTotalTaskOvertimeFromDateToDate(from_date, to_date));
+            }
+            if (month != 0 && year != 0) {
+                return new TaskStatisticsResponse(taskRepository.getTotalTaskWithMonthAndYear(month, year),
+                        taskRepository.getTotalTaskDoingWithMonthAndYear(month, year),
+                        taskRepository.getTotalTaskDoneWithMonthAndYear(month, year),
+                        taskRepository.getTotalTaskOvertimeWithMonthAndYear(month, year));
+            }
+            return new TaskStatisticsResponse(taskRepository.getTotalTask(),
+                    taskRepository.getTotalTaskDoing(),
+                    taskRepository.getTotalTaskDone(),
+                    taskRepository.getTotalTaskOvertime());
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "TASK STATISTIC",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
     }
 }

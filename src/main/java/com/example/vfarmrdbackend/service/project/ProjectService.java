@@ -13,6 +13,7 @@ import com.example.vfarmrdbackend.model.notification.Notification;
 import com.example.vfarmrdbackend.model.project.Project;
 import com.example.vfarmrdbackend.model.error.ErrorModel;
 import com.example.vfarmrdbackend.payload.project.ProjectRequest;
+import com.example.vfarmrdbackend.payload.project.ProjectStatisticsResponse;
 import com.example.vfarmrdbackend.payload.project.ProjectGetResponse;
 import com.example.vfarmrdbackend.repository.project.ProjectRepository;
 import com.example.vfarmrdbackend.service.error.ErrorService;
@@ -293,6 +294,33 @@ public class ProjectService {
             errorService.createError(new ErrorModel(
                     JwtService.getUser_idFromToken(jwt),
                     "PROJECT GET ALL BY MATERIAL ID",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public ProjectStatisticsResponse getProjectStatistics(String jwt, Date from_date, Date to_date, int month,
+            int year) {
+        try {
+            if (from_date != null && to_date != null) {
+                return new ProjectStatisticsResponse(
+                        projectRepository.getTotalProjectFromDateToDate(from_date, to_date),
+                        projectRepository.getTotalProjectRunningFromDateToDate(from_date, to_date),
+                        projectRepository.getTotalProjectCanceledFromDateToDate(from_date, to_date));
+            }
+            if (month != 0 && year != 0) {
+                return new ProjectStatisticsResponse(projectRepository.getTotalProjectWithMonthAndYear(month, year),
+                        projectRepository.getTotalProjectRunningWithMonthAndYear(month, year),
+                        projectRepository.getTotalProjectCanceledWithMonthAndYear(month, year));
+            }
+            return new ProjectStatisticsResponse(projectRepository.getTotalProject(),
+                    projectRepository.getTotalProjectRunning(),
+                    projectRepository.getTotalProjectCanceled());
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PROJECT STATISTIC",
                     e.getMessage(),
                     new Date()));
             throw e;

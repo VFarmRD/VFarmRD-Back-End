@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.vfarmrdbackend.payload.project.ProjectRequest;
 import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.others.StatisticsRequest;
 import com.example.vfarmrdbackend.service.project.ProjectService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -156,4 +157,20 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/projects/statistics")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
+    public ResponseEntity<?> getProjectStatistics(@RequestBody StatisticsRequest request,
+            @RequestHeader("Authorization") String jwt) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    projectService.getProjectStatistics(jwt,
+                            request.getFrom_date(),
+                            request.getTo_date(),
+                            request.getMonth(),
+                            request.getYear()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
 }

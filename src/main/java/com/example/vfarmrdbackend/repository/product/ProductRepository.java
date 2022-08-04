@@ -1,5 +1,6 @@
 package com.example.vfarmrdbackend.repository.product;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -42,4 +43,34 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
         @Query(value = "select * from products p where p.formula_id = :formula_id", nativeQuery = true)
         List<Product> getProductByFormula_id(@Param("formula_id") int formula_id);
+
+        @Query(value = "SELECT COUNT(*) FROM products p;", nativeQuery = true)
+        int getTotalProduct();
+
+        @Query(value = "SELECT COUNT(*) FROM products p where p.created_time between :from_date and :to_date;", nativeQuery = true)
+        int getTotalProductFromDateToDate(@Param("from_date") Date from_date,
+                        @Param("to_date") Date to_date);
+
+        @Query(value = "SELECT COUNT(*) FROM products p where month(p.created_time) = :month and year(p.created_time) = :year;", nativeQuery = true)
+        int getTotalProductWithMonthAndYear(@Param("month") int month, @Param("year") int year);
+
+        @Query(value = "SELECT COUNT(*) FROM products p where p.product_status = 'activated';", nativeQuery = true)
+        int getTotalProductActivated();
+
+        @Query(value = "SELECT COUNT(*) FROM products p where (p.created_time between :from_date and :to_date) and p.product_status = 'activated';", nativeQuery = true)
+        int getTotalProductActivatedFromDateToDate(@Param("from_date") Date from_date,
+                        @Param("to_date") Date to_date);
+
+        @Query(value = "SELECT COUNT(*) FROM products p where month(p.created_time) = :month and year(p.created_time) = :year and p.product_status = 'activated';", nativeQuery = true)
+        int getTotalProductActivatedWithMonthAndYear(@Param("month") int month, @Param("year") int year);
+
+        @Query(value = "SELECT COUNT(*) FROM products p where p.product_status = 'deactivated';", nativeQuery = true)
+        int getTotalProductDeactivated();
+
+        @Query(value = "SELECT COUNT(*) FROM products p where (p.created_time between :from_date and :to_date) and p.product_status = 'deactivated';", nativeQuery = true)
+        int getTotalProductDeactivatedFromDateToDate(@Param("from_date") Date from_date,
+                        @Param("to_date") Date to_date);
+
+        @Query(value = "SELECT COUNT(*) FROM products p where month(p.created_time) = :month and year(p.created_time) = :year and p.product_status = 'deactivated';", nativeQuery = true)
+        int getTotalProductDeactivatedWithMonthAndYear(@Param("month") int month, @Param("year") int year);
 }

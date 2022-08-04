@@ -4,6 +4,7 @@ import com.example.vfarmrdbackend.payload.formula.FormulaCreateRequest;
 import com.example.vfarmrdbackend.payload.formula.FormulaUpdateRequest;
 import com.example.vfarmrdbackend.payload.formula.FormulaUpgradeRequest;
 import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.others.StatisticsRequest;
 import com.example.vfarmrdbackend.service.formula.FormulaService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -177,6 +178,23 @@ public class FormulaController {
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
                         new MessageResponse("Lỗi", "Công thức này chưa được gửi!"));
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
+    @GetMapping("/formulas/statistics")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
+    public ResponseEntity<?> getFormulaStatistics(@RequestBody StatisticsRequest request,
+            @RequestHeader("Authorization") String jwt) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    formulaService.getFormulaStatistics(jwt,
+                            request.getFrom_date(),
+                            request.getTo_date(),
+                            request.getMonth(),
+                            request.getYear()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

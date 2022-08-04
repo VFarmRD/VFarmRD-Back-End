@@ -20,6 +20,7 @@ import com.example.vfarmrdbackend.model.task.Task;
 import com.example.vfarmrdbackend.payload.task.TaskCreateRequest;
 import com.example.vfarmrdbackend.payload.task.TaskUpdateRequest;
 import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.others.StatisticsRequest;
 import com.example.vfarmrdbackend.payload.task.TaskGetResponse;
 import com.example.vfarmrdbackend.service.task.TaskService;
 import com.example.vfarmrdbackend.service.others.JwtService;
@@ -108,6 +109,23 @@ public class TaskController {
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not found!");
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
+    @GetMapping("/tasks/statistics")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
+    public ResponseEntity<?> getTaskStatistics(@RequestBody StatisticsRequest request,
+            @RequestHeader("Authorization") String jwt) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    taskService.getTaskStatistics(jwt,
+                            request.getFrom_date(),
+                            request.getTo_date(),
+                            request.getMonth(),
+                            request.getYear()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
