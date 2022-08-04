@@ -300,7 +300,7 @@ public class ProjectService {
         }
     }
 
-    public ProjectStatisticsResponse getProjectStatistics(String jwt, Date from_date, Date to_date, int month,
+    public ProjectStatisticsResponse getProjectStatistics(String jwt, String from_date, String to_date, int month,
             int year) {
         try {
             if (from_date != null && to_date != null) {

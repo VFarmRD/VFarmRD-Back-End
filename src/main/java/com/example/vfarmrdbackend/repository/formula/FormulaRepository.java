@@ -1,6 +1,5 @@
 package com.example.vfarmrdbackend.repository.formula;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -43,7 +42,7 @@ public interface FormulaRepository extends JpaRepository<Formula, Integer> {
         int getTotalFormula();
 
         @Query(value = "SELECT COUNT(*) FROM formulas f where (f.created_time between :from_date and :to_date);", nativeQuery = true)
-        int getTotalFormulaFromDateToDate(@Param("from_date") Date from_date, @Param("to_date") Date to_date);
+        int getTotalFormulaFromDateToDate(@Param("from_date") String from_date, @Param("to_date") String to_date);
 
         @Query(value = "SELECT COUNT(*) FROM formulas f where month(f.created_time) = :month and year(f.created_time) = :year;", nativeQuery = true)
         int getTotalFormulaWithMonthAndYear(@Param("month") int month, @Param("year") int year);
@@ -52,8 +51,8 @@ public interface FormulaRepository extends JpaRepository<Formula, Integer> {
         int getTotalFormulaPending();
 
         @Query(value = "SELECT COUNT(*) FROM formulas f where (f.created_time between :from_date and :to_date) and f.formula_status = 'pending';", nativeQuery = true)
-        int getTotalFormulaPendingFromDateToDate(@Param("from_date") Date from_date,
-                        @Param("to_date") Date to_date);
+        int getTotalFormulaPendingFromDateToDate(@Param("from_date") String from_date,
+                        @Param("to_date") String to_date);
 
         @Query(value = "SELECT COUNT(*) FROM formulas f where month(f.created_time) = :month and year(f.created_time) = :year and f.formula_status = 'pending';", nativeQuery = true)
         int getTotalFormulaPendingWithMonthAndYear(@Param("month") int month, @Param("year") int year);
@@ -62,8 +61,8 @@ public interface FormulaRepository extends JpaRepository<Formula, Integer> {
         int getTotalFormulaOnProcess();
 
         @Query(value = "SELECT COUNT(*) FROM formulas f where (f.created_time between :from_date and :to_date) and f.formula_status = 'on process';", nativeQuery = true)
-        int getTotalFormulaOnProcessFromDateToDate(@Param("from_date") Date from_date,
-                        @Param("to_date") Date to_date);
+        int getTotalFormulaOnProcessFromDateToDate(@Param("from_date") String from_date,
+                        @Param("to_date") String to_date);
 
         @Query(value = "SELECT COUNT(*) FROM formulas f where month(f.created_time) = :month and year(f.created_time) = :year and f.formula_status = 'on process';", nativeQuery = true)
         int getTotalFormulaOnProcessWithMonthAndYear(@Param("month") int month, @Param("year") int year);
@@ -72,8 +71,8 @@ public interface FormulaRepository extends JpaRepository<Formula, Integer> {
         int getTotalFormulaApproved();
 
         @Query(value = "SELECT COUNT(*) FROM formulas f where (f.created_time between :from_date and :to_date) and f.formula_status = 'approved';", nativeQuery = true)
-        int getTotalFormulaApprovedFromDateToDate(@Param("from_date") Date from_date,
-                        @Param("to_date") Date to_date);
+        int getTotalFormulaApprovedFromDateToDate(@Param("from_date") String from_date,
+                        @Param("to_date") String to_date);
 
         @Query(value = "SELECT COUNT(*) FROM formulas f where month(f.created_time) = :month and year(f.created_time) = :year and f.formula_status = 'approved';", nativeQuery = true)
         int getTotalFormulaApprovedWithMonthAndYear(@Param("month") int month, @Param("year") int year);

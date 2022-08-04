@@ -1,6 +1,5 @@
 package com.example.vfarmrdbackend.repository.project;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,8 +30,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
         int getTotalProject();
 
         @Query(value = "SELECT COUNT(*) FROM projects p where p.created_time between :from_date and :to_date;", nativeQuery = true)
-        int getTotalProjectFromDateToDate(@Param("from_date") Date from_date,
-                        @Param("to_date") Date to_date);
+        int getTotalProjectFromDateToDate(@Param("from_date") String from_date,
+                        @Param("to_date") String to_date);
 
         @Query(value = "SELECT COUNT(*) FROM projects p where month(p.created_time) = :month and year(p.created_time) = :year;", nativeQuery = true)
         int getTotalProjectWithMonthAndYear(@Param("month") int month, @Param("year") int year);
@@ -41,8 +40,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
         int getTotalProjectRunning();
 
         @Query(value = "SELECT COUNT(*) FROM projects p where (p.created_time between :from_date and :to_date) and p.project_status = 'running';", nativeQuery = true)
-        int getTotalProjectRunningFromDateToDate(@Param("from_date") Date from_date,
-                        @Param("to_date") Date to_date);
+        int getTotalProjectRunningFromDateToDate(@Param("from_date") String from_date,
+                        @Param("to_date") String to_date);
 
         @Query(value = "SELECT COUNT(*) FROM projects p where month(p.created_time) = :month and year(p.created_time) = :year and p.project_status = 'running';", nativeQuery = true)
         int getTotalProjectRunningWithMonthAndYear(@Param("month") int month, @Param("year") int year);
@@ -51,8 +50,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
         int getTotalProjectCanceled();
 
         @Query(value = "SELECT COUNT(*) FROM projects p where (p.created_time between :from_date and :to_date) and p.project_status = 'canceled';", nativeQuery = true)
-        int getTotalProjectCanceledFromDateToDate(@Param("from_date") Date from_date,
-                        @Param("to_date") Date to_date);
+        int getTotalProjectCanceledFromDateToDate(@Param("from_date") String from_date,
+                        @Param("to_date") String to_date);
 
         @Query(value = "SELECT COUNT(*) FROM projects p where month(p.created_time) = :month and year(p.created_time) = :year and p.project_status = 'canceled';", nativeQuery = true)
         int getTotalProjectCanceledWithMonthAndYear(@Param("month") int month, @Param("year") int year);

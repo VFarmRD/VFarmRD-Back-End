@@ -483,7 +483,7 @@ public class FormulaService {
         }
     }
 
-    public FormulaStatisticsResponse getFormulaStatistics(String jwt, Date from_date, Date to_date, int month,
+    public FormulaStatisticsResponse getFormulaStatistics(String jwt, String from_date, String to_date, int month,
             int year) {
         try {
             if (from_date != null && to_date != null) {

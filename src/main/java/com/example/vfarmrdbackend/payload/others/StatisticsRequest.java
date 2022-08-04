@@ -1,29 +1,27 @@
 package com.example.vfarmrdbackend.payload.others;
 
-import java.util.Date;
-
 public class StatisticsRequest {
-    private Date from_date;
-    private Date to_date;
+    private String from_date;
+    private String to_date;
     private int month;
     private int year;
 
     public StatisticsRequest() {
     }
 
-    public Date getFrom_date() {
+    public String getFrom_date() {
         return from_date;
     }
 
-    public void setFrom_date(Date from_date) {
+    public void setFrom_date(String from_date) {
         this.from_date = from_date;
     }
 
-    public Date getTo_date() {
+    public String getTo_date() {
         return to_date;
     }
 
-    public void setTo_date(Date to_date) {
+    public void setTo_date(String to_date) {
         this.to_date = to_date;
     }
 
