@@ -44,7 +44,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
         int getTotalProjectRunningFromDateToDate(@Param("from_date") Date from_date,
                         @Param("to_date") Date to_date);
 
-        @Query(value = "SELECT COUNT(*) FROM projects p where month(p.created_time) = 6 and year(p.created_time) = :year and p.project_status = 'running';", nativeQuery = true)
+        @Query(value = "SELECT COUNT(*) FROM projects p where month(p.created_time) = :month and year(p.created_time) = :year and p.project_status = 'running';", nativeQuery = true)
         int getTotalProjectRunningWithMonthAndYear(@Param("month") int month, @Param("year") int year);
 
         @Query(value = "SELECT COUNT(*) FROM projects p where p.project_status = 'canceled';", nativeQuery = true)
@@ -54,6 +54,6 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
         int getTotalProjectCanceledFromDateToDate(@Param("from_date") Date from_date,
                         @Param("to_date") Date to_date);
 
-        @Query(value = "SELECT COUNT(*) FROM projects p where month(p.created_time) = 6 and year(p.created_time) = :year and p.project_status = 'canceled';", nativeQuery = true)
+        @Query(value = "SELECT COUNT(*) FROM projects p where month(p.created_time) = :month and year(p.created_time) = :year and p.project_status = 'canceled';", nativeQuery = true)
         int getTotalProjectCanceledWithMonthAndYear(@Param("month") int month, @Param("year") int year);
 }
