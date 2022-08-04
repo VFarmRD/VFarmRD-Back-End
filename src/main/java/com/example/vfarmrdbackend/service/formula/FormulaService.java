@@ -486,7 +486,7 @@ public class FormulaService {
     public FormulaStatisticsResponse getFormulaStatistics(String jwt, String from_date, String to_date, int month,
             int year) {
         try {
-            if (from_date != null && to_date != null) {
+            if (!from_date.equals("none") && !to_date.equals("none")) {
                 return new FormulaStatisticsResponse(
                         formulaRepository.getTotalFormulaFromDateToDate(from_date, to_date),
                         formulaRepository.getTotalFormulaPendingFromDateToDate(from_date, to_date),

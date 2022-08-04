@@ -303,7 +303,7 @@ public class ProjectService {
     public ProjectStatisticsResponse getProjectStatistics(String jwt, String from_date, String to_date, int month,
             int year) {
         try {
-            if (from_date != null && to_date != null) {
+            if (!from_date.equals("none") && !to_date.equals("none")) {
                 return new ProjectStatisticsResponse(
                         projectRepository.getTotalProjectFromDateToDate(from_date, to_date),
                         projectRepository.getTotalProjectRunningFromDateToDate(from_date, to_date),

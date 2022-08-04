@@ -177,7 +177,7 @@ public class TaskService {
     public TaskStatisticsResponse getTaskStatistics(String jwt, String from_date, String to_date, int month,
             int year) {
         try {
-            if (from_date != null && to_date != null) {
+            if (!from_date.equals("none") && !to_date.equals("none")) {
                 return new TaskStatisticsResponse(taskRepository.getTotalTaskFromDateToDate(from_date, to_date),
                         taskRepository.getTotalTaskDoingFromDateToDate(from_date, to_date),
                         taskRepository.getTotalTaskDoneFromDateToDate(from_date, to_date),
