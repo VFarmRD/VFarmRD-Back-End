@@ -306,7 +306,8 @@ public class ProjectService {
         try {
             return new ProjectStatisticsResponse(projectRepository.getTotalProject(),
                     projectRepository.getTotalProjectRunning(),
-                    projectRepository.getTotalProjectCanceled());
+                    projectRepository.getTotalProjectCanceled(),
+                    projectRepository.getTotalProjectHaveProduct());
         } catch (Exception e) {
             errorService.createError(new ErrorModel(
                     JwtService.getUser_idFromToken(jwt),
@@ -335,6 +336,8 @@ public class ProjectService {
                         projectRepository.getTotalProjectRunningFromDateToDate(totalDates.get(i) + " 00:00:00",
                                 totalDates.get(i) + " 23:59:59"),
                         projectRepository.getTotalProjectCanceledFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                totalDates.get(i) + " 23:59:59"),
+                        projectRepository.getTotalProjectHaveProductFromDateToDate(totalDates.get(i) + " 00:00:00",
                                 totalDates.get(i) + " 23:59:59")));
             }
             return listResponses;
@@ -352,7 +355,8 @@ public class ProjectService {
         try {
             return new ProjectStatisticsResponse(projectRepository.getTotalProjectWithMonthAndYear(month, year),
                     projectRepository.getTotalProjectRunningWithMonthAndYear(month, year),
-                    projectRepository.getTotalProjectCanceledWithMonthAndYear(month, year));
+                    projectRepository.getTotalProjectCanceledWithMonthAndYear(month, year),
+                    projectRepository.getTotalProjectHaveProductWithMonthAndYear(month, year));
         } catch (Exception e) {
             errorService.createError(new ErrorModel(
                     JwtService.getUser_idFromToken(jwt),

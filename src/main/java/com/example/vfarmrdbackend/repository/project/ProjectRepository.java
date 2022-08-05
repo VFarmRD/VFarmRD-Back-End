@@ -58,4 +58,14 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
         @Query(value = "SELECT * FROM projects p where p.client_id = :client_id ;", nativeQuery = true)
         List<Project> getProjectByClient_id(@Param("client_id") String client_id);
+
+        @Query(value = "select COUNT(*) from projects p where project_id in (select distinct f.project_id from formulas f where f.formula_id in (select p.formula_id from products p));", nativeQuery = true)
+        int getTotalProjectHaveProduct();
+
+        @Query(value = "select COUNT(*) from projects p where (p.created_time between :from_date and :to_date) and project_id in (select distinct f.project_id from formulas f where f.formula_id in (select p.formula_id from products p));", nativeQuery = true)
+        int getTotalProjectHaveProductFromDateToDate(@Param("from_date") String from_date,
+                        @Param("to_date") String to_date);
+
+        @Query(value = "select COUNT(*) from projects p where month(p.created_time) = :month and year(p.created_time) = :year and project_id in (select distinct f.project_id from formulas f where f.formula_id in (select p.formula_id from products p));", nativeQuery = true)
+        int getTotalProjectHaveProductWithMonthAndYear(@Param("month") int month, @Param("year") int year);
 }
