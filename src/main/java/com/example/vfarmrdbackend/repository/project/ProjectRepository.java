@@ -55,4 +55,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
         @Query(value = "SELECT COUNT(*) FROM projects p where month(p.created_time) = :month and year(p.created_time) = :year and p.project_status = 'canceled';", nativeQuery = true)
         int getTotalProjectCanceledWithMonthAndYear(@Param("month") int month, @Param("year") int year);
+
+        @Query(value = "SELECT * FROM projects p where p.client_id = :client_id;", nativeQuery = true)
+        List<Project> getProjectByClient_id(@Param("client_id") String client_id);
 }

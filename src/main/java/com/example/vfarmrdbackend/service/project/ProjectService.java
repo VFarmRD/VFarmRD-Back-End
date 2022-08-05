@@ -1,5 +1,6 @@
 package com.example.vfarmrdbackend.service.project;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.example.vfarmrdbackend.model.notification.Notification;
 import com.example.vfarmrdbackend.model.project.Project;
 import com.example.vfarmrdbackend.model.error.ErrorModel;
 import com.example.vfarmrdbackend.payload.project.ProjectRequest;
+import com.example.vfarmrdbackend.payload.project.ProjectStatisticsFromDateToDateResponse;
 import com.example.vfarmrdbackend.payload.project.ProjectStatisticsResponse;
 import com.example.vfarmrdbackend.payload.project.ProjectGetResponse;
 import com.example.vfarmrdbackend.repository.project.ProjectRepository;
@@ -300,27 +302,94 @@ public class ProjectService {
         }
     }
 
-    public ProjectStatisticsResponse getProjectStatistics(String jwt, String from_date, String to_date, int month,
-            int year) {
+    public ProjectStatisticsResponse getProjectStatisticsOfAllTime(String jwt) {
         try {
-            if (!from_date.equals("none") && !to_date.equals("none")) {
-                return new ProjectStatisticsResponse(
-                        projectRepository.getTotalProjectFromDateToDate(from_date, to_date),
-                        projectRepository.getTotalProjectRunningFromDateToDate(from_date, to_date),
-                        projectRepository.getTotalProjectCanceledFromDateToDate(from_date, to_date));
-            }
-            if (month != 0 && year != 0) {
-                return new ProjectStatisticsResponse(projectRepository.getTotalProjectWithMonthAndYear(month, year),
-                        projectRepository.getTotalProjectRunningWithMonthAndYear(month, year),
-                        projectRepository.getTotalProjectCanceledWithMonthAndYear(month, year));
-            }
             return new ProjectStatisticsResponse(projectRepository.getTotalProject(),
                     projectRepository.getTotalProjectRunning(),
                     projectRepository.getTotalProjectCanceled());
         } catch (Exception e) {
             errorService.createError(new ErrorModel(
                     JwtService.getUser_idFromToken(jwt),
-                    "PROJECT STATISTIC",
+                    "PROJECT STATISTIC OF ALL TIME",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public List<ProjectStatisticsFromDateToDateResponse> getProjectStatisticsFromDateToDate(String jwt,
+            String from_date, String to_date) {
+        try {
+            LocalDate start = LocalDate.parse(from_date.split(" ")[0]);
+            LocalDate end = LocalDate.parse(to_date.split(" ")[0]);
+            List<LocalDate> totalDates = new ArrayList<>();
+            while (!start.isAfter(end)) {
+                totalDates.add(start);
+                start = start.plusDays(1);
+            }
+            List<ProjectStatisticsFromDateToDateResponse> listResponses = new ArrayList<>();
+            for (int i = 0; i < listResponses.size(); i++) {
+                listResponses.add(new ProjectStatisticsFromDateToDateResponse(listResponses.get(i).toString(),
+                        projectRepository.getTotalProjectFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                totalDates.get(i) + " 23:59:59"),
+                        projectRepository.getTotalProjectRunningFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                totalDates.get(i) + " 23:59:59"),
+                        projectRepository.getTotalProjectCanceledFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                totalDates.get(i) + " 23:59:59")));
+            }
+            return listResponses;
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PROJECT STATISTIC FROM DATE TO DATE",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public ProjectStatisticsResponse getProjectStatisticsWithMonthAndYear(String jwt, int month, int year) {
+        try {
+            return new ProjectStatisticsResponse(projectRepository.getTotalProjectWithMonthAndYear(month, year),
+                    projectRepository.getTotalProjectRunningWithMonthAndYear(month, year),
+                    projectRepository.getTotalProjectCanceledWithMonthAndYear(month, year));
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PROJECT STATISTIC WITH MONTH AND YEAR",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public List<ProjectGetResponse> getProjectByClient_id(String client_id, String jwt) {
+        try {
+            List<Project> listProject = projectRepository.getProjectByClient_id(client_id);
+            List<ProjectGetResponse> listResponse = new ArrayList<>();
+            for (int i = 0; i < listProject.size(); i++) {
+                Project project = listProject.get(i);
+                ProjectGetResponse response = new ProjectGetResponse();
+                response.setProject_id(project.getProject_id());
+                response.setProject_name(project.getProject_name());
+                response.setClient_id(project.getClient_id());
+                response.setCreated_user_id(project.getCreated_user_id());
+                response.setCreated_user_name(userService.getUserInfo(project.getCreated_user_id()).getFullname());
+                response.setAssigned_user_id(project.getAssigned_user_id());
+                response.setAssigned_user_name(userService.getUserInfo(project.getAssigned_user_id()).getFullname());
+                response.setProject_code(project.getProject_code());
+                response.setCreated_time(new Date());
+                response.setComplete_date(project.getComplete_date());
+                response.setProject_status(project.getProject_status());
+                response.setRequirement(project.getRequirement());
+                response.setEstimated_weight(project.getEstimated_weight());
+                listResponse.add(response);
+            }
+            return listResponse;
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PROJECT GET BY ASSIGNED_USER_ID",
                     e.getMessage(),
                     new Date()));
             throw e;

@@ -1,5 +1,6 @@
 package com.example.vfarmrdbackend.service.product;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import com.example.vfarmrdbackend.model.error.ErrorModel;
 import com.example.vfarmrdbackend.model.log.Log;
 import com.example.vfarmrdbackend.model.product.Product;
 import com.example.vfarmrdbackend.payload.product.ProductCreateRequest;
+import com.example.vfarmrdbackend.payload.product.ProductStatisticsFromDateToDateResponse;
 import com.example.vfarmrdbackend.payload.product.ProductStatisticsResponse;
 import com.example.vfarmrdbackend.payload.product.ProductUpdateRequest;
 import com.example.vfarmrdbackend.repository.product.ProductRepository;
@@ -183,27 +185,61 @@ public class ProductService {
         }
     }
 
-    public ProductStatisticsResponse getProductStatistics(String jwt, String from_date, String to_date, int month,
-            int year) {
+    public ProductStatisticsResponse getProductStatisticsOfAllTime(String jwt) {
         try {
-            if (!from_date.equals("none") && !to_date.equals("none")) {
-                return new ProductStatisticsResponse(
-                        productRepository.getTotalProductFromDateToDate(from_date, to_date),
-                        productRepository.getTotalProductActivatedFromDateToDate(from_date, to_date),
-                        productRepository.getTotalProductDeactivatedFromDateToDate(from_date, to_date));
-            }
-            if (month != 0 && year != 0) {
-                return new ProductStatisticsResponse(productRepository.getTotalProductWithMonthAndYear(month, year),
-                        productRepository.getTotalProductActivatedWithMonthAndYear(month, year),
-                        productRepository.getTotalProductDeactivatedWithMonthAndYear(month, year));
-            }
             return new ProductStatisticsResponse(productRepository.getTotalProduct(),
                     productRepository.getTotalProductActivated(),
                     productRepository.getTotalProductDeactivated());
         } catch (Exception e) {
             errorService.createError(new ErrorModel(
                     JwtService.getUser_idFromToken(jwt),
-                    "PRODUCT STATISTIC",
+                    "PRODUCT STATISTIC OF ALL TIME",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public List<ProductStatisticsFromDateToDateResponse> getProductStatisticsFromDateToDate(String jwt,
+            String from_date, String to_date) {
+        try {
+            LocalDate start = LocalDate.parse(from_date.split(" ")[0]);
+            LocalDate end = LocalDate.parse(to_date.split(" ")[0]);
+            List<LocalDate> totalDates = new ArrayList<>();
+            while (!start.isAfter(end)) {
+                totalDates.add(start);
+                start = start.plusDays(1);
+            }
+            List<ProductStatisticsFromDateToDateResponse> listResponses = new ArrayList<>();
+            for (int i = 0; i < listResponses.size(); i++) {
+                listResponses.add(new ProductStatisticsFromDateToDateResponse(listResponses.get(i).toString(),
+                        productRepository.getTotalProductFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                totalDates.get(i) + " 23:59:59"),
+                        productRepository.getTotalProductActivatedFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                totalDates.get(i) + " 23:59:59"),
+                        productRepository.getTotalProductDeactivatedFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                totalDates.get(i) + " 23:59:59")));
+            }
+            return listResponses;
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PRODUCT STATISTIC FROM DATE TO DATE",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public ProductStatisticsResponse getProductStatisticsWithMonthAndYear(String jwt, int month, int year) {
+        try {
+            return new ProductStatisticsResponse(productRepository.getTotalProductWithMonthAndYear(month, year),
+                    productRepository.getTotalProductActivatedWithMonthAndYear(month, year),
+                    productRepository.getTotalProductDeactivatedWithMonthAndYear(month, year));
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "PRODUCT STATISTIC WITH MONTH AND YEAR",
                     e.getMessage(),
                     new Date()));
             throw e;

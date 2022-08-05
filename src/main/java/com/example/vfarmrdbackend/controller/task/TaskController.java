@@ -124,12 +124,16 @@ public class TaskController {
             @RequestParam(defaultValue = "0", required = false) int year,
             @RequestHeader("Authorization") String jwt) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    taskService.getTaskStatistics(jwt,
-                            from_date,
-                            to_date,
-                            month,
-                            year));
+            if (!from_date.equals("none") && !to_date.equals("none")) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        taskService.getTaskStatisticsFromDateToDate(jwt, from_date, to_date));
+            } else if (month != 0 && year != 0) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        taskService.getTaskStatisticsWithMonthAndYear(jwt, month, year));
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        taskService.getTaskStatisticsOfAllTime(jwt));
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

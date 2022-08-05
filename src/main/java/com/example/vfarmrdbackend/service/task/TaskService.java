@@ -2,6 +2,7 @@ package com.example.vfarmrdbackend.service.task;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +20,7 @@ import com.example.vfarmrdbackend.model.user.User;
 import com.example.vfarmrdbackend.payload.task.TaskCreateRequest;
 import com.example.vfarmrdbackend.payload.task.TaskUpdateRequest;
 import com.example.vfarmrdbackend.payload.task.TaskGetResponse;
+import com.example.vfarmrdbackend.payload.task.TaskStatisticsFromDateToDateResponse;
 import com.example.vfarmrdbackend.payload.task.TaskStatisticsResponse;
 import com.example.vfarmrdbackend.repository.task.TaskRepository;
 import com.example.vfarmrdbackend.repository.user.UserRepository;
@@ -174,21 +176,8 @@ public class TaskService {
         return false;
     }
 
-    public TaskStatisticsResponse getTaskStatistics(String jwt, String from_date, String to_date, int month,
-            int year) {
+    public TaskStatisticsResponse getTaskStatisticsOfAllTime(String jwt) {
         try {
-            if (!from_date.equals("none") && !to_date.equals("none")) {
-                return new TaskStatisticsResponse(taskRepository.getTotalTaskFromDateToDate(from_date, to_date),
-                        taskRepository.getTotalTaskDoingFromDateToDate(from_date, to_date),
-                        taskRepository.getTotalTaskDoneFromDateToDate(from_date, to_date),
-                        taskRepository.getTotalTaskOvertimeFromDateToDate(from_date, to_date));
-            }
-            if (month != 0 && year != 0) {
-                return new TaskStatisticsResponse(taskRepository.getTotalTaskWithMonthAndYear(month, year),
-                        taskRepository.getTotalTaskDoingWithMonthAndYear(month, year),
-                        taskRepository.getTotalTaskDoneWithMonthAndYear(month, year),
-                        taskRepository.getTotalTaskOvertimeWithMonthAndYear(month, year));
-            }
             return new TaskStatisticsResponse(taskRepository.getTotalTask(),
                     taskRepository.getTotalTaskDoing(),
                     taskRepository.getTotalTaskDone(),
@@ -196,7 +185,52 @@ public class TaskService {
         } catch (Exception e) {
             errorService.createError(new ErrorModel(
                     JwtService.getUser_idFromToken(jwt),
-                    "TASK STATISTIC",
+                    "TASK STATISTIC OF ALL TIME",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public List<TaskStatisticsFromDateToDateResponse> getTaskStatisticsFromDateToDate(String jwt, String from_date,
+            String to_date) {
+        try {
+            LocalDate start = LocalDate.parse(from_date.split(" ")[0]);
+            LocalDate end = LocalDate.parse(to_date.split(" ")[0]);
+            List<LocalDate> totalDates = new ArrayList<>();
+            while (!start.isAfter(end)) {
+                totalDates.add(start);
+                start = start.plusDays(1);
+            }
+            List<TaskStatisticsFromDateToDateResponse> listResponses = new ArrayList<>();
+            for (int i = 0; i < listResponses.size(); i++) {
+                listResponses.add(new TaskStatisticsFromDateToDateResponse(listResponses.get(i).toString(),
+                        taskRepository.getTotalTaskFromDateToDate(from_date, to_date),
+                        taskRepository.getTotalTaskDoingFromDateToDate(from_date, to_date),
+                        taskRepository.getTotalTaskDoneFromDateToDate(from_date, to_date),
+                        taskRepository.getTotalTaskOvertimeFromDateToDate(from_date, to_date)));
+            }
+            return listResponses;
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "TASK STATISTIC FROM DATE TO DATE",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public TaskStatisticsResponse getTaskStatisticsWithMonthAndYear(String jwt, int month, int year) {
+        try {
+            return new TaskStatisticsResponse(taskRepository.getTotalTaskWithMonthAndYear(month, year),
+                    taskRepository.getTotalTaskDoingWithMonthAndYear(month, year),
+                    taskRepository.getTotalTaskDoneWithMonthAndYear(month, year),
+                    taskRepository.getTotalTaskOvertimeWithMonthAndYear(month, year));
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "TASK STATISTIC WITH MONTH AND YEAR",
                     e.getMessage(),
                     new Date()));
             throw e;

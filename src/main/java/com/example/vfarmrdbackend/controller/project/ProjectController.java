@@ -165,12 +165,30 @@ public class ProjectController {
             @RequestParam(defaultValue = "0", required = false) int year,
             @RequestHeader("Authorization") String jwt) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    projectService.getProjectStatistics(jwt,
-                            from_date,
-                            to_date,
-                            month,
-                            year));
+            if (!from_date.equals("none") && !to_date.equals("none")) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        projectService.getProjectStatisticsFromDateToDate(jwt, from_date, to_date));
+            } else if (month != 0 && year != 0) {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        projectService.getProjectStatisticsWithMonthAndYear(jwt, month, year));
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        projectService.getProjectStatisticsOfAllTime(jwt));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
+    @GetMapping("/projects/clients/{client_id}")
+    @PreAuthorize("hasAuthority('staff') " +
+            "or hasAuthority('manager')")
+    public ResponseEntity<?> getProjectByClient_id(@PathVariable("client_id") String client_id,
+            @RequestHeader("Authorization") String jwt) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(projectService.getProjectByClient_id(client_id, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

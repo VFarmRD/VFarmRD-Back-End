@@ -1,5 +1,6 @@
 package com.example.vfarmrdbackend.service.formula;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ import com.example.vfarmrdbackend.payload.phase.PhaseUpdateRequest;
 import com.example.vfarmrdbackend.payload.tool.ToolInPhaseRequest;
 import com.example.vfarmrdbackend.payload.formula.FormulaGetAllResponse;
 import com.example.vfarmrdbackend.payload.formula.FormulaGetResponse;
+import com.example.vfarmrdbackend.payload.formula.FormulaStatisticsFromDateToDateResponse;
 import com.example.vfarmrdbackend.payload.formula.FormulaStatisticsResponse;
 import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseGetResponse;
 import com.example.vfarmrdbackend.payload.phase.PhaseGetResponse;
@@ -483,22 +485,62 @@ public class FormulaService {
         }
     }
 
-    public FormulaStatisticsResponse getFormulaStatistics(String jwt, String from_date, String to_date, int month,
-            int year) {
+    public FormulaStatisticsResponse getFormulaStatisticsWithMonthAndYear(String jwt, int month, int year) {
         try {
-            if (!from_date.equals("none") && !to_date.equals("none")) {
-                return new FormulaStatisticsResponse(
-                        formulaRepository.getTotalFormulaFromDateToDate(from_date, to_date),
-                        formulaRepository.getTotalFormulaPendingFromDateToDate(from_date, to_date),
-                        formulaRepository.getTotalFormulaOnProcessFromDateToDate(from_date, to_date),
-                        formulaRepository.getTotalFormulaApprovedFromDateToDate(from_date, to_date));
+            return new FormulaStatisticsResponse(formulaRepository.getTotalFormulaWithMonthAndYear(month, year),
+                    formulaRepository.getTotalFormulaPendingWithMonthAndYear(month, year),
+                    formulaRepository.getTotalFormulaOnProcessWithMonthAndYear(month, year),
+                    formulaRepository.getTotalFormulaApprovedWithMonthAndYear(month, year));
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FORMULA STATISTIC WITH MONTH AND YEAR",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public List<FormulaStatisticsFromDateToDateResponse> getFormulaStatisticsFromDateToDate(String jwt,
+            String from_date,
+            String to_date) {
+        try {
+            LocalDate start = LocalDate.parse(from_date.split(" ")[0]);
+            LocalDate end = LocalDate.parse(to_date.split(" ")[0]);
+            List<LocalDate> totalDates = new ArrayList<>();
+            while (!start.isAfter(end)) {
+                totalDates.add(start);
+                start = start.plusDays(1);
             }
-            if (month != 0 && year != 0) {
-                return new FormulaStatisticsResponse(formulaRepository.getTotalFormulaWithMonthAndYear(month, year),
-                        formulaRepository.getTotalFormulaPendingWithMonthAndYear(month, year),
-                        formulaRepository.getTotalFormulaOnProcessWithMonthAndYear(month, year),
-                        formulaRepository.getTotalFormulaApprovedWithMonthAndYear(month, year));
+            List<FormulaStatisticsFromDateToDateResponse> listResponses = new ArrayList<>();
+            for (int i = 0; i < totalDates.size(); i++) {
+                if (formulaRepository.getTotalFormulaFromDateToDate(totalDates.get(i) + " 00:00:00",
+                        totalDates.get(i) + " 23:59:59") != 0) {
+                    listResponses.add(new FormulaStatisticsFromDateToDateResponse(
+                            totalDates.get(i).toString(),
+                            formulaRepository.getTotalFormulaFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59"),
+                            formulaRepository.getTotalFormulaPendingFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59"),
+                            formulaRepository.getTotalFormulaOnProcessFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59"),
+                            formulaRepository.getTotalFormulaApprovedFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59")));
+                }
             }
+            return listResponses;
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FORMULA STATISTIC FROM DATE TO DATE",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public FormulaStatisticsResponse getFormulaStatisticsOfAllTime(String jwt) {
+        try {
             return new FormulaStatisticsResponse(formulaRepository.getTotalFormula(),
                     formulaRepository.getTotalFormulaPending(),
                     formulaRepository.getTotalFormulaOnProcess(),
@@ -506,7 +548,7 @@ public class FormulaService {
         } catch (Exception e) {
             errorService.createError(new ErrorModel(
                     JwtService.getUser_idFromToken(jwt),
-                    "FORMULA STATISTIC",
+                    "FORMULA STATISTIC OF ALL TIME",
                     e.getMessage(),
                     new Date()));
             throw e;
