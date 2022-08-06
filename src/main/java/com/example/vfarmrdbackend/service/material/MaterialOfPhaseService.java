@@ -2,9 +2,11 @@ package com.example.vfarmrdbackend.service.material;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.vfarmrdbackend.model.material.MaterialOfPhase;
 import com.example.vfarmrdbackend.model.error.ErrorModel;
@@ -12,6 +14,7 @@ import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseUpdateRequest;
 import com.example.vfarmrdbackend.repository.material.MaterialOfPhaseRepository;
 import com.example.vfarmrdbackend.service.error.ErrorService;
+import com.example.vfarmrdbackend.service.file.FileService;
 import com.example.vfarmrdbackend.service.others.JwtService;
 
 @Service
@@ -21,6 +24,9 @@ public class MaterialOfPhaseService {
 
     @Autowired
     ErrorService errorService;
+
+    @Autowired
+    FileService fileService;
 
     public List<MaterialOfPhase> getAllMaterialOfPhase(int phase_id) {
         return materialOfPhaseRepository.getAllMaterialOfOnePhase(phase_id);
@@ -81,6 +87,20 @@ public class MaterialOfPhaseService {
             errorService.createError(new ErrorModel(
                     JwtService.getUser_idFromToken(jwt),
                     "MATERIAL GET ALL WITH PROJECT ID",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public Map<String, List<Integer>> uploadFileForMaterial(String jwt, List<MultipartFile> listFile,
+            String material_id) throws Exception {
+        try {
+            return fileService.uploadFile(listFile, "MATERIAL", material_id, jwt);
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "MATERIAL UPLOAD FILE",
                     e.getMessage(),
                     new Date()));
             throw e;
