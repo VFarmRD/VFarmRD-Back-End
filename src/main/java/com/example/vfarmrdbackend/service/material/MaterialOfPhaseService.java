@@ -3,6 +3,7 @@ package com.example.vfarmrdbackend.service.material;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.vfarmrdbackend.model.material.MaterialOfPhase;
 import com.example.vfarmrdbackend.model.error.ErrorModel;
+import com.example.vfarmrdbackend.model.file.File;
 import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseUpdateRequest;
 import com.example.vfarmrdbackend.payload.material.MaterialStatisticResponse;
@@ -121,6 +123,19 @@ public class MaterialOfPhaseService {
             errorService.createError(new ErrorModel(
                     JwtService.getUser_idFromToken(jwt),
                     "MATERIAL STATISTIC OF ALL TIME",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
+    public Stream<File> getFileByMaterial_id(String material_id, String jwt) {
+        try {
+            return fileService.getFileByMaterial_id(material_id, jwt);
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FILE GET MATERIAL",
                     e.getMessage(),
                     new Date()));
             throw e;

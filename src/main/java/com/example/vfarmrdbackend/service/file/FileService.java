@@ -179,4 +179,17 @@ public class FileService {
             throw e;
         }
     }
+
+    public Stream<File> getFileByMaterial_id(String material_id, String jwt) {
+        try {
+            return fileRepository.getFileByMaterial_id(material_id).stream();
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "FILE GET MATERIAL",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
 }

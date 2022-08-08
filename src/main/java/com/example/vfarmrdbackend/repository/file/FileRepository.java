@@ -31,4 +31,7 @@ public interface FileRepository extends JpaRepository<File, Integer> {
 
     @Query(value = "select * from files f where f.user_id = :user_id order by f.file_id desc limit 1", nativeQuery = true)
     File getNewFileUploadByUser(@Param("user_id") int user_id);
+
+    @Query(value = "select * from files f where lower(f.file_name) like lower(:material_id)", nativeQuery = true)
+    List<File> getFileByMaterial_id(@Param("material_id") String material_id);
 }
