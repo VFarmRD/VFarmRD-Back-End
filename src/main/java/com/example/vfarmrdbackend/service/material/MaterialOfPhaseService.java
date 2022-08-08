@@ -97,7 +97,7 @@ public class MaterialOfPhaseService {
     public Map<String, List<Integer>> uploadFileForMaterial(String jwt, List<MultipartFile> listFile,
             String material_id) throws Exception {
         try {
-            return fileService.uploadFile(listFile, "MATERIAL", material_id, jwt);
+            return fileService.uploadFile(listFile, "materials", material_id, jwt);
         } catch (Exception e) {
             errorService.createError(new ErrorModel(
                     JwtService.getUser_idFromToken(jwt),
