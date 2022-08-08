@@ -90,6 +90,28 @@ public class TaskService {
         for (int i = 0; i < listTasks.size(); i++) {
             Task task = listTasks.get(i);
             TaskGetResponse newTaskInfo = new TaskGetResponse();
+            newTaskInfo.setTask_id(task.getTask_id());
+            newTaskInfo.setTask_name(task.getTask_name());
+            newTaskInfo.setUser_id(task.getUser_id());
+            newTaskInfo.setUser_name(requestUser.getUser_name());
+            newTaskInfo.setUser_role(requestUser.getRole_name());
+            newTaskInfo.setProject_id(task.getProject_id());
+            newTaskInfo.setCreated_date(task.getCreated_date());
+            newTaskInfo.setStart_date(task.getStart_date());
+            newTaskInfo.setEstimated_date(task.getEstimated_date());
+            newTaskInfo.setTask_status(task.getTask_status());
+            newTaskInfo.setDescription(task.getDescription());
+            listTasksResponse.add(newTaskInfo);
+        }
+        return listTasksResponse;
+    }
+
+    public List<TaskGetResponse> getAllTasksWithUser_id(int user_id) {
+        List<Task> listTasks = taskRepository.getAllTasksWithUser_id(user_id);
+        List<TaskGetResponse> listTasksResponse = new ArrayList<>();
+        for (int i = 0; i < listTasks.size(); i++) {
+            Task task = listTasks.get(i);
+            TaskGetResponse newTaskInfo = new TaskGetResponse();
             User user = userRepository.getUserByUser_id(task.getUser_id());
             newTaskInfo.setTask_id(task.getTask_id());
             newTaskInfo.setTask_name(task.getTask_name());
@@ -107,8 +129,50 @@ public class TaskService {
         return listTasksResponse;
     }
 
-    public List<Task> getAllTasksWithUser_id(int user_id) {
-        return taskRepository.getAllTasksWithUser_id(user_id);
+    public List<TaskGetResponse> getAllTasksWithProject_id(int project_id) {
+        List<Task> listTasks = taskRepository.getAllTasksWithProject_id(project_id);
+        List<TaskGetResponse> listTasksResponse = new ArrayList<>();
+        for (int i = 0; i < listTasks.size(); i++) {
+            Task task = listTasks.get(i);
+            TaskGetResponse newTaskInfo = new TaskGetResponse();
+            User user = userRepository.getUserByUser_id(task.getUser_id());
+            newTaskInfo.setTask_id(task.getTask_id());
+            newTaskInfo.setTask_name(task.getTask_name());
+            newTaskInfo.setUser_id(task.getUser_id());
+            newTaskInfo.setUser_name(user.getUser_name());
+            newTaskInfo.setUser_role(user.getRole_name());
+            newTaskInfo.setProject_id(task.getProject_id());
+            newTaskInfo.setCreated_date(task.getCreated_date());
+            newTaskInfo.setStart_date(task.getStart_date());
+            newTaskInfo.setEstimated_date(task.getEstimated_date());
+            newTaskInfo.setTask_status(task.getTask_status());
+            newTaskInfo.setDescription(task.getDescription());
+            listTasksResponse.add(newTaskInfo);
+        }
+        return listTasksResponse;
+    }
+
+    public List<TaskGetResponse> getAllTasksWithProject_idAndUser_id(int project_id, int user_id) {
+        List<Task> listTasks = taskRepository.getAllTasksWithProject_idAndUser_id(project_id, user_id);
+        List<TaskGetResponse> listTasksResponse = new ArrayList<>();
+        for (int i = 0; i < listTasks.size(); i++) {
+            Task task = listTasks.get(i);
+            TaskGetResponse newTaskInfo = new TaskGetResponse();
+            User user = userRepository.getUserByUser_id(task.getUser_id());
+            newTaskInfo.setTask_id(task.getTask_id());
+            newTaskInfo.setTask_name(task.getTask_name());
+            newTaskInfo.setUser_id(task.getUser_id());
+            newTaskInfo.setUser_name(user.getUser_name());
+            newTaskInfo.setUser_role(user.getRole_name());
+            newTaskInfo.setProject_id(task.getProject_id());
+            newTaskInfo.setCreated_date(task.getCreated_date());
+            newTaskInfo.setStart_date(task.getStart_date());
+            newTaskInfo.setEstimated_date(task.getEstimated_date());
+            newTaskInfo.setTask_status(task.getTask_status());
+            newTaskInfo.setDescription(task.getDescription());
+            listTasksResponse.add(newTaskInfo);
+        }
+        return listTasksResponse;
     }
 
     public Task getTaskByTask_id(int task_id) {

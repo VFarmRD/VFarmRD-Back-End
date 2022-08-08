@@ -139,4 +139,30 @@ public class TaskController {
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
+
+    @GetMapping("/tasks/filter")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
+    public ResponseEntity<?> getAllTasksWithProject_idAndUser_id(@RequestHeader("Authorization") String jwt,
+            @RequestParam(defaultValue = "0", required = false) int project_id,
+            @RequestParam(defaultValue = "0", required = false) int user_id) {
+        try {
+            if (project_id != 0 && user_id != 0) {
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(taskService.getAllTasksWithProject_idAndUser_id(project_id, user_id));
+            } else if (user_id != 0) {
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(taskService.getAllTasksWithUser_id(user_id));
+            } else if (project_id != 0) {
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(taskService.getAllTasksWithProject_id(project_id));
+            } else {
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(taskService.getAllTasks(JwtService.getUser_idFromToken(jwt)));
+
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
 }
