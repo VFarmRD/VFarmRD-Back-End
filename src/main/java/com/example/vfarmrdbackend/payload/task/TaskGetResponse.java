@@ -9,6 +9,7 @@ public class TaskGetResponse {
     private String user_name;
     private String user_role;
     private int project_id;
+    private String project_name;
     private Date created_date;
     private Date start_date;
     private Date estimated_date;
@@ -104,6 +105,14 @@ public class TaskGetResponse {
 
     public void setStart_date(Date start_date) {
         this.start_date = start_date;
+    }
+
+    public String getProject_name() {
+        return project_name;
+    }
+
+    public void setProject_name(String project_name) {
+        this.project_name = project_name;
     }
 
 }

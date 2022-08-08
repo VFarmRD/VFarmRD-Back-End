@@ -17,6 +17,7 @@ import com.example.vfarmrdbackend.model.log.Log;
 import com.example.vfarmrdbackend.model.notification.Notification;
 import com.example.vfarmrdbackend.model.task.Task;
 import com.example.vfarmrdbackend.model.user.User;
+import com.example.vfarmrdbackend.payload.project.ProjectGetResponse;
 import com.example.vfarmrdbackend.payload.task.TaskCreateRequest;
 import com.example.vfarmrdbackend.payload.task.TaskUpdateRequest;
 import com.example.vfarmrdbackend.payload.task.TaskGetResponse;
@@ -78,24 +79,26 @@ public class TaskService {
         }
     }
 
-    public List<TaskGetResponse> getAllTasks(int user_id) {
+    public List<TaskGetResponse> getAllTasks(String jwt) {
         List<Task> listTasks = new ArrayList<>();
         List<TaskGetResponse> listTasksResponse = new ArrayList<>();
-        User requestUser = userRepository.getUserByUser_id(user_id);
+        User requestUser = userRepository.getUserByUser_id(JwtService.getUser_idFromToken(jwt));
         if (requestUser.getRole_name().equals("staff")) {
-            listTasks = taskRepository.getAllTasksWithUser_id(user_id);
+            listTasks = taskRepository.getAllTasksWithUser_id(JwtService.getUser_idFromToken(jwt));
         } else {
             listTasks = taskRepository.findAll();
         }
         for (int i = 0; i < listTasks.size(); i++) {
             Task task = listTasks.get(i);
             TaskGetResponse newTaskInfo = new TaskGetResponse();
+            ProjectGetResponse project = projectService.getProjectByProject_id(task.getProject_id(), jwt);
             newTaskInfo.setTask_id(task.getTask_id());
             newTaskInfo.setTask_name(task.getTask_name());
             newTaskInfo.setUser_id(task.getUser_id());
             newTaskInfo.setUser_name(requestUser.getUser_name());
             newTaskInfo.setUser_role(requestUser.getRole_name());
             newTaskInfo.setProject_id(task.getProject_id());
+            newTaskInfo.setProject_name(project.getProject_name());
             newTaskInfo.setCreated_date(task.getCreated_date());
             newTaskInfo.setStart_date(task.getStart_date());
             newTaskInfo.setEstimated_date(task.getEstimated_date());
@@ -106,19 +109,21 @@ public class TaskService {
         return listTasksResponse;
     }
 
-    public List<TaskGetResponse> getAllTasksWithUser_id(int user_id) {
+    public List<TaskGetResponse> getAllTasksWithUser_id(int user_id, String jwt) {
         List<Task> listTasks = taskRepository.getAllTasksWithUser_id(user_id);
         List<TaskGetResponse> listTasksResponse = new ArrayList<>();
         for (int i = 0; i < listTasks.size(); i++) {
             Task task = listTasks.get(i);
             TaskGetResponse newTaskInfo = new TaskGetResponse();
             User user = userRepository.getUserByUser_id(task.getUser_id());
+            ProjectGetResponse project = projectService.getProjectByProject_id(task.getProject_id(), jwt);
             newTaskInfo.setTask_id(task.getTask_id());
             newTaskInfo.setTask_name(task.getTask_name());
             newTaskInfo.setUser_id(task.getUser_id());
             newTaskInfo.setUser_name(user.getUser_name());
             newTaskInfo.setUser_role(user.getRole_name());
             newTaskInfo.setProject_id(task.getProject_id());
+            newTaskInfo.setProject_name(project.getProject_name());
             newTaskInfo.setCreated_date(task.getCreated_date());
             newTaskInfo.setStart_date(task.getStart_date());
             newTaskInfo.setEstimated_date(task.getEstimated_date());
@@ -129,19 +134,21 @@ public class TaskService {
         return listTasksResponse;
     }
 
-    public List<TaskGetResponse> getAllTasksWithProject_id(int project_id) {
+    public List<TaskGetResponse> getAllTasksWithProject_id(int project_id, String jwt) {
         List<Task> listTasks = taskRepository.getAllTasksWithProject_id(project_id);
         List<TaskGetResponse> listTasksResponse = new ArrayList<>();
         for (int i = 0; i < listTasks.size(); i++) {
             Task task = listTasks.get(i);
             TaskGetResponse newTaskInfo = new TaskGetResponse();
             User user = userRepository.getUserByUser_id(task.getUser_id());
+            ProjectGetResponse project = projectService.getProjectByProject_id(task.getProject_id(), jwt);
             newTaskInfo.setTask_id(task.getTask_id());
             newTaskInfo.setTask_name(task.getTask_name());
             newTaskInfo.setUser_id(task.getUser_id());
             newTaskInfo.setUser_name(user.getUser_name());
             newTaskInfo.setUser_role(user.getRole_name());
             newTaskInfo.setProject_id(task.getProject_id());
+            newTaskInfo.setProject_name(project.getProject_name());
             newTaskInfo.setCreated_date(task.getCreated_date());
             newTaskInfo.setStart_date(task.getStart_date());
             newTaskInfo.setEstimated_date(task.getEstimated_date());
@@ -152,19 +159,21 @@ public class TaskService {
         return listTasksResponse;
     }
 
-    public List<TaskGetResponse> getAllTasksWithProject_idAndUser_id(int project_id, int user_id) {
+    public List<TaskGetResponse> getAllTasksWithProject_idAndUser_id(int project_id, int user_id, String jwt) {
         List<Task> listTasks = taskRepository.getAllTasksWithProject_idAndUser_id(project_id, user_id);
         List<TaskGetResponse> listTasksResponse = new ArrayList<>();
         for (int i = 0; i < listTasks.size(); i++) {
             Task task = listTasks.get(i);
             TaskGetResponse newTaskInfo = new TaskGetResponse();
             User user = userRepository.getUserByUser_id(task.getUser_id());
+            ProjectGetResponse project = projectService.getProjectByProject_id(task.getProject_id(), jwt);
             newTaskInfo.setTask_id(task.getTask_id());
             newTaskInfo.setTask_name(task.getTask_name());
             newTaskInfo.setUser_id(task.getUser_id());
             newTaskInfo.setUser_name(user.getUser_name());
             newTaskInfo.setUser_role(user.getRole_name());
             newTaskInfo.setProject_id(task.getProject_id());
+            newTaskInfo.setProject_name(project.getProject_name());
             newTaskInfo.setCreated_date(task.getCreated_date());
             newTaskInfo.setStart_date(task.getStart_date());
             newTaskInfo.setEstimated_date(task.getEstimated_date());

@@ -23,7 +23,6 @@ import com.example.vfarmrdbackend.payload.task.TaskUpdateRequest;
 import com.example.vfarmrdbackend.payload.others.MessageResponse;
 import com.example.vfarmrdbackend.payload.task.TaskGetResponse;
 import com.example.vfarmrdbackend.service.task.TaskService;
-import com.example.vfarmrdbackend.service.others.JwtService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,7 +39,7 @@ public class TaskController {
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllTasks(@RequestHeader("Authorization") String jwt) {
         try {
-            List<TaskGetResponse> listTasks = taskService.getAllTasks(JwtService.getUser_idFromToken(jwt));
+            List<TaskGetResponse> listTasks = taskService.getAllTasks(jwt);
             if (listTasks != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(listTasks);
             } else {
@@ -148,16 +147,16 @@ public class TaskController {
         try {
             if (project_id != 0 && user_id != 0) {
                 return ResponseEntity.status(HttpStatus.OK)
-                        .body(taskService.getAllTasksWithProject_idAndUser_id(project_id, user_id));
+                        .body(taskService.getAllTasksWithProject_idAndUser_id(project_id, user_id, jwt));
             } else if (user_id != 0) {
                 return ResponseEntity.status(HttpStatus.OK)
-                        .body(taskService.getAllTasksWithUser_id(user_id));
+                        .body(taskService.getAllTasksWithUser_id(user_id, jwt));
             } else if (project_id != 0) {
                 return ResponseEntity.status(HttpStatus.OK)
-                        .body(taskService.getAllTasksWithProject_id(project_id));
+                        .body(taskService.getAllTasksWithProject_id(project_id, jwt));
             } else {
                 return ResponseEntity.status(HttpStatus.OK)
-                        .body(taskService.getAllTasks(JwtService.getUser_idFromToken(jwt)));
+                        .body(taskService.getAllTasks(jwt));
 
             }
         } catch (Exception e) {
