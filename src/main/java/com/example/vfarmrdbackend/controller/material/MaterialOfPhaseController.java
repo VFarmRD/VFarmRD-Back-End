@@ -134,4 +134,17 @@ public class MaterialOfPhaseController {
         }
     }
 
+    @GetMapping("/materials/statistics")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
+    public ResponseEntity<?> getMaterialStatistics(
+            @RequestHeader("Authorization") String jwt) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    materialOfPhaseService.getMaterialStatisticsOfAllTime(jwt));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
 }

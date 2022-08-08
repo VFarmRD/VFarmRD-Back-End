@@ -12,6 +12,7 @@ import com.example.vfarmrdbackend.model.material.MaterialOfPhase;
 import com.example.vfarmrdbackend.model.error.ErrorModel;
 import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseCreateRequest;
 import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.material.MaterialStatisticResponse;
 import com.example.vfarmrdbackend.repository.material.MaterialOfPhaseRepository;
 import com.example.vfarmrdbackend.service.error.ErrorService;
 import com.example.vfarmrdbackend.service.file.FileService;
@@ -106,4 +107,24 @@ public class MaterialOfPhaseService {
             throw e;
         }
     }
+
+    public MaterialStatisticResponse getMaterialStatisticsOfAllTime(String jwt) {
+        try {
+            return new MaterialStatisticResponse(materialOfPhaseRepository.getTotalMaterialUsed(),
+                    materialOfPhaseRepository.getMostMaterial_idUsed(),
+                    materialOfPhaseRepository.getMostMaterial_idUsedTime(),
+                    materialOfPhaseRepository.getTop10MaterialMostUsedByPercent(),
+                    materialOfPhaseRepository.getTop10MaterialMostUsedTimeByPercent(),
+                    materialOfPhaseRepository.getTop10MaterialMostUsedByWeight(),
+                    materialOfPhaseRepository.getTop10MaterialMostUsedTimeByWeight());
+        } catch (Exception e) {
+            errorService.createError(new ErrorModel(
+                    JwtService.getUser_idFromToken(jwt),
+                    "MATERIAL STATISTIC OF ALL TIME",
+                    e.getMessage(),
+                    new Date()));
+            throw e;
+        }
+    }
+
 }

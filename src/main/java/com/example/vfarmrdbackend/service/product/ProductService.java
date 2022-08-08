@@ -212,13 +212,16 @@ public class ProductService {
             }
             List<ProductStatisticsFromDateToDateResponse> listResponses = new ArrayList<>();
             for (int i = 0; i < listResponses.size(); i++) {
-                listResponses.add(new ProductStatisticsFromDateToDateResponse(listResponses.get(i).toString(),
-                        productRepository.getTotalProductFromDateToDate(totalDates.get(i) + " 00:00:00",
-                                totalDates.get(i) + " 23:59:59"),
-                        productRepository.getTotalProductActivatedFromDateToDate(totalDates.get(i) + " 00:00:00",
-                                totalDates.get(i) + " 23:59:59"),
-                        productRepository.getTotalProductDeactivatedFromDateToDate(totalDates.get(i) + " 00:00:00",
-                                totalDates.get(i) + " 23:59:59")));
+                if (productRepository.getTotalProductFromDateToDate(totalDates.get(i) + " 00:00:00",
+                        totalDates.get(i) + " 23:59:59") != 0) {
+                    listResponses.add(new ProductStatisticsFromDateToDateResponse(listResponses.get(i).toString(),
+                            productRepository.getTotalProductFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59"),
+                            productRepository.getTotalProductActivatedFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59"),
+                            productRepository.getTotalProductDeactivatedFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59")));
+                }
             }
             return listResponses;
         } catch (Exception e) {

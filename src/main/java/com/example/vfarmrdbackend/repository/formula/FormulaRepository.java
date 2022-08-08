@@ -44,7 +44,7 @@ public interface FormulaRepository extends JpaRepository<Formula, Integer> {
         @Query(value = "SELECT COUNT(*) FROM formulas f where (f.created_time between :from_date and :to_date);", nativeQuery = true)
         int getTotalFormulaFromDateToDate(@Param("from_date") String from_date, @Param("to_date") String to_date);
 
-        @Query(value = "SELECT COUNT(*) FROM formulas f where month(f.created_time) = :month and year(f.created_time) = :year;", nativeQuery = true)
+        @Query(value = "SELECT COUNT(*) FROM formulas f where month(f.created_time) = :month and year(f.created_time) = :year ;", nativeQuery = true)
         int getTotalFormulaWithMonthAndYear(@Param("month") int month, @Param("year") int year);
 
         @Query(value = "SELECT COUNT(*) FROM formulas f where f.formula_status = 'pending';", nativeQuery = true)

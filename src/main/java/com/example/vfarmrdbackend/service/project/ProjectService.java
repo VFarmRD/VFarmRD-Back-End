@@ -330,15 +330,18 @@ public class ProjectService {
             }
             List<ProjectStatisticsFromDateToDateResponse> listResponses = new ArrayList<>();
             for (int i = 0; i < listResponses.size(); i++) {
-                listResponses.add(new ProjectStatisticsFromDateToDateResponse(listResponses.get(i).toString(),
-                        projectRepository.getTotalProjectFromDateToDate(totalDates.get(i) + " 00:00:00",
-                                totalDates.get(i) + " 23:59:59"),
-                        projectRepository.getTotalProjectRunningFromDateToDate(totalDates.get(i) + " 00:00:00",
-                                totalDates.get(i) + " 23:59:59"),
-                        projectRepository.getTotalProjectCanceledFromDateToDate(totalDates.get(i) + " 00:00:00",
-                                totalDates.get(i) + " 23:59:59"),
-                        projectRepository.getTotalProjectHaveProductFromDateToDate(totalDates.get(i) + " 00:00:00",
-                                totalDates.get(i) + " 23:59:59")));
+                if (projectRepository.getTotalProjectFromDateToDate(totalDates.get(i) + " 00:00:00",
+                        totalDates.get(i) + " 23:59:59") != 0) {
+                    listResponses.add(new ProjectStatisticsFromDateToDateResponse(listResponses.get(i).toString(),
+                            projectRepository.getTotalProjectFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59"),
+                            projectRepository.getTotalProjectRunningFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59"),
+                            projectRepository.getTotalProjectCanceledFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59"),
+                            projectRepository.getTotalProjectHaveProductFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59")));
+                }
             }
             return listResponses;
         } catch (Exception e) {

@@ -50,7 +50,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
         int getTotalProductFromDateToDate(@Param("from_date") String from_date,
                         @Param("to_date") String to_date);
 
-        @Query(value = "SELECT COUNT(*) FROM products p where month(p.created_time) = :month and year(p.created_time) = :year;", nativeQuery = true)
+        @Query(value = "SELECT COUNT(*) FROM products p where month(p.created_time) = :month and year(p.created_time) = :year ;", nativeQuery = true)
         int getTotalProductWithMonthAndYear(@Param("month") int month, @Param("year") int year);
 
         @Query(value = "SELECT COUNT(*) FROM products p where p.product_status = 'activated';", nativeQuery = true)

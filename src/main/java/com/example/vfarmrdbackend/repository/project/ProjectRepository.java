@@ -33,7 +33,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
         int getTotalProjectFromDateToDate(@Param("from_date") String from_date,
                         @Param("to_date") String to_date);
 
-        @Query(value = "SELECT COUNT(*) FROM projects p where month(p.created_time) = :month and year(p.created_time) = :year;", nativeQuery = true)
+        @Query(value = "SELECT COUNT(*) FROM projects p where month(p.created_time) = :month and year(p.created_time) = :year ;", nativeQuery = true)
         int getTotalProjectWithMonthAndYear(@Param("month") int month, @Param("year") int year);
 
         @Query(value = "SELECT COUNT(*) FROM projects p where p.project_status = 'running';", nativeQuery = true)

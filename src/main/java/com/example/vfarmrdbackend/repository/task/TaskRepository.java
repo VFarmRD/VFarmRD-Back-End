@@ -25,7 +25,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
         int getTotalTaskFromDateToDate(@Param("from_date") String from_date,
                         @Param("to_date") String to_date);
 
-        @Query(value = "SELECT COUNT(*) FROM tasks t where month(t.created_date) = :month and year(t.created_date) = :year;", nativeQuery = true)
+        @Query(value = "SELECT COUNT(*) FROM tasks t where month(t.created_date) = :month and year(t.created_date) = :year ;", nativeQuery = true)
         int getTotalTaskWithMonthAndYear(@Param("month") int month, @Param("year") int year);
 
         @Query(value = "SELECT COUNT(*) FROM tasks t where t.task_status = 'doing';", nativeQuery = true)

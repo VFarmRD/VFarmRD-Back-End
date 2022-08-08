@@ -204,11 +204,18 @@ public class TaskService {
             }
             List<TaskStatisticsFromDateToDateResponse> listResponses = new ArrayList<>();
             for (int i = 0; i < listResponses.size(); i++) {
-                listResponses.add(new TaskStatisticsFromDateToDateResponse(listResponses.get(i).toString(),
-                        taskRepository.getTotalTaskFromDateToDate(from_date, to_date),
-                        taskRepository.getTotalTaskDoingFromDateToDate(from_date, to_date),
-                        taskRepository.getTotalTaskDoneFromDateToDate(from_date, to_date),
-                        taskRepository.getTotalTaskOvertimeFromDateToDate(from_date, to_date)));
+                if (taskRepository.getTotalTaskFromDateToDate(totalDates.get(i) + " 00:00:00",
+                        totalDates.get(i) + " 23:59:59") != 0) {
+                    listResponses.add(new TaskStatisticsFromDateToDateResponse(listResponses.get(i).toString(),
+                            taskRepository.getTotalTaskFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59"),
+                            taskRepository.getTotalTaskDoingFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59"),
+                            taskRepository.getTotalTaskDoneFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59"),
+                            taskRepository.getTotalTaskOvertimeFromDateToDate(totalDates.get(i) + " 00:00:00",
+                                    totalDates.get(i) + " 23:59:59")));
+                }
             }
             return listResponses;
         } catch (Exception e) {
