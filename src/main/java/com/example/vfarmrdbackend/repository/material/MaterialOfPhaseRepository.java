@@ -25,7 +25,7 @@ public interface MaterialOfPhaseRepository extends JpaRepository<MaterialOfPhase
         @Query(value = "select distinct m.material_id from materialofphase m where m.phase_id in (select p.phase_id from phases p join Materials f where p.Material_id = f.Material_id and f.project_id = :project_id); ", nativeQuery = true)
         List<String> getAllMaterial_idWithProject_id(@Param("project_id") int project_id);
 
-        @Query(value = "SELECT count(*) FROM materialofphase m group by m.material_id ;", nativeQuery = true)
+        @Query(value = "SELECT count(distinct m.material_id) FROM materialofphase m;", nativeQuery = true)
         int getTotalMaterialUsed();
 
         @Query(value = "SELECT material_id from materialofphase m group by m.material_id order by count(m.material_id) desc limit 1;", nativeQuery = true)
