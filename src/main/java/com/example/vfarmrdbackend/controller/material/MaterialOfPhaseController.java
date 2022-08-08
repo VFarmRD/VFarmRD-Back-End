@@ -122,7 +122,6 @@ public class MaterialOfPhaseController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> uploadFileForMaterial(@RequestParam("file") List<MultipartFile> listFile,
-            @RequestParam("object_type") String object_type,
             @PathVariable("material_id") String material_id,
             @RequestHeader("Authorization") String jwt) {
         try {
