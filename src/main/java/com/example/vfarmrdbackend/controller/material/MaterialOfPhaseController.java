@@ -149,8 +149,7 @@ public class MaterialOfPhaseController {
     @GetMapping("/materials/{material_id}/get-file")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getFileByMaterial_id(@RequestParam("file") List<MultipartFile> listFile,
-            @PathVariable("material_id") String material_id,
+    public ResponseEntity<?> getFileByMaterial_id(@PathVariable("material_id") String material_id,
             @RequestHeader("Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
