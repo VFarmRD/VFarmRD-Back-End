@@ -146,7 +146,7 @@ public class UserController {
     }
 
     @PutMapping("/users/update")
-    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
