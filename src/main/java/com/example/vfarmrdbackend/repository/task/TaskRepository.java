@@ -12,6 +12,9 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
         @Query(value = "select * from tasks t where t.task_id = :task_id", nativeQuery = true)
         Task getTaskByTask_id(@Param("task_id") int task_id);
 
+        @Query(value = "select * from tasks t where t.task_status like :task_status ", nativeQuery = true)
+        List<Task> getAllTasksWithTask_status(@Param("task_status") String task_status);
+
         @Query(value = "select * from tasks t where t.user_id = :user_id and t.task_status like :task_status ", nativeQuery = true)
         List<Task> getAllTasksWithUser_id(@Param("user_id") int user_id, @Param("task_status") String task_status);
 

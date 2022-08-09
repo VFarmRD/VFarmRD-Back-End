@@ -87,7 +87,7 @@ public class TaskService {
             listTasks = taskRepository.getAllTasksWithUser_id(JwtService.getUser_idFromToken(jwt),
                     "%" + task_status + "%");
         } else {
-            listTasks = taskRepository.findAll();
+            listTasks = taskRepository.getAllTasksWithTask_status("%" + task_status + "%");
         }
         for (int i = 0; i < listTasks.size(); i++) {
             Task task = listTasks.get(i);
