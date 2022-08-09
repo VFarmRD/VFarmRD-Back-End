@@ -84,7 +84,7 @@ public class TaskService {
         List<TaskGetResponse> listTasksResponse = new ArrayList<>();
         User requestUser = userRepository.getUserByUser_id(JwtService.getUser_idFromToken(jwt));
         if (requestUser.getRole_name().equals("staff")) {
-            listTasks = taskRepository.getAllTasksWithUser_id(JwtService.getUser_idFromToken(jwt));
+            listTasks = taskRepository.getAllTasksWithUser_id(JwtService.getUser_idFromToken(jwt), "%");
         } else {
             listTasks = taskRepository.findAll();
         }
@@ -109,8 +109,8 @@ public class TaskService {
         return listTasksResponse;
     }
 
-    public List<TaskGetResponse> getAllTasksWithUser_id(int user_id, String jwt) {
-        List<Task> listTasks = taskRepository.getAllTasksWithUser_id(user_id);
+    public List<TaskGetResponse> getAllTasksWithUser_id(int user_id, String task_status, String jwt) {
+        List<Task> listTasks = taskRepository.getAllTasksWithUser_id(user_id, "%" + task_status + "%");
         List<TaskGetResponse> listTasksResponse = new ArrayList<>();
         for (int i = 0; i < listTasks.size(); i++) {
             Task task = listTasks.get(i);
@@ -134,8 +134,8 @@ public class TaskService {
         return listTasksResponse;
     }
 
-    public List<TaskGetResponse> getAllTasksWithProject_id(int project_id, String jwt) {
-        List<Task> listTasks = taskRepository.getAllTasksWithProject_id(project_id);
+    public List<TaskGetResponse> getAllTasksWithProject_id(int project_id, String task_status, String jwt) {
+        List<Task> listTasks = taskRepository.getAllTasksWithProject_id(project_id, "%" + task_status + "%");
         List<TaskGetResponse> listTasksResponse = new ArrayList<>();
         for (int i = 0; i < listTasks.size(); i++) {
             Task task = listTasks.get(i);
@@ -159,8 +159,10 @@ public class TaskService {
         return listTasksResponse;
     }
 
-    public List<TaskGetResponse> getAllTasksWithProject_idAndUser_id(int project_id, int user_id, String jwt) {
-        List<Task> listTasks = taskRepository.getAllTasksWithProject_idAndUser_id(project_id, user_id);
+    public List<TaskGetResponse> getAllTasksWithProject_idAndUser_id(int project_id, int user_id, String task_status,
+            String jwt) {
+        List<Task> listTasks = taskRepository.getAllTasksWithProject_idAndUser_id(project_id, user_id,
+                "%" + task_status + "%");
         List<TaskGetResponse> listTasksResponse = new ArrayList<>();
         for (int i = 0; i < listTasks.size(); i++) {
             Task task = listTasks.get(i);
@@ -315,5 +317,20 @@ public class TaskService {
                     new Date()));
             throw e;
         }
+    }
+
+    public boolean setTaskStatusIfDone(int task_id, String jwt) {
+        Task updateTask = taskRepository.getTaskByTask_id(task_id);
+        if (updateTask != null) {
+            updateTask.setTask_status("done");
+            taskRepository.save(updateTask);
+            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                    "TASK",
+                    "UPDATE",
+                    String.valueOf(task_id),
+                    new Date()));
+            return true;
+        }
+        return false;
     }
 }
