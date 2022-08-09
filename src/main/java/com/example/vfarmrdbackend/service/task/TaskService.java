@@ -79,12 +79,13 @@ public class TaskService {
         }
     }
 
-    public List<TaskGetResponse> getAllTasks(String jwt) {
+    public List<TaskGetResponse> getAllTasks(String task_status, String jwt) {
         List<Task> listTasks = new ArrayList<>();
         List<TaskGetResponse> listTasksResponse = new ArrayList<>();
         User requestUser = userRepository.getUserByUser_id(JwtService.getUser_idFromToken(jwt));
         if (requestUser.getRole_name().equals("staff")) {
-            listTasks = taskRepository.getAllTasksWithUser_id(JwtService.getUser_idFromToken(jwt), "%");
+            listTasks = taskRepository.getAllTasksWithUser_id(JwtService.getUser_idFromToken(jwt),
+                    "%" + task_status + "%");
         } else {
             listTasks = taskRepository.findAll();
         }

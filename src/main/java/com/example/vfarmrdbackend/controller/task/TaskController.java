@@ -39,7 +39,7 @@ public class TaskController {
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllTasks(@RequestHeader("Authorization") String jwt) {
         try {
-            List<TaskGetResponse> listTasks = taskService.getAllTasks(jwt);
+            List<TaskGetResponse> listTasks = taskService.getAllTasks("%", jwt);
             if (listTasks != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(listTasks);
             } else {
@@ -157,7 +157,7 @@ public class TaskController {
                         .body(taskService.getAllTasksWithProject_id(project_id, task_status, jwt));
             } else {
                 return ResponseEntity.status(HttpStatus.OK)
-                        .body(taskService.getAllTasks(jwt));
+                        .body(taskService.getAllTasks(task_status, jwt));
 
             }
         } catch (Exception e) {
