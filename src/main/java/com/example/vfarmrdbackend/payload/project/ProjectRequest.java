@@ -8,6 +8,7 @@ public class ProjectRequest {
     private int assigned_user_id;
     private String project_code;
     private String requirement;
+    private Date start_date;
     private Date complete_date;
     private float estimated_weight;
 
@@ -68,6 +69,14 @@ public class ProjectRequest {
 
     public void setEstimated_weight(float estimated_weight) {
         this.estimated_weight = estimated_weight;
+    }
+
+    public Date getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(Date start_date) {
+        this.start_date = start_date;
     }
 
 }

@@ -14,6 +14,7 @@ public class ProjectGetResponse {
     private String requirement;
     private Date created_time;
     private Date modified_time;
+    private Date start_date;
     private Date complete_date;
     private float estimated_weight;
     private String project_status;
@@ -131,6 +132,14 @@ public class ProjectGetResponse {
 
     public void setProject_id(int project_id) {
         this.project_id = project_id;
+    }
+
+    public Date getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(Date start_date) {
+        this.start_date = start_date;
     }
 
 }

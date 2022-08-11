@@ -65,7 +65,8 @@ public class ProjectService {
             response.setAssigned_user_id(project.getAssigned_user_id());
             response.setAssigned_user_name(userService.getUserInfo(project.getAssigned_user_id()).getFullname());
             response.setProject_code(project.getProject_code());
-            response.setCreated_time(new Date());
+            response.setCreated_time(project.getCreated_time());
+            response.setStart_date(project.getStart_date());
             response.setComplete_date(project.getComplete_date());
             response.setProject_status(project.getProject_status());
             response.setRequirement(project.getRequirement());
@@ -89,21 +90,25 @@ public class ProjectService {
             List<ProjectGetResponse> listResponse = new ArrayList<>();
             for (int i = 0; i < listProject.size(); i++) {
                 Project project = listProject.get(i);
-                ProjectGetResponse response = new ProjectGetResponse();
-                response.setProject_id(project.getProject_id());
-                response.setProject_name(project.getProject_name());
-                response.setClient_id(project.getClient_id());
-                response.setCreated_user_id(project.getCreated_user_id());
-                response.setCreated_user_name(userService.getUserInfo(project.getCreated_user_id()).getFullname());
-                response.setAssigned_user_id(project.getAssigned_user_id());
-                response.setAssigned_user_name(userService.getUserInfo(project.getAssigned_user_id()).getFullname());
-                response.setProject_code(project.getProject_code());
-                response.setCreated_time(new Date());
-                response.setComplete_date(project.getComplete_date());
-                response.setProject_status(project.getProject_status());
-                response.setRequirement(project.getRequirement());
-                response.setEstimated_weight(project.getEstimated_weight());
-                listResponse.add(response);
+                if (new Date().after(project.getStart_date())) {
+                    ProjectGetResponse response = new ProjectGetResponse();
+                    response.setProject_id(project.getProject_id());
+                    response.setProject_name(project.getProject_name());
+                    response.setClient_id(project.getClient_id());
+                    response.setCreated_user_id(project.getCreated_user_id());
+                    response.setCreated_user_name(userService.getUserInfo(project.getCreated_user_id()).getFullname());
+                    response.setAssigned_user_id(project.getAssigned_user_id());
+                    response.setAssigned_user_name(
+                            userService.getUserInfo(project.getAssigned_user_id()).getFullname());
+                    response.setProject_code(project.getProject_code());
+                    response.setCreated_time(project.getCreated_time());
+                    response.setStart_date(project.getStart_date());
+                    response.setComplete_date(project.getComplete_date());
+                    response.setProject_status(project.getProject_status());
+                    response.setRequirement(project.getRequirement());
+                    response.setEstimated_weight(project.getEstimated_weight());
+                    listResponse.add(response);
+                }
             }
             return listResponse;
         } catch (Exception e) {
@@ -132,7 +137,7 @@ public class ProjectService {
                 response.setAssigned_user_id(project.getAssigned_user_id());
                 response.setAssigned_user_name(userService.getUserInfo(project.getAssigned_user_id()).getFullname());
                 response.setProject_code(project.getProject_code());
-                response.setCreated_time(new Date());
+                response.setCreated_time(project.getCreated_time());
                 response.setComplete_date(project.getComplete_date());
                 response.setProject_status(project.getProject_status());
                 response.setRequirement(project.getRequirement());
@@ -160,6 +165,7 @@ public class ProjectService {
             newProject.setProject_code(request.getProject_code());
             newProject.setCreated_time(new Date());
             newProject.setProject_status("running");
+            newProject.setStart_date(request.getStart_date());
             newProject.setComplete_date(request.getComplete_date());
             newProject.setRequirement(request.getRequirement());
             newProject.setEstimated_weight(request.getEstimated_weight());
@@ -188,6 +194,7 @@ public class ProjectService {
             updateProject.setAssigned_user_id(request.getAssigned_user_id());
             updateProject.setProject_code(request.getProject_code());
             updateProject.setModified_time(new Date());
+            updateProject.setStart_date(request.getStart_date());
             updateProject.setComplete_date(request.getComplete_date());
             updateProject.setRequirement(request.getRequirement());
             updateProject.setEstimated_weight(request.getEstimated_weight());
@@ -284,7 +291,8 @@ public class ProjectService {
                 response.setAssigned_user_id(project.getAssigned_user_id());
                 response.setAssigned_user_name(userService.getUserInfo(project.getAssigned_user_id()).getFullname());
                 response.setProject_code(project.getProject_code());
-                response.setCreated_time(new Date());
+                response.setCreated_time(project.getCreated_time());
+                response.setStart_date(project.getStart_date());
                 response.setComplete_date(project.getComplete_date());
                 response.setProject_status(project.getProject_status());
                 response.setRequirement(project.getRequirement());
@@ -385,7 +393,8 @@ public class ProjectService {
                 response.setAssigned_user_id(project.getAssigned_user_id());
                 response.setAssigned_user_name(userService.getUserInfo(project.getAssigned_user_id()).getFullname());
                 response.setProject_code(project.getProject_code());
-                response.setCreated_time(new Date());
+                response.setCreated_time(project.getCreated_time());
+                response.setStart_date(project.getStart_date());
                 response.setComplete_date(project.getComplete_date());
                 response.setProject_status(project.getProject_status());
                 response.setRequirement(project.getRequirement());

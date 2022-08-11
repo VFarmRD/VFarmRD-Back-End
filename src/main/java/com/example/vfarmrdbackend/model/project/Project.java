@@ -21,6 +21,7 @@ public class Project {
     private String project_code;
     private Date created_time;
     private Date modified_time;
+    private Date start_date;
     private Date complete_date;
     private String requirement;
     private String project_status;
@@ -123,6 +124,14 @@ public class Project {
 
     public void setEstimated_weight(float estimated_weight) {
         this.estimated_weight = estimated_weight;
+    }
+
+    public Date getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(Date start_date) {
+        this.start_date = start_date;
     }
 
 }
