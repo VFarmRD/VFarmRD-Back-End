@@ -97,6 +97,7 @@ public class UserService {
         return new JwtResponse(jwt,
                 userDetails.getUser_id(),
                 userDetails.getUsername(),
+                userRepository.getUserByUser_id(userDetails.getUser_id()).getFullname(),
                 userDetails.getEmail(),
                 roles);
     }
