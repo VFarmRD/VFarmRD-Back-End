@@ -1,11 +1,12 @@
 package com.example.vfarmrdbackend.payload.project;
 
 import java.util.Date;
+import java.util.List;
 
 public class ProjectRequest {
     private String project_name;
     private String client_id;
-    private int assigned_user_id;
+    private List<Integer> listUser_id;
     private String project_code;
     private String requirement;
     private Date start_date;
@@ -39,14 +40,6 @@ public class ProjectRequest {
         this.client_id = client_id;
     }
 
-    public int getAssigned_user_id() {
-        return assigned_user_id;
-    }
-
-    public void setAssigned_user_id(int assigned_user_id) {
-        this.assigned_user_id = assigned_user_id;
-    }
-
     public String getProject_code() {
         return project_code;
     }
@@ -77,6 +70,14 @@ public class ProjectRequest {
 
     public void setStart_date(Date start_date) {
         this.start_date = start_date;
+    }
+
+    public List<Integer> getListUser_id() {
+        return listUser_id;
+    }
+
+    public void setListUser_id(List<Integer> listUser_id) {
+        this.listUser_id = listUser_id;
     }
 
 }

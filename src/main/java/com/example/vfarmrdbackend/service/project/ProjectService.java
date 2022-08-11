@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.example.vfarmrdbackend.service.user.UserInProjectService;
 import com.example.vfarmrdbackend.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,9 @@ public class ProjectService {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserInProjectService userInProjectService;
+
     public List<Project> getAllProjects(String jwt) {
         try {
             return projectRepository.findAll();
@@ -62,8 +66,8 @@ public class ProjectService {
             response.setClient_id(project.getClient_id());
             response.setCreated_user_id(project.getCreated_user_id());
             response.setCreated_user_name(userService.getUserInfo(project.getCreated_user_id()).getFullname());
-            response.setAssigned_user_id(project.getAssigned_user_id());
-            response.setAssigned_user_name(userService.getUserInfo(project.getAssigned_user_id()).getFullname());
+            response.setListUserInProject(userInProjectService
+                    .getAllUserInProjectWithProject_id(project.getProject_id()));
             response.setProject_code(project.getProject_code());
             response.setCreated_time(project.getCreated_time());
             response.setStart_date(project.getStart_date());
@@ -97,9 +101,8 @@ public class ProjectService {
                     response.setClient_id(project.getClient_id());
                     response.setCreated_user_id(project.getCreated_user_id());
                     response.setCreated_user_name(userService.getUserInfo(project.getCreated_user_id()).getFullname());
-                    response.setAssigned_user_id(project.getAssigned_user_id());
-                    response.setAssigned_user_name(
-                            userService.getUserInfo(project.getAssigned_user_id()).getFullname());
+                    response.setListUserInProject(userInProjectService
+                            .getAllUserInProjectWithProject_id(project.getProject_id()));
                     response.setProject_code(project.getProject_code());
                     response.setCreated_time(project.getCreated_time());
                     response.setStart_date(project.getStart_date());
@@ -134,8 +137,8 @@ public class ProjectService {
                 response.setClient_id(project.getClient_id());
                 response.setCreated_user_id(project.getCreated_user_id());
                 response.setCreated_user_name(userService.getUserInfo(project.getCreated_user_id()).getFullname());
-                response.setAssigned_user_id(project.getAssigned_user_id());
-                response.setAssigned_user_name(userService.getUserInfo(project.getAssigned_user_id()).getFullname());
+                response.setListUserInProject(userInProjectService
+                        .getAllUserInProjectWithProject_id(project.getProject_id()));
                 response.setProject_code(project.getProject_code());
                 response.setCreated_time(project.getCreated_time());
                 response.setComplete_date(project.getComplete_date());
@@ -161,7 +164,6 @@ public class ProjectService {
             newProject.setProject_name(request.getProject_name());
             newProject.setClient_id(request.getClient_id());
             newProject.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
-            newProject.setAssigned_user_id(request.getAssigned_user_id());
             newProject.setProject_code(request.getProject_code());
             newProject.setCreated_time(new Date());
             newProject.setProject_status("running");
@@ -170,6 +172,11 @@ public class ProjectService {
             newProject.setRequirement(request.getRequirement());
             newProject.setEstimated_weight(request.getEstimated_weight());
             projectRepository.save(newProject);
+            for (int i = 0; i < request.getListUser_id().size(); i++) {
+                userInProjectService.createUserInProject(
+                        projectRepository.getProjectByProject_code(newProject.getProject_code()).getProject_id(),
+                        request.getListUser_id().get(i));
+            }
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                     "PROJECT",
                     "CREATE",
@@ -191,7 +198,6 @@ public class ProjectService {
             Project updateProject = projectRepository.getProjectByProject_id(project_id);
             updateProject.setProject_name(request.getProject_name());
             updateProject.setClient_id(request.getClient_id());
-            updateProject.setAssigned_user_id(request.getAssigned_user_id());
             updateProject.setProject_code(request.getProject_code());
             updateProject.setModified_time(new Date());
             updateProject.setStart_date(request.getStart_date());
@@ -199,6 +205,28 @@ public class ProjectService {
             updateProject.setRequirement(request.getRequirement());
             updateProject.setEstimated_weight(request.getEstimated_weight());
             projectRepository.save(updateProject);
+            List<Integer> listUserInProjectOld = userInProjectService.getAllUser_idInProjectWithProject_id(project_id);
+            List<Integer> listUserInProjectNew = request.getListUser_id();
+            for (int i = 0; i < listUserInProjectNew.size(); i++) {
+                for (int j = 0; j < listUserInProjectOld.size(); j++) {
+                    if (listUserInProjectNew.get(i) == listUserInProjectOld.get(j)) {
+                        listUserInProjectNew.remove(Integer.valueOf(listUserInProjectNew.get(i)));
+                        listUserInProjectOld.remove(Integer.valueOf(listUserInProjectOld.get(j)));
+                    }
+                }
+            }
+            if (listUserInProjectOld.size() != 0) {
+                for (int i = 0; i < listUserInProjectOld.size(); i++) {
+                    userInProjectService.deleteUserInProject(
+                            userInProjectService.getUserInProjectWithUser_idAndProject_id(listUserInProjectOld.get(i),
+                                    project_id).getUip_id());
+                }
+            }
+            if (listUserInProjectNew.size() != 0) {
+                for (int i = 0; i < listUserInProjectNew.size(); i++) {
+                    userInProjectService.createUserInProject(project_id, listUserInProjectNew.get(i));
+                }
+            }
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                     "PROJECT",
                     "UPDATE",
@@ -258,9 +286,7 @@ public class ProjectService {
 
     public void assignUserFromTaskToProject(int project_id, int user_id) {
         try {
-            Project project = projectRepository.getProjectByProject_id(project_id);
-            project.setAssigned_user_id(user_id);
-            projectRepository.save(project);
+            userInProjectService.createUserInProject(project_id, user_id);
             notificationService.createNotification(new Notification(
                     user_id,
                     "Thông báo",
@@ -288,8 +314,8 @@ public class ProjectService {
                 response.setClient_id(project.getClient_id());
                 response.setCreated_user_id(project.getCreated_user_id());
                 response.setCreated_user_name(userService.getUserInfo(project.getCreated_user_id()).getFullname());
-                response.setAssigned_user_id(project.getAssigned_user_id());
-                response.setAssigned_user_name(userService.getUserInfo(project.getAssigned_user_id()).getFullname());
+                response.setListUserInProject(userInProjectService
+                        .getAllUserInProjectWithProject_id(project.getProject_id()));
                 response.setProject_code(project.getProject_code());
                 response.setCreated_time(project.getCreated_time());
                 response.setStart_date(project.getStart_date());
@@ -390,8 +416,8 @@ public class ProjectService {
                 response.setClient_id(project.getClient_id());
                 response.setCreated_user_id(project.getCreated_user_id());
                 response.setCreated_user_name(userService.getUserInfo(project.getCreated_user_id()).getFullname());
-                response.setAssigned_user_id(project.getAssigned_user_id());
-                response.setAssigned_user_name(userService.getUserInfo(project.getAssigned_user_id()).getFullname());
+                response.setListUserInProject(userInProjectService
+                        .getAllUserInProjectWithProject_id(project.getProject_id()));
                 response.setProject_code(project.getProject_code());
                 response.setCreated_time(project.getCreated_time());
                 response.setStart_date(project.getStart_date());

@@ -17,7 +17,6 @@ public class Project {
     private String project_name;
     private String client_id;
     private int created_user_id;
-    private int assigned_user_id;
     private String project_code;
     private Date created_time;
     private Date modified_time;
@@ -78,14 +77,6 @@ public class Project {
         this.created_user_id = created_user_id;
     }
 
-    public int getAssigned_user_id() {
-        return assigned_user_id;
-    }
-
-    public void setAssigned_user_id(int assigned_user_id) {
-        this.assigned_user_id = assigned_user_id;
-    }
-
     public String getProject_code() {
         return project_code;
     }
@@ -133,5 +124,4 @@ public class Project {
     public void setStart_date(Date start_date) {
         this.start_date = start_date;
     }
-
 }

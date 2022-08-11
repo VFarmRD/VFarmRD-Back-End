@@ -1,6 +1,9 @@
 package com.example.vfarmrdbackend.payload.project;
 
 import java.util.Date;
+import java.util.List;
+
+import com.example.vfarmrdbackend.payload.user.UserInProjectResponse;
 
 public class ProjectGetResponse {
     private int project_id;
@@ -8,8 +11,7 @@ public class ProjectGetResponse {
     private String client_id;
     private int created_user_id;
     private String created_user_name;
-    private int assigned_user_id;
-    private String assigned_user_name;
+    private List<UserInProjectResponse> listUserInProject;
     private String project_code;
     private String requirement;
     private Date created_time;
@@ -20,6 +22,26 @@ public class ProjectGetResponse {
     private String project_status;
 
     public ProjectGetResponse() {
+    }
+
+    public ProjectGetResponse(int project_id, String project_name, String client_id, int created_user_id,
+            String created_user_name, List<UserInProjectResponse> listUserInProject, String project_code,
+            String requirement, Date created_time, Date modified_time, Date start_date, Date complete_date,
+            float estimated_weight, String project_status) {
+        this.project_id = project_id;
+        this.project_name = project_name;
+        this.client_id = client_id;
+        this.created_user_id = created_user_id;
+        this.created_user_name = created_user_name;
+        this.listUserInProject = listUserInProject;
+        this.project_code = project_code;
+        this.requirement = requirement;
+        this.created_time = created_time;
+        this.modified_time = modified_time;
+        this.start_date = start_date;
+        this.complete_date = complete_date;
+        this.estimated_weight = estimated_weight;
+        this.project_status = project_status;
     }
 
     public String getProject_status() {
@@ -86,22 +108,6 @@ public class ProjectGetResponse {
         this.created_user_name = created_user_name;
     }
 
-    public int getAssigned_user_id() {
-        return assigned_user_id;
-    }
-
-    public void setAssigned_user_id(int assigned_user_id) {
-        this.assigned_user_id = assigned_user_id;
-    }
-
-    public String getAssigned_user_name() {
-        return assigned_user_name;
-    }
-
-    public void setAssigned_user_name(String assigned_user_name) {
-        this.assigned_user_name = assigned_user_name;
-    }
-
     public String getProject_code() {
         return project_code;
     }
@@ -140,6 +146,14 @@ public class ProjectGetResponse {
 
     public void setStart_date(Date start_date) {
         this.start_date = start_date;
+    }
+
+    public List<UserInProjectResponse> getListUserInProject() {
+        return listUserInProject;
+    }
+
+    public void setListUserInProject(List<UserInProjectResponse> listUserInProject) {
+        this.listUserInProject = listUserInProject;
     }
 
 }
