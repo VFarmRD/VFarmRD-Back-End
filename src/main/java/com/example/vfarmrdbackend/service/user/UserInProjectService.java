@@ -44,10 +44,10 @@ public class UserInProjectService {
         return userInProjectRepository.getUserInProjectWithUser_idAndProject_id(user_id, project_id);
     }
 
-    public void createUserInProject(int project_id, int user_id) {
+    public void createUserInProject(int user_id, int project_id) {
         userInProjectRepository.save(new UserInProject(0,
-                project_id,
                 user_id,
+                project_id,
                 new Date()));
     }
 

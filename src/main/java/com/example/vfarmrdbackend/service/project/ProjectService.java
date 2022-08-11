@@ -174,14 +174,14 @@ public class ProjectService {
             projectRepository.save(newProject);
             for (int i = 0; i < request.getListUser_id().size(); i++) {
                 userInProjectService.createUserInProject(
-                        projectRepository.getProjectByProject_code(newProject.getProject_code()).getProject_id(),
-                        request.getListUser_id().get(i));
+                        request.getListUser_id().get(i),
+                        projectRepository.getProjectByProject_code(request.getProject_code()).getProject_id());
             }
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                     "PROJECT",
                     "CREATE",
                     String.valueOf(
-                            projectRepository.getProjectByProject_code(newProject.getProject_code()).getProject_id()),
+                            projectRepository.getProjectByProject_code(request.getProject_code()).getProject_id()),
                     new Date()));
         } catch (Exception e) {
             errorService.createError(new ErrorModel(
