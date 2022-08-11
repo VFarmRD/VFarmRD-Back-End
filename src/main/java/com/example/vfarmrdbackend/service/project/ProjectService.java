@@ -224,7 +224,7 @@ public class ProjectService {
             }
             if (listUserInProjectNew.size() != 0) {
                 for (int i = 0; i < listUserInProjectNew.size(); i++) {
-                    userInProjectService.createUserInProject(project_id, listUserInProjectNew.get(i));
+                    userInProjectService.createUserInProject(listUserInProjectNew.get(i), project_id);
                 }
             }
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
@@ -286,7 +286,7 @@ public class ProjectService {
 
     public void assignUserFromTaskToProject(int project_id, int user_id) {
         try {
-            userInProjectService.createUserInProject(project_id, user_id);
+            userInProjectService.createUserInProject(user_id, project_id);
             notificationService.createNotification(new Notification(
                     user_id,
                     "Thông báo",
