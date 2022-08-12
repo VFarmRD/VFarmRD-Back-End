@@ -1,6 +1,7 @@
 package com.example.vfarmrdbackend.service.notification;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,15 @@ public class NotificationService {
 
     public void createNotification(Notification notification) {
         notificationRepository.save(notification);
+    }
+
+    public void createNotificationForUser(List<Integer> listUser_id, String message) {
+        for (int i = 0; i < listUser_id.size(); i++) {
+            createNotification(new Notification(listUser_id.get(i),
+                    "Thông báo",
+                    message,
+                    new Date()));
+        }
     }
 
     public boolean deleteNotification(int notification_id) {
