@@ -176,7 +176,13 @@ public class ProjectService {
                 userInProjectService.createUserInProject(
                         request.getListUser_id().get(i),
                         projectRepository.getProjectByProject_code(request.getProject_code()).getProject_id());
+                notificationService.createNotification(new Notification(
+                        request.getListUser_id().get(i),
+                        "Thông báo",
+                        "Bạn đã được phân công vào dự án " + request.getProject_name() + " !",
+                        new Date()));
             }
+
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                     "PROJECT",
                     "CREATE",
