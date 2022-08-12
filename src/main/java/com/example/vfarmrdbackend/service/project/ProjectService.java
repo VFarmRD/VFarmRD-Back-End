@@ -86,10 +86,10 @@ public class ProjectService {
         }
     }
 
-    public List<ProjectGetResponse> getProjectByAssigned_user_id(int assigned_user_id, String project_status,
+    public List<ProjectGetResponse> getProjectByUser_id(int user_id, String project_status,
             String jwt) {
         try {
-            List<Project> listProject = projectRepository.getProjectByAssigned_user_id(assigned_user_id,
+            List<Project> listProject = projectRepository.getProjectByUser_id(user_id,
                     "%" + project_status + "%");
             List<ProjectGetResponse> listResponse = new ArrayList<>();
             for (int i = 0; i < listProject.size(); i++) {
@@ -117,7 +117,7 @@ public class ProjectService {
         } catch (Exception e) {
             errorService.createError(new ErrorModel(
                     JwtService.getUser_idFromToken(jwt),
-                    "PROJECT GET BY ASSIGNED_USER_ID",
+                    "PROJECT GET BY USER_ID",
                     e.getMessage(),
                     new Date()));
             throw e;
@@ -431,7 +431,7 @@ public class ProjectService {
         } catch (Exception e) {
             errorService.createError(new ErrorModel(
                     JwtService.getUser_idFromToken(jwt),
-                    "PROJECT GET BY ASSIGNED_USER_ID",
+                    "PROJECT GET BY CLIENT_ID",
                     e.getMessage(),
                     new Date()));
             throw e;

@@ -45,12 +45,12 @@ public class ProjectController {
     @GetMapping("/projects/users/{user_id}")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getProjectByAssigned_user_id(@PathVariable("user_id") int user_id,
+    public ResponseEntity<?> getProjectByUser_id(@PathVariable("user_id") int user_id,
             @RequestParam(defaultValue = "", required = false) String project_status,
             @RequestHeader("Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(projectService.getProjectByAssigned_user_id(user_id, project_status, jwt));
+                    .body(projectService.getProjectByUser_id(user_id, project_status, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
