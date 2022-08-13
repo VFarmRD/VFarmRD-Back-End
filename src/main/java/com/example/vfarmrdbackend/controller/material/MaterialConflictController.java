@@ -35,7 +35,7 @@ public class MaterialConflictController {
     MaterialConflictService materialConflictService;
 
     @GetMapping("/materialconflicts")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllMaterialConflict() {
         try {
             List<MaterialConflict> listMaterialConflict = materialConflictService.getAllMaterialConflict();
@@ -52,7 +52,7 @@ public class MaterialConflictController {
     }
 
     @GetMapping("/materialconflicts/{materialconflict_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getMaterialConflictById(@PathVariable("materialconflict_id") int materialconflict_id) {
         try {
             MaterialConflict materialconflicts = materialConflictService.getMaterialConflictById(materialconflict_id);
@@ -69,7 +69,7 @@ public class MaterialConflictController {
     }
 
     @GetMapping("/materialconflicts/")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getMaterialConflictByFirstMaterialId(@RequestParam("material_id") String material_id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(materialConflictService
@@ -81,7 +81,7 @@ public class MaterialConflictController {
     }
 
     @PostMapping("/materialconflicts")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createMaterialConflict(@RequestBody List<MaterialConflictCreateRequest> request,
             @RequestHeader("Authorization") String jwt) {
         try {
@@ -95,7 +95,7 @@ public class MaterialConflictController {
     }
 
     @PutMapping("/materialconflicts/")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateMaterialConflict(@RequestBody List<MaterialConflictUpdateRequest> request,
             @RequestHeader("Authorization") String jwt) {
         try {
@@ -109,7 +109,7 @@ public class MaterialConflictController {
     }
 
     @DeleteMapping("/materialconflicts/{materialconflict_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteMaterialConflict(@PathVariable("materialconflict_id") int materialconflict_id,
             @RequestHeader("Authorization") String jwt) {
         try {
