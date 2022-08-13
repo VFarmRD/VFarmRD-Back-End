@@ -34,7 +34,7 @@ public class MaterialStandardPercentController {
     MaterialStandardPercentService materialStandardPercentService;
 
     @GetMapping("/materialstandardpercents")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllMaterialStandardPercent() {
         try {
             List<MaterialStandardPercent> listMaterialStandardPercents = materialStandardPercentService
@@ -52,7 +52,7 @@ public class MaterialStandardPercentController {
     }
 
     @GetMapping("/materialstandardpercents/{msp_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getMaterialStandardPercentById(@PathVariable("msp_id") int msp_id) {
         try {
             MaterialStandardPercent materialstandardpercents = materialStandardPercentService
@@ -70,7 +70,7 @@ public class MaterialStandardPercentController {
     }
 
     @GetMapping("/materialstandardpercents/")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getMaterialStandardPercentByMaterial_id(@RequestParam("material_id") String material_id) {
         try {
             MaterialStandardPercent materialstandardpercents = materialStandardPercentService
@@ -88,7 +88,7 @@ public class MaterialStandardPercentController {
     }
 
     @PostMapping("/materialstandardpercents")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createMaterialStandardPercent(@RequestBody MaterialStandardPercentRequest request,
             @RequestHeader("Authorization") String jwt) {
         try {
@@ -106,7 +106,7 @@ public class MaterialStandardPercentController {
     }
 
     @PutMapping("/materialstandardpercents/{msp_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateMaterialStandardPercent(@PathVariable("msp_id") int msp_id,
             @RequestBody MaterialStandardPercentRequest request,
             @RequestHeader("Authorization") String jwt) {
@@ -125,7 +125,7 @@ public class MaterialStandardPercentController {
     }
 
     @DeleteMapping("/materialstandardpercents/{msp_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteMaterialStandardPercent(@PathVariable("msp_id") int msp_id,
             @RequestHeader("Authorization") String jwt) {
         try {
