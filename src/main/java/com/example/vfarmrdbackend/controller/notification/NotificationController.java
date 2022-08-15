@@ -27,7 +27,7 @@ public class NotificationController {
     NotificationService notificationService;
 
     @GetMapping("/notifications")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllNotifications() {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(notificationService.getAllNotifications());
@@ -38,7 +38,7 @@ public class NotificationController {
     }
 
     @GetMapping("/notifications/users/{user_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllNotificationsOfUser_id(@PathVariable("user_id") int user_id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(notificationService.getAllNotificationsOfUser(user_id));
@@ -49,7 +49,7 @@ public class NotificationController {
     }
 
     @PostMapping("/notifications")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createNotificationForUser(@RequestBody NotificationRequest request) {
         try {
             notificationService.createNotificationForUser(request.getListUser_id(), request.getMessage());

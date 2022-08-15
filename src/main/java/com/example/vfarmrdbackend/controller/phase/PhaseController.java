@@ -33,7 +33,7 @@ public class PhaseController {
     PhaseService phaseService;
 
     @GetMapping("/phases")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllPhaseByFormula_id(@RequestParam("formula_id") int formula_id) {
         try {
             List<Phase> listPhases = phaseService.getAllPhaseByFormula_id(formula_id);
@@ -50,7 +50,7 @@ public class PhaseController {
     }
 
     @GetMapping("/phases/{phase_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getPhaseByPhase_id(@PathVariable("phase_id") int phase_id) {
         try {
             Phase phase = phaseService.getPhaseByPhase_id(phase_id);
@@ -67,7 +67,7 @@ public class PhaseController {
     }
 
     @PutMapping("/phases/update")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updatePhase(@RequestBody PhaseUpdateRequest phaseUpdateRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
@@ -83,7 +83,7 @@ public class PhaseController {
     }
 
     @DeleteMapping("/phases/delete/{phase_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deletePhase(@PathVariable("phase_id") int phase_id,
             @RequestHeader("Authorization") String jwt) {
         try {

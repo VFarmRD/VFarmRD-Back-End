@@ -35,7 +35,7 @@ public class MaterialOfPhaseController {
     MaterialOfPhaseService materialOfPhaseService;
 
     @GetMapping("/materialofphase")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllMOPwithPhase_id(@RequestParam("phase_id") int phase_id) {
         try {
             List<MaterialOfPhase> listMaterialOfPhases = materialOfPhaseService.getAllMaterialOfPhase(phase_id);
@@ -52,7 +52,7 @@ public class MaterialOfPhaseController {
     }
 
     @GetMapping("/materialofphase/{mop_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getMaterialOfPhase(@PathVariable("mop_id") int mop_id) {
         try {
             MaterialOfPhase materialOfPhase = materialOfPhaseService.getMaterialOfPhase(mop_id);
@@ -69,7 +69,7 @@ public class MaterialOfPhaseController {
     }
 
     @PutMapping("/materialofphase/update")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateMaterialOfPhase(
             @RequestBody MaterialOfPhaseUpdateRequest materialOfPhaseUpdateRequest,
             @RequestHeader("Authorization") String jwt) {
@@ -88,7 +88,7 @@ public class MaterialOfPhaseController {
     }
 
     @DeleteMapping("/materialofphase/delete/{mop_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteMaterialOfPhase(@PathVariable("mop_id") int mop_id,
             @RequestHeader("Authorization") String jwt) {
         try {

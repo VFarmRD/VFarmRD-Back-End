@@ -35,7 +35,7 @@ public class TestController {
     TestService testService;
 
     @GetMapping("/tests")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllTestWithFormula_id(@RequestParam("formula_id") int formula_id,
             @RequestHeader("Authorization") String jwt) {
         try {
@@ -47,7 +47,7 @@ public class TestController {
     }
 
     @GetMapping("/tests/{test_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getTestByTest_id(@PathVariable("test_id") int test_id,
             @RequestHeader("Authorization") String jwt) {
         try {
@@ -59,7 +59,7 @@ public class TestController {
     }
 
     @PostMapping("/tests")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createTest(@RequestBody TestCreateRequest testCreateRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
@@ -72,7 +72,7 @@ public class TestController {
     }
 
     @PutMapping("/tests/{test_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateTest(@PathVariable("test_id") int test_id,
             @RequestBody TestUpdateRequest request, @RequestHeader("Authorization") String jwt) {
         try {
@@ -85,7 +85,7 @@ public class TestController {
     }
 
     @PutMapping("/tests/formulas/{formula_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateMultipleTestInFormula(@PathVariable("formula_id") int formula_id,
             @RequestBody List<TestUpdateMultipleRequest> listRequest, @RequestHeader("Authorization") String jwt) {
         try {
@@ -98,7 +98,7 @@ public class TestController {
     }
 
     @DeleteMapping("/tests/{test_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteTest(@PathVariable("test_id") int test_id,
             @RequestHeader("Authorization") String jwt) {
         try {

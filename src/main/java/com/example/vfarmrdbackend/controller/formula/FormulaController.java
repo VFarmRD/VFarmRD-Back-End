@@ -77,7 +77,7 @@ public class FormulaController {
     }
 
     @PostMapping("/formulas")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createFormula(@RequestBody FormulaCreateRequest formulaCreateRequest,
             @RequestHeader("Authorization") String jwt) {
         try {
@@ -90,7 +90,7 @@ public class FormulaController {
     }
 
     @DeleteMapping("/formulas/{formula_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteFormula(@PathVariable("formula_id") int formula_id,
             @RequestHeader("Authorization") String jwt) {
         try {
@@ -108,7 +108,7 @@ public class FormulaController {
     }
 
     @PutMapping("/formulas/{formula_id}")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateFormula(
             @PathVariable("formula_id") int formula_id,
             @RequestBody FormulaUpdateRequest formulaUpdateRequest,
@@ -127,7 +127,7 @@ public class FormulaController {
     }
 
     @PutMapping("/formulas/{formula_id}/upgrade")
-    @PreAuthorize("hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> upgradeFormula(
             @PathVariable("formula_id") int formula_id,
             @RequestBody FormulaUpgradeRequest formulaUpgradeRequest,
