@@ -69,7 +69,7 @@ public class PhaseController {
     @PutMapping("/phases/update")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updatePhase(@RequestBody PhaseUpdateRequest phaseUpdateRequest,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (phaseService.updatePhase(phaseUpdateRequest, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Update phase successfully!");
@@ -85,7 +85,7 @@ public class PhaseController {
     @DeleteMapping("/phases/delete/{phase_id}")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deletePhase(@PathVariable("phase_id") int phase_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (phaseService.deletePhase(phase_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Delete phase successfully!");

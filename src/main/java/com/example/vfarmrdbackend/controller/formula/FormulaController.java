@@ -37,7 +37,7 @@ public class FormulaController {
             "or hasAuthority('manager')")
     public ResponseEntity<?> getAllFormulaByProject_id(@RequestParam("project_id") int project_id,
             @RequestParam(defaultValue = "", required = false) String formula_status,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(formulaService.getAllFormulaByProject_id(project_id,
                     formula_status, jwt));
@@ -52,7 +52,7 @@ public class FormulaController {
             "or hasAuthority('manager')")
     public ResponseEntity<?> getAllFormulaByUser_idAndFormula_status(@PathVariable("user_id") int user_id,
             @RequestParam(defaultValue = "", required = false) String formula_status,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(formulaService.getAllFormulaByUser_idAndFormula_status(user_id,
@@ -67,7 +67,7 @@ public class FormulaController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getFormulaByFormula_id(@PathVariable("formula_id") int formula_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(formulaService.getFormulaByFormula_id(formula_id, jwt));
         } catch (Exception e) {
@@ -79,7 +79,7 @@ public class FormulaController {
     @PostMapping("/formulas")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createFormula(@RequestBody FormulaCreateRequest formulaCreateRequest,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     formulaService.createFormula(formulaCreateRequest, jwt));
@@ -92,7 +92,7 @@ public class FormulaController {
     @DeleteMapping("/formulas/{formula_id}")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteFormula(@PathVariable("formula_id") int formula_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (formulaService.setFormula_status(formula_id, "canceled", jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -112,7 +112,7 @@ public class FormulaController {
     public ResponseEntity<?> updateFormula(
             @PathVariable("formula_id") int formula_id,
             @RequestBody FormulaUpdateRequest formulaUpdateRequest,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             int id = formulaService.updateFormula(formula_id, formulaUpdateRequest, jwt);
             if (id != 0) {
@@ -131,7 +131,7 @@ public class FormulaController {
     public ResponseEntity<?> upgradeFormula(
             @PathVariable("formula_id") int formula_id,
             @RequestBody FormulaUpgradeRequest formulaUpgradeRequest,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             int id = formulaService.upgradeFormula(formula_id, formulaUpgradeRequest, jwt);
             if (id != 0) {
@@ -149,7 +149,7 @@ public class FormulaController {
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> changeFormula_status(@PathVariable("formula_id") int formula_id,
             @RequestParam("status") String status,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (formulaService.setFormula_status(formula_id, status, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -168,7 +168,7 @@ public class FormulaController {
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> denyWithReason(@PathVariable("formula_id") int formula_id,
             @RequestBody String deny_reason,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (formulaService.denyFormulaWithReason(formula_id, deny_reason, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -190,7 +190,7 @@ public class FormulaController {
             @RequestParam(defaultValue = "none", required = false) String to_date,
             @RequestParam(defaultValue = "0", required = false) int month,
             @RequestParam(defaultValue = "0", required = false) int year,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (!from_date.equals("none") && !to_date.equals("none")) {
                 return ResponseEntity.status(HttpStatus.OK).body(

@@ -37,7 +37,7 @@ public class TestController {
     @GetMapping("/tests")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllTestWithFormula_id(@RequestParam("formula_id") int formula_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(testService.getAllTestWithFormula_id(formula_id, jwt));
         } catch (Exception e) {
@@ -49,7 +49,7 @@ public class TestController {
     @GetMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getTestByTest_id(@PathVariable("test_id") int test_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(testService.getTestWithTest_id(test_id, jwt));
         } catch (Exception e) {
@@ -61,7 +61,7 @@ public class TestController {
     @PostMapping("/tests")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createTest(@RequestBody TestCreateRequest testCreateRequest,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             testService.createTest(testCreateRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body("Create new test completed!");
@@ -74,7 +74,7 @@ public class TestController {
     @PutMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateTest(@PathVariable("test_id") int test_id,
-            @RequestBody TestUpdateRequest request, @RequestHeader("Authorization") String jwt) {
+            @RequestBody TestUpdateRequest request, @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             testService.updateTest(test_id, request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
@@ -87,7 +87,7 @@ public class TestController {
     @PutMapping("/tests/formulas/{formula_id}")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateMultipleTestInFormula(@PathVariable("formula_id") int formula_id,
-            @RequestBody List<TestUpdateMultipleRequest> listRequest, @RequestHeader("Authorization") String jwt) {
+            @RequestBody List<TestUpdateMultipleRequest> listRequest, @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             testService.updateMultipleTest(formula_id, listRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
@@ -100,7 +100,7 @@ public class TestController {
     @DeleteMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteTest(@PathVariable("test_id") int test_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (testService.deleteTest(test_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Delete test successfully!");

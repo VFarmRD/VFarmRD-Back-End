@@ -27,7 +27,7 @@ public class UserInProjectController {
     @GetMapping("/userinproject/projects/{project_id}")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateUser(@PathVariable("project_id") int project_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(userInProjectService.getAllUserInProjectWithProject_id(project_id));

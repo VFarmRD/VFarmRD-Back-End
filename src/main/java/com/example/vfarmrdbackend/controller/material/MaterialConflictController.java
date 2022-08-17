@@ -83,7 +83,7 @@ public class MaterialConflictController {
     @PostMapping("/materialconflicts")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createMaterialConflict(@RequestBody List<MaterialConflictCreateRequest> request,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             materialConflictService.createMaterialConflict(request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -97,7 +97,7 @@ public class MaterialConflictController {
     @PutMapping("/materialconflicts/")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateMaterialConflict(@RequestBody List<MaterialConflictUpdateRequest> request,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             materialConflictService.updateMaterialConflict(request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -111,7 +111,7 @@ public class MaterialConflictController {
     @DeleteMapping("/materialconflicts/{materialconflict_id}")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteMaterialConflict(@PathVariable("materialconflict_id") int materialconflict_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
 
             if (materialConflictService.deleteMaterialConflict(materialconflict_id, jwt)) {

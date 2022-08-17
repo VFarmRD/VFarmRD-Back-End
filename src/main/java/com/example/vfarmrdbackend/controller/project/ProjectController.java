@@ -33,7 +33,7 @@ public class ProjectController {
     @GetMapping("/projects/")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
-    public ResponseEntity<?> getAllProject(@RequestHeader("Authorization") String jwt) {
+    public ResponseEntity<?> getAllProject(@RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(projectService.getAllProjects(jwt));
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class ProjectController {
             "or hasAuthority('manager')")
     public ResponseEntity<?> getProjectByUser_id(@PathVariable("user_id") int user_id,
             @RequestParam(defaultValue = "", required = false) String project_status,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(projectService.getProjectByUser_id(user_id, project_status, jwt));
@@ -63,7 +63,7 @@ public class ProjectController {
     public ResponseEntity<?> getProjectByStatus(
             @RequestParam(defaultValue = "", required = false) String formula_status,
             @RequestParam(defaultValue = "", required = false) String user_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(projectService.getProjectByFormula_status(formula_status, user_id, jwt));
@@ -77,7 +77,7 @@ public class ProjectController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getProjectByProject_id(@PathVariable("project_id") int project_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(projectService.getProjectByProject_id(project_id, jwt));
         } catch (Exception e) {
@@ -89,7 +89,7 @@ public class ProjectController {
     @PostMapping("/projects/")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> createProject(@RequestBody ProjectRequest request,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             projectService.createProject(request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -103,7 +103,7 @@ public class ProjectController {
     @PutMapping("/projects/{project_id}")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> updateProjects(@PathVariable("project_id") int project_id,
-            @RequestBody ProjectRequest request, @RequestHeader("Authorization") String jwt) {
+            @RequestBody ProjectRequest request, @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             projectService.updateProject(project_id, request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -117,7 +117,7 @@ public class ProjectController {
     @DeleteMapping("/projects/{project_id}")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> deleteProject(@PathVariable("project_id") int project_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             projectService.deleteProject(project_id, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -131,7 +131,7 @@ public class ProjectController {
     @PutMapping("/projects/{project_id}/recover-project")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> recoverProject(@PathVariable("project_id") int project_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             projectService.recoverProject(project_id, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -146,7 +146,7 @@ public class ProjectController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getProjectByMaterial_id(@PathVariable("material_id") String material_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(projectService.getProjectByMaterial_id(material_id, jwt));
@@ -163,7 +163,7 @@ public class ProjectController {
             @RequestParam(defaultValue = "none", required = false) String to_date,
             @RequestParam(defaultValue = "0", required = false) int month,
             @RequestParam(defaultValue = "0", required = false) int year,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (!from_date.equals("none") && !to_date.equals("none")) {
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -185,7 +185,7 @@ public class ProjectController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getProjectByClient_id(@PathVariable("client_id") String client_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(projectService.getProjectByClient_id(client_id, jwt));

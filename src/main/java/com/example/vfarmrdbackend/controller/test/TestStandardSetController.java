@@ -56,7 +56,7 @@ public class TestStandardSetController {
     @PostMapping("/teststandardsets")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> createStandardSet(@RequestBody TestStandardSetCreateRequest request,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return testStandardSetService.createStandardSet(request, jwt);
         } catch (Exception e) {
@@ -68,7 +68,7 @@ public class TestStandardSetController {
     @PutMapping("/teststandardsets/{teststandardset_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> updateStandardSet(@PathVariable("teststandardset_id") int teststandardset_id,
-            @RequestBody TestStandardSetUpdateRequest request, @RequestHeader("Authorization") String jwt) {
+            @RequestBody TestStandardSetUpdateRequest request, @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return testStandardSetService.updateStandardSet(request, teststandardset_id, jwt);
         } catch (Exception e) {
@@ -80,7 +80,7 @@ public class TestStandardSetController {
     @DeleteMapping("/teststandardsets/{teststandardset_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> deleteStandardSet(@RequestParam("teststandardset_id") int teststandardset_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return testStandardSetService.deleteStandardSet(teststandardset_id, jwt);
         } catch (Exception e) {

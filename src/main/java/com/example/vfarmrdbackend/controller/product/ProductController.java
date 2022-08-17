@@ -85,7 +85,7 @@ public class ProductController {
     @PostMapping("/products/create")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> createProduct(@RequestBody ProductCreateRequest productCreateRequest,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     productService.createProduct(productCreateRequest, jwt));
@@ -98,7 +98,7 @@ public class ProductController {
     @PutMapping("/products/update")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             productService.updateProduct(productUpdateRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -112,7 +112,7 @@ public class ProductController {
     @PutMapping("/products/delete/{product_id}")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> deleteProduct(@PathVariable("product_id") String product_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             productService.deleteProduct(product_id, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -126,7 +126,7 @@ public class ProductController {
     @DeleteMapping("/products/{product_code}/remove-from-system")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> removeProductFromSystem(@PathVariable("product_code") String product_code,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             productService.deleteProductFromSystem(product_code, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -144,7 +144,7 @@ public class ProductController {
             @RequestParam(defaultValue = "none", required = false) String to_date,
             @RequestParam(defaultValue = "0", required = false) int month,
             @RequestParam(defaultValue = "0", required = false) int year,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (!from_date.equals("none") && !to_date.equals("none")) {
                 return ResponseEntity.status(HttpStatus.OK).body(

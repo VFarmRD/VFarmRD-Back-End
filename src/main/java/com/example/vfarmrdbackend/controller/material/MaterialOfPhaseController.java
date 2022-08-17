@@ -72,7 +72,7 @@ public class MaterialOfPhaseController {
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateMaterialOfPhase(
             @RequestBody MaterialOfPhaseUpdateRequest materialOfPhaseUpdateRequest,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (materialOfPhaseService.updateMaterialOfPhase(materialOfPhaseUpdateRequest, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -90,7 +90,7 @@ public class MaterialOfPhaseController {
     @DeleteMapping("/materialofphase/delete/{mop_id}")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteMaterialOfPhase(@PathVariable("mop_id") int mop_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (materialOfPhaseService.deleteMaterialOfPhase(mop_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -108,7 +108,7 @@ public class MaterialOfPhaseController {
     @GetMapping("/materialofphase/projects/{project_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> getAllMaterial_idWithProject_id(@PathVariable("project_id") int project_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(materialOfPhaseService.getAllMaterial_idWithProject_id(project_id, jwt));
@@ -123,7 +123,7 @@ public class MaterialOfPhaseController {
             "or hasAuthority('manager')")
     public ResponseEntity<?> uploadFileForMaterial(@RequestParam("file") List<MultipartFile> listFile,
             @PathVariable("material_id") String material_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     materialOfPhaseService.uploadFileForMaterial(jwt, listFile, material_id));
@@ -136,7 +136,7 @@ public class MaterialOfPhaseController {
     @GetMapping("/materials/statistics")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getMaterialStatistics(
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     materialOfPhaseService.getMaterialStatisticsOfAllTime(jwt));
@@ -150,7 +150,7 @@ public class MaterialOfPhaseController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getFileByMaterial_id(@PathVariable("material_id") String material_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
                     materialOfPhaseService.getFileByMaterial_id(material_id, jwt));

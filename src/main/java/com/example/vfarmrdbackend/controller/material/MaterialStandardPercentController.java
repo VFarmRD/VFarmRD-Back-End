@@ -90,7 +90,7 @@ public class MaterialStandardPercentController {
     @PostMapping("/materialstandardpercents")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createMaterialStandardPercent(@RequestBody MaterialStandardPercentRequest request,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (materialStandardPercentService.createMaterialStandardPercent(request, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -109,7 +109,7 @@ public class MaterialStandardPercentController {
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateMaterialStandardPercent(@PathVariable("msp_id") int msp_id,
             @RequestBody MaterialStandardPercentRequest request,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (materialStandardPercentService.updateMaterialStandardPercent(msp_id, request, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -127,7 +127,7 @@ public class MaterialStandardPercentController {
     @DeleteMapping("/materialstandardpercents/{msp_id}")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteMaterialStandardPercent(@PathVariable("msp_id") int msp_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
 
             if (materialStandardPercentService.deleteMaterialStandardPercent(msp_id, jwt)) {

@@ -68,7 +68,7 @@ public class ToolController {
     @PostMapping("/tools")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> createTool(@RequestBody ToolRequest request,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             toolService.createTool(request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -82,7 +82,7 @@ public class ToolController {
     @PutMapping("/tools/{tool_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> updateTool(@PathVariable("tool_id") int tool_id, @RequestBody ToolRequest request,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             toolService.updateTool(tool_id, request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -96,7 +96,7 @@ public class ToolController {
     @DeleteMapping("/tools/{tool_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> deleteTool(@PathVariable("tool_id") int tool_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             toolService.deleteTool(tool_id, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(

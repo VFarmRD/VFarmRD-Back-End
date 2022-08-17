@@ -56,7 +56,7 @@ public class TestStandardController {
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> createStandard(
             @RequestParam(defaultValue = "", required = false) int teststandardset_id,
-            @RequestBody TestStandardRequest testStandardRequest, @RequestHeader("Authorization") String jwt) {
+            @RequestBody TestStandardRequest testStandardRequest, @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return testStandardService.createStandard(teststandardset_id, testStandardRequest, jwt);
         } catch (Exception e) {
@@ -68,7 +68,7 @@ public class TestStandardController {
     @PutMapping("/teststandards/{teststandard_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> updateStandard(@PathVariable("teststandard_id") int teststandard_id,
-            @RequestBody TestStandardRequest testStandardRequest, @RequestHeader("Authorization") String jwt) {
+            @RequestBody TestStandardRequest testStandardRequest, @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return testStandardService.updateStandard(teststandard_id, testStandardRequest, jwt);
         } catch (Exception e) {
@@ -80,7 +80,7 @@ public class TestStandardController {
     @DeleteMapping("/teststandards/{teststandard_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> deleteStandard(@RequestParam("teststandard_id") int teststandard_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return testStandardService.deleteStandard(teststandard_id, jwt);
         } catch (Exception e) {

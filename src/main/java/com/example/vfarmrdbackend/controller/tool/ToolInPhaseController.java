@@ -56,7 +56,7 @@ public class ToolInPhaseController {
     @PostMapping("/toolinphases")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> createToolInPhase(@RequestBody ToolInPhaseRequest request,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             toolInPhaseService.createToolInPhase(request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -71,7 +71,7 @@ public class ToolInPhaseController {
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> updateToolInPhase(@PathVariable("toolinphase_id") int toolinphase_id,
             @RequestBody ToolInPhaseRequest request,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             toolInPhaseService.updateToolInPhase(toolinphase_id, request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -85,7 +85,7 @@ public class ToolInPhaseController {
     @DeleteMapping("/toolinphases/{toolinphase_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
     public ResponseEntity<?> deleteToolInPhase(@PathVariable("toolinphase_id") int toolinphase_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             toolInPhaseService.deleteToolInPhase(toolinphase_id, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(

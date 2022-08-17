@@ -148,7 +148,7 @@ public class UserController {
     @PutMapping("/users/update")
     @PreAuthorize("hasAuthority('admin') or hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (userService.updateUser(userRequest, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body(
@@ -165,7 +165,7 @@ public class UserController {
     @PutMapping("/users/delete/{user_id}")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> deleteUser(@PathVariable("user_id") int user_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (userService.deleteUser(user_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Delete user successfully!");
@@ -181,7 +181,7 @@ public class UserController {
     @PutMapping("/users/recover/{user_id}")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> recoverUser(@PathVariable("user_id") int user_id,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (userService.recoverUser(user_id, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Recover user successfully!");
@@ -195,7 +195,7 @@ public class UserController {
     }
 
     @GetMapping("/users/check-valid-jwt")
-    public ResponseEntity<?> checkTokenIsExpired(@RequestHeader("Authorization") String jwt) {
+    public ResponseEntity<?> checkTokenIsExpired(@RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (JwtService.checkJWTIsExpired(jwt)) {
                 return ResponseEntity.status(HttpStatus.GONE).body(new MessageResponse(

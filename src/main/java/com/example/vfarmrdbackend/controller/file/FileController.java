@@ -42,7 +42,7 @@ public class FileController {
         public ResponseEntity<?> uploadFile(@RequestParam("file") List<MultipartFile> listFile,
                         @RequestParam("object_type") String object_type,
                         @RequestParam("object_id") String object_id,
-                        @RequestHeader("Authorization") String jwt) {
+                        @RequestHeader(required = false, value = "Authorization") String jwt) {
                 try {
                         return ResponseEntity.status(HttpStatus.OK).body(
                                         fileService.uploadFile(listFile, object_type,
@@ -56,7 +56,7 @@ public class FileController {
         @GetMapping("/files")
         @PreAuthorize("hasAuthority('staff') " +
                         "or hasAuthority('manager')")
-        public ResponseEntity<?> getAllFilesWithUser_id(@RequestHeader("Authorization") String jwt) {
+        public ResponseEntity<?> getAllFilesWithUser_id(@RequestHeader(required = false, value = "Authorization") String jwt) {
                 try {
                         List<FileResponse> files = fileService
                                         .getAllFilesWithUser_id(JwtService.getUser_idFromToken(jwt))
@@ -81,7 +81,7 @@ public class FileController {
 
         @GetMapping("/files/{file_id}")
         public ResponseEntity<?> getFile(@PathVariable("file_id") int file_id,
-                        @RequestHeader("Authorization") String jwt) {
+                        @RequestHeader(required = false, value = "Authorization") String jwt) {
                 try {
                         return ResponseEntity.status(HttpStatus.OK)
                                         .body(fileService.getFile(file_id, JwtService.getUser_idFromToken(jwt)));
@@ -95,7 +95,7 @@ public class FileController {
         @PreAuthorize("hasAuthority('staff') " +
                         "or hasAuthority('manager')")
         public ResponseEntity<?> findFileWithKeyword(@RequestParam("keyword") String keyword,
-                        @RequestHeader("Authorization") String jwt) {
+                        @RequestHeader(required = false, value = "Authorization") String jwt) {
                 try {
                         List<FileResponse> files = fileService
                                         .findFilesWithUser_idAndKeyword("%" + keyword + "%",
@@ -123,7 +123,7 @@ public class FileController {
         @PreAuthorize("hasAuthority('staff') " +
                         "or hasAuthority('manager')")
         public ResponseEntity<?> deleteFile(@PathVariable("file_id") int file_id,
-                        @RequestHeader("Authorization") String jwt) {
+                        @RequestHeader(required = false, value = "Authorization") String jwt) {
                 try {
                         fileService.deleteFile(file_id, jwt);
                         return ResponseEntity.status(HttpStatus.OK).body(
@@ -136,7 +136,7 @@ public class FileController {
 
         @GetMapping("/files/download/{file_id}")
         public ResponseEntity<?> downloadFile(@PathVariable("file_id") int file_id,
-                        @RequestHeader("Authorization") String jwt) {
+                        @RequestHeader(required = false, value = "Authorization") String jwt) {
                 try {
                         File file = fileService.getFileDownload(file_id, jwt);
                         return ResponseEntity.ok()
