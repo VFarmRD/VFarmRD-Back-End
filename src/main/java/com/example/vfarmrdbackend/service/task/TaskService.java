@@ -96,6 +96,7 @@ public class TaskService {
             newTaskInfo.setTask_id(task.getTask_id());
             newTaskInfo.setTask_name(task.getTask_name());
             newTaskInfo.setUser_id(task.getUser_id());
+            newTaskInfo.setManager_user_id(project.getCreated_user_id());
             newTaskInfo.setUser_name(requestUser.getUser_name());
             newTaskInfo.setUser_role(requestUser.getRole_name());
             newTaskInfo.setProject_id(task.getProject_id());
@@ -121,6 +122,7 @@ public class TaskService {
             newTaskInfo.setTask_id(task.getTask_id());
             newTaskInfo.setTask_name(task.getTask_name());
             newTaskInfo.setUser_id(task.getUser_id());
+            newTaskInfo.setManager_user_id(project.getCreated_user_id());
             newTaskInfo.setUser_name(user.getUser_name());
             newTaskInfo.setUser_role(user.getRole_name());
             newTaskInfo.setProject_id(task.getProject_id());
@@ -146,6 +148,7 @@ public class TaskService {
             newTaskInfo.setTask_id(task.getTask_id());
             newTaskInfo.setTask_name(task.getTask_name());
             newTaskInfo.setUser_id(task.getUser_id());
+            newTaskInfo.setManager_user_id(project.getCreated_user_id());
             newTaskInfo.setUser_name(user.getUser_name());
             newTaskInfo.setUser_role(user.getRole_name());
             newTaskInfo.setProject_id(task.getProject_id());
@@ -173,6 +176,7 @@ public class TaskService {
             newTaskInfo.setTask_id(task.getTask_id());
             newTaskInfo.setTask_name(task.getTask_name());
             newTaskInfo.setUser_id(task.getUser_id());
+            newTaskInfo.setManager_user_id(project.getCreated_user_id());
             newTaskInfo.setUser_name(user.getUser_name());
             newTaskInfo.setUser_role(user.getRole_name());
             newTaskInfo.setProject_id(task.getProject_id());

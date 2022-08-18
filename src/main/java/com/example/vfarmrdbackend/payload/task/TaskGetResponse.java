@@ -5,6 +5,7 @@ import java.util.Date;
 public class TaskGetResponse {
     private int task_id;
     private String task_name;
+    private int manager_user_id;
     private int user_id;
     private String user_name;
     private String user_role;
@@ -113,6 +114,14 @@ public class TaskGetResponse {
 
     public void setProject_name(String project_name) {
         this.project_name = project_name;
+    }
+
+    public int getManager_user_id() {
+        return manager_user_id;
+    }
+
+    public void setManager_user_id(int manager_user_id) {
+        this.manager_user_id = manager_user_id;
     }
 
 }
