@@ -347,6 +347,12 @@ public class TaskService {
         if (updateTask != null) {
             updateTask.setTask_status("done");
             taskRepository.save(updateTask);
+            ProjectGetResponse project = projectService.getProjectByProject_id(updateTask.getProject_id(), jwt);
+            User user = userRepository.getUserByUser_id(updateTask.getUser_id());
+            notificationService.createNotification(new Notification(project.getCreated_user_id(),
+                    "Thông Báo",
+                    user.getFullname() + " đã hoàn thành công việc " + updateTask.getTask_name(),
+                    new Date()));
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                     "TASK",
                     "UPDATE",
