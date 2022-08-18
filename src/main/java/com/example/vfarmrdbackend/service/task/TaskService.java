@@ -191,8 +191,25 @@ public class TaskService {
         return listTasksResponse;
     }
 
-    public Task getTaskByTask_id(int task_id) {
-        return taskRepository.getTaskByTask_id(task_id);
+    public TaskGetResponse getTaskByTask_id(int task_id,String jwt) {
+        Task task = taskRepository.getTaskByTask_id(task_id);
+            TaskGetResponse newTaskInfo = new TaskGetResponse();
+            User user = userRepository.getUserByUser_id(task.getUser_id());
+            ProjectGetResponse project = projectService.getProjectByProject_id(task.getProject_id(), jwt);
+            newTaskInfo.setTask_id(task.getTask_id());
+            newTaskInfo.setTask_name(task.getTask_name());
+            newTaskInfo.setUser_id(task.getUser_id());
+            newTaskInfo.setManager_user_id(project.getCreated_user_id());
+            newTaskInfo.setUser_name(user.getUser_name());
+            newTaskInfo.setUser_role(user.getRole_name());
+            newTaskInfo.setProject_id(task.getProject_id());
+            newTaskInfo.setProject_name(project.getProject_name());
+            newTaskInfo.setCreated_date(task.getCreated_date());
+            newTaskInfo.setStart_date(task.getStart_date());
+            newTaskInfo.setEstimated_date(task.getEstimated_date());
+            newTaskInfo.setTask_status(task.getTask_status());
+            newTaskInfo.setDescription(task.getDescription());
+        return newTaskInfo;
     }
 
     public void createTask(TaskCreateRequest taskCreateRequest, String jwt) {

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.vfarmrdbackend.model.task.Task;
 import com.example.vfarmrdbackend.payload.task.TaskCreateRequest;
 import com.example.vfarmrdbackend.payload.task.TaskUpdateRequest;
 import com.example.vfarmrdbackend.payload.others.MessageResponse;
@@ -54,15 +53,10 @@ public class TaskController {
 
     @GetMapping("/tasks/{task_id}")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
-    public ResponseEntity<?> getTaskByTask_id(@PathVariable("task_id") int task_id) {
+    public ResponseEntity<?> getTaskByTask_id(@PathVariable("task_id") int task_id,
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
-            Task task = taskService.getTaskByTask_id(task_id);
-            if (task != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(task);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        "Can't found any task!");
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(taskService.getTaskByTask_id(task_id, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
