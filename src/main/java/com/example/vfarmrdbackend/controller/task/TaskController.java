@@ -85,7 +85,8 @@ public class TaskController {
     @PutMapping("/tasks/{task_id}")
     @PreAuthorize("hasAuthority('manager')")
     public ResponseEntity<?> updateTask(@PathVariable("task_id") int task_id,
-            @RequestBody TaskUpdateRequest taskUpdateRequest, @RequestHeader(required = false, value = "Authorization") String jwt) {
+            @RequestBody TaskUpdateRequest taskUpdateRequest,
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             if (taskService.updateTask(task_id, taskUpdateRequest, jwt)) {
                 return ResponseEntity.status(HttpStatus.OK).body("Update task successfully!");
@@ -141,7 +142,8 @@ public class TaskController {
 
     @GetMapping("/tasks/filter")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
-    public ResponseEntity<?> getAllTasksWithProject_idAndUser_id(@RequestHeader(required = false, value = "Authorization") String jwt,
+    public ResponseEntity<?> getAllTasksWithProject_idAndUser_id(
+            @RequestHeader(required = false, value = "Authorization") String jwt,
             @RequestParam(defaultValue = "0", required = false) int project_id,
             @RequestParam(defaultValue = "0", required = false) int user_id,
             @RequestParam(defaultValue = "", required = false) String task_status) {
@@ -167,7 +169,7 @@ public class TaskController {
     }
 
     @PutMapping("/tasks/{task_id}/change-status-is-done")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> setTaskStatusIfDone(@PathVariable("task_id") int task_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
