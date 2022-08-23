@@ -96,10 +96,12 @@ public class MaterialConflictController {
 
     @PutMapping("/materialconflicts/")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
-    public ResponseEntity<?> updateMaterialConflict(@RequestBody List<MaterialConflictUpdateRequest> request,
+    public ResponseEntity<?> updateMaterialConflict(
+            @RequestBody(required = false) List<MaterialConflictUpdateRequest> request,
+            @RequestParam(required = false, defaultValue = "") String material_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
-            materialConflictService.updateMaterialConflict(request, jwt);
+            materialConflictService.updateMaterialConflict(request, material_id, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Cập nhật nguyên liệu xung đột thành công!"));
         } catch (Exception e) {

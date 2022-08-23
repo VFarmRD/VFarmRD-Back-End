@@ -81,9 +81,12 @@ public class MaterialConflictService {
         }
     }
 
-    public void updateMaterialConflict(List<MaterialConflictUpdateRequest> listRequest, String jwt) {
+    public void updateMaterialConflict(List<MaterialConflictUpdateRequest> listRequest, String material_id,
+            String jwt) {
         try {
-            String material_id = listRequest.get(0).getFirst_material_id();
+            if (material_id == null || material_id.equals("")) {
+                material_id = listRequest.get(0).getFirst_material_id();
+            }
             List<MaterialConflict> listMaterialConflict = materialConflictRepository
                     .getMaterialConflictByMaterial_id(material_id);
             List<Integer> listMaterialConflict_id = materialConflictRepository
