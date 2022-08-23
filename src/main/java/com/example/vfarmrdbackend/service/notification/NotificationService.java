@@ -21,67 +21,91 @@ public class NotificationService {
     UserRepository userRepository;
 
     public List<NotificationGetResponse> getAllNotifications() {
-        List<NotificationGetResponse> listResponse = new ArrayList<>();
-        List<Notification> listNotifications = notificationRepository.findAll();
-        for (int i = 0; i < listNotifications.size(); i++) {
-            Notification notification = listNotifications.get(i);
-            NotificationGetResponse response = new NotificationGetResponse();
-            response.setNotification_id(notification.getNotification_id());
-            response.setUser_id(notification.getUser_id());
-            response.setUser_fullname(userRepository.getUserByUser_id(notification.getUser_id()).getFullname());
-            response.setTitle(notification.getTitle());
-            response.setMessage(notification.getMessage());
-            listResponse.add(response);
+        try {
+            List<NotificationGetResponse> listResponse = new ArrayList<>();
+            List<Notification> listNotifications = notificationRepository.findAll();
+            for (int i = 0; i < listNotifications.size(); i++) {
+                Notification notification = listNotifications.get(i);
+                NotificationGetResponse response = new NotificationGetResponse();
+                response.setNotification_id(notification.getNotification_id());
+                response.setUser_id(notification.getUser_id());
+                response.setUser_fullname(userRepository.getUserByUser_id(notification.getUser_id()).getFullname());
+                response.setTitle(notification.getTitle());
+                response.setMessage(notification.getMessage());
+                listResponse.add(response);
+            }
+            return listResponse;
+        } catch (Exception e) {
+            throw e;
         }
-        return listResponse;
     }
 
     public List<NotificationGetResponse> getAllNotificationsOfUser(int user_id) {
-        List<NotificationGetResponse> listResponse = new ArrayList<>();
-        List<Notification> listNotifications = notificationRepository.getAllNotificationByUser_id(user_id);
-        for (int i = 0; i < listNotifications.size(); i++) {
-            Notification notification = listNotifications.get(i);
+        try {
+            List<NotificationGetResponse> listResponse = new ArrayList<>();
+            List<Notification> listNotifications = notificationRepository.getAllNotificationByUser_id(user_id);
+            for (int i = 0; i < listNotifications.size(); i++) {
+                Notification notification = listNotifications.get(i);
+                NotificationGetResponse response = new NotificationGetResponse();
+                response.setNotification_id(notification.getNotification_id());
+                response.setUser_id(notification.getUser_id());
+                response.setUser_fullname(userRepository.getUserByUser_id(notification.getUser_id()).getFullname());
+                response.setTitle(notification.getTitle());
+                response.setMessage(notification.getMessage());
+                listResponse.add(response);
+            }
+            return listResponse;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public NotificationGetResponse getNotification(int notification_id) {
+        try {
+            Notification notification = notificationRepository.getNotificationById(notification_id);
             NotificationGetResponse response = new NotificationGetResponse();
             response.setNotification_id(notification.getNotification_id());
             response.setUser_id(notification.getUser_id());
             response.setUser_fullname(userRepository.getUserByUser_id(notification.getUser_id()).getFullname());
             response.setTitle(notification.getTitle());
             response.setMessage(notification.getMessage());
-            listResponse.add(response);
+            return response;
+        } catch (Exception e) {
+            throw e;
         }
-        return listResponse;
-    }
-
-    public NotificationGetResponse getNotification(int notification_id) {
-        Notification notification = notificationRepository.getNotificationById(notification_id);
-        NotificationGetResponse response = new NotificationGetResponse();
-        response.setNotification_id(notification.getNotification_id());
-        response.setUser_id(notification.getUser_id());
-        response.setUser_fullname(userRepository.getUserByUser_id(notification.getUser_id()).getFullname());
-        response.setTitle(notification.getTitle());
-        response.setMessage(notification.getMessage());
-        return response;
     }
 
     public void createNotification(Notification notification) {
-        notificationRepository.save(notification);
+        try {
+            notificationRepository.save(notification);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public void createNotificationForUser(List<Integer> listUser_id, String message) {
-        for (int i = 0; i < listUser_id.size(); i++) {
-            createNotification(new Notification(listUser_id.get(i),
-                    "Thông báo",
-                    message,
-                    new Date()));
+        try {
+            for (int i = 0; i < listUser_id.size(); i++) {
+                createNotification(new Notification(listUser_id.get(i),
+                        "Thông báo",
+                        message,
+                        new Date()));
+            }
+        } catch (Exception e) {
+            throw e;
         }
     }
 
     public boolean deleteNotification(int notification_id) {
-        Notification notification = notificationRepository.getNotificationById(notification_id);
-        if (notification != null) {
-            notificationRepository.delete(notification);
-            return true;
+        try {
+            Notification notification = notificationRepository.getNotificationById(notification_id);
+            if (notification != null) {
+                notificationRepository.delete(notification);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            throw e;
         }
-        return false;
     }
 }

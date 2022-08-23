@@ -1,7 +1,6 @@
 package com.example.vfarmrdbackend.service.test;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.example.vfarmrdbackend.service.user.UserService;
@@ -11,7 +10,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.vfarmrdbackend.model.test.Test;
 import com.example.vfarmrdbackend.model.user.User;
-import com.example.vfarmrdbackend.model.error.ErrorModel;
 import com.example.vfarmrdbackend.model.file.File;
 import com.example.vfarmrdbackend.payload.test.TestCreateRequest;
 import com.example.vfarmrdbackend.payload.test.TestCreateValue;
@@ -20,7 +18,6 @@ import com.example.vfarmrdbackend.payload.test.TestUpdateRequest;
 import com.example.vfarmrdbackend.payload.file.FileResponse;
 import com.example.vfarmrdbackend.payload.test.TestGetResponse;
 import com.example.vfarmrdbackend.repository.test.TestRepository;
-import com.example.vfarmrdbackend.service.error.ErrorService;
 import com.example.vfarmrdbackend.service.file.FileService;
 import com.example.vfarmrdbackend.service.others.JwtService;
 
@@ -35,18 +32,10 @@ public class TestService {
     @Autowired
     FileService fileService;
 
-    @Autowired
-    ErrorService errorService;
-
     public List<Test> getAllTestWithFormula_id(int formula_id, String jwt) {
         try {
             return testRepository.getTestWithFormula_id(formula_id);
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "TEST GET WITH FORMULA ID",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -79,11 +68,6 @@ public class TestService {
             }
             return response;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "TEST GET WITH TEST ID",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -101,11 +85,6 @@ public class TestService {
                 testRepository.save(test);
             }
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "TEST CREATE",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -120,11 +99,6 @@ public class TestService {
                 testRepository.save(test);
             }
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "TEST UPDATE",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -158,11 +132,6 @@ public class TestService {
                 deleteTest(listTest_id.get(i), jwt);
             }
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "TEST UPDATE MULTIPLE",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -176,11 +145,6 @@ public class TestService {
             }
             return false;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "TEST DELETE",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -189,11 +153,6 @@ public class TestService {
         try {
             return testRepository.getAllPassTestWithFormula_id(formula_id);
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "TEST GET ALL PASS TEST",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -202,11 +161,6 @@ public class TestService {
         try {
             return testRepository.getAllNotPassTestWithFormula_id(formula_id);
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "TEST GET ALL NOT PASS TEST",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }

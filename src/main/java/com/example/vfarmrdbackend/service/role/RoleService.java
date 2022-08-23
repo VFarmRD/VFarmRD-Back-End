@@ -14,16 +14,28 @@ public class RoleService {
     private RoleRepository roleRepository;
 
     public List<Role> getAllRoles() {
-        return roleRepository.findAll();
+        try {
+            return roleRepository.findAll();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public Role getRoleByRole_id(int role_id) {
-        return roleRepository.getRoleByRole_id(role_id);
+        try {
+            return roleRepository.getRoleByRole_id(role_id);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public void createRole(String role_name) {
-        Role role = new Role();
-        role.setRole_name(role_name);
-        roleRepository.save(role);
+        try {
+            Role role = new Role();
+            role.setRole_name(role_name);
+            roleRepository.save(role);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }

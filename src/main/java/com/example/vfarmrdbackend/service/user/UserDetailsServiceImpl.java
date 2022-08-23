@@ -31,18 +31,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   @Override
   @Transactional
   public UserDetails loadUserByUsername(String user_name) {
-    User user = new User();
-    List<Role> listRole = new ArrayList<Role>();
     try {
-      user = userRepository.getUserByUser_name(user_name);
-      List<UserRole> roleOfUser = userroleRepository.getAllRoleOfOneByUser_id(user.getUser_id());
-      for (int i = 0; i < roleOfUser.size(); i++) {
-        listRole.add(roleRepository.getRoleByRole_id(roleOfUser.get(i).getRole_id()));
+      User user = new User();
+      List<Role> listRole = new ArrayList<Role>();
+      try {
+        user = userRepository.getUserByUser_name(user_name);
+        List<UserRole> roleOfUser = userroleRepository.getAllRoleOfOneByUser_id(user.getUser_id());
+        for (int i = 0; i < roleOfUser.size(); i++) {
+          listRole.add(roleRepository.getRoleByRole_id(roleOfUser.get(i).getRole_id()));
+        }
+      } catch (UsernameNotFoundException e) {
+        e.getMessage();
       }
-    } catch (UsernameNotFoundException e) {
-      e.getMessage();
+      return userDetails.build(user, listRole, roleRepository.findAll());
+    } catch (Exception e) {
+      throw e;
     }
-    return userDetails.build(user,listRole, roleRepository.findAll());
   }
 
 }

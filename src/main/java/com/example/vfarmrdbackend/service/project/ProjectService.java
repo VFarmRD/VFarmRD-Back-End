@@ -13,13 +13,11 @@ import org.springframework.stereotype.Service;
 import com.example.vfarmrdbackend.model.log.Log;
 import com.example.vfarmrdbackend.model.notification.Notification;
 import com.example.vfarmrdbackend.model.project.Project;
-import com.example.vfarmrdbackend.model.error.ErrorModel;
 import com.example.vfarmrdbackend.payload.project.ProjectRequest;
 import com.example.vfarmrdbackend.payload.project.ProjectStatisticsFromDateToDateResponse;
 import com.example.vfarmrdbackend.payload.project.ProjectStatisticsResponse;
 import com.example.vfarmrdbackend.payload.project.ProjectGetResponse;
 import com.example.vfarmrdbackend.repository.project.ProjectRepository;
-import com.example.vfarmrdbackend.service.error.ErrorService;
 import com.example.vfarmrdbackend.service.log.LogService;
 import com.example.vfarmrdbackend.service.notification.NotificationService;
 import com.example.vfarmrdbackend.service.others.JwtService;
@@ -36,9 +34,6 @@ public class ProjectService {
     NotificationService notificationService;
 
     @Autowired
-    ErrorService errorService;
-
-    @Autowired
     UserService userService;
 
     @Autowired
@@ -48,11 +43,6 @@ public class ProjectService {
         try {
             return projectRepository.findAll();
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT GET ALL",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -77,11 +67,6 @@ public class ProjectService {
             response.setEstimated_weight(project.getEstimated_weight());
             return response;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT GET BY PROJECT ID",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -115,11 +100,6 @@ public class ProjectService {
             }
             return listResponse;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT GET BY USER_ID",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -149,11 +129,6 @@ public class ProjectService {
             }
             return listResponse;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT GET BY FORMULA STATUS",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -190,11 +165,6 @@ public class ProjectService {
                             projectRepository.getProjectByProject_code(request.getProject_code()).getProject_id()),
                     new Date()));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT CREATE",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -239,11 +209,6 @@ public class ProjectService {
                     String.valueOf(project_id),
                     new Date()));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT UPDATE",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -260,11 +225,6 @@ public class ProjectService {
                     String.valueOf(project_id),
                     new Date()));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT DELETE",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -281,11 +241,6 @@ public class ProjectService {
                     String.valueOf(project_id),
                     new Date()));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT RECOVER",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -299,11 +254,6 @@ public class ProjectService {
                     "Bạn đã được phân công vào 1 dự án!",
                     new Date()));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    0,
-                    "PROJECT ASSIGN USER FROM TASK",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -333,11 +283,6 @@ public class ProjectService {
             }
             return listResponse;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT GET ALL BY MATERIAL ID",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -349,11 +294,6 @@ public class ProjectService {
                     projectRepository.getTotalProjectCanceled(),
                     projectRepository.getTotalProjectHaveProduct());
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT STATISTIC OF ALL TIME",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -385,11 +325,6 @@ public class ProjectService {
             }
             return listResponses;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT STATISTIC FROM DATE TO DATE",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -401,11 +336,6 @@ public class ProjectService {
                     projectRepository.getTotalProjectCanceledWithMonthAndYear(month, year),
                     projectRepository.getTotalProjectHaveProductWithMonthAndYear(month, year));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT STATISTIC WITH MONTH AND YEAR",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -435,11 +365,6 @@ public class ProjectService {
             }
             return listResponse;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "PROJECT GET BY CLIENT_ID",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }

@@ -15,7 +15,6 @@ import com.example.vfarmrdbackend.model.notification.Notification;
 import com.example.vfarmrdbackend.model.phase.Phase;
 import com.example.vfarmrdbackend.model.test.Test;
 import com.example.vfarmrdbackend.model.user.User;
-import com.example.vfarmrdbackend.model.error.ErrorModel;
 import com.example.vfarmrdbackend.payload.formula.FormulaCreateRequest;
 import com.example.vfarmrdbackend.payload.formula.FormulaUpdateRequest;
 import com.example.vfarmrdbackend.payload.formula.FormulaUpgradeRequest;
@@ -37,7 +36,6 @@ import com.example.vfarmrdbackend.service.project.ProjectService;
 import com.example.vfarmrdbackend.service.test.TestService;
 import com.example.vfarmrdbackend.service.tool.ToolInPhaseService;
 import com.example.vfarmrdbackend.service.user.UserService;
-import com.example.vfarmrdbackend.service.error.ErrorService;
 import com.example.vfarmrdbackend.service.log.LogService;
 import com.example.vfarmrdbackend.service.material.MaterialOfPhaseService;
 import com.example.vfarmrdbackend.service.notification.NotificationService;
@@ -69,9 +67,6 @@ public class FormulaService {
 
     @Autowired
     ToolInPhaseService toolInPhaseService;
-
-    @Autowired
-    ErrorService errorService;
 
     @Autowired
     ProjectService projectService;
@@ -107,11 +102,6 @@ public class FormulaService {
             }
             return listFormulasGetAll;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FORMULA GET ALL BY PROJECT ID",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -149,11 +139,6 @@ public class FormulaService {
             }
             return listFormulasGetAll;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    user_id,
-                    "GET FORMULA BY USER ID AND FORMULA STATUS",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -222,210 +207,38 @@ public class FormulaService {
             formulaGetResponse.setTest_status(test_status);
             return formulaGetResponse;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "GET FORMULA BY FORMULA ID",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
 
     public int createFormula(FormulaCreateRequest formulaCreateRequest, String jwt) {
-        Formula formula = new Formula();
-        formula.setProject_id(formulaCreateRequest.getProject_id());
-        formula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
-        formula.setFormula_pre_version("none");
-        formula.setFormula_version(
-                String.valueOf(formulaRepository.getTotalFormulaOfProduct(formula.getProject_id()) + 1));
-        formula.setFormula_status("on process");
-        formula.setFormula_cost(formulaCreateRequest.getFormula_cost());
-        formula.setFormula_weight(formulaCreateRequest.getFormula_weight());
-        formula.setVolume(formulaCreateRequest.getVolume());
-        formula.setProduct_weight(formulaCreateRequest.getProduct_weight());
-        formula.setDensity(formulaCreateRequest.getDensity());
-        formula.setDescription(formulaCreateRequest.getDescription());
-        formula.setLoss(formulaCreateRequest.getLoss());
-        formula.setCreated_time(new Date());
-        formulaRepository.save(formula);
-        for (int i = 0; i < formulaCreateRequest.getPhaseCreateRequest().size(); i++) {
-            PhaseCreateRequest phaseCreateRequest = formulaCreateRequest.getPhaseCreateRequest().get(i);
-            phaseService.createPhase(
-                    formulaRepository.getLatestFormula_idOfProject(formulaCreateRequest.getProject_id()),
-                    phaseCreateRequest, jwt);
-            int newest_phase_id = phaseService.getNewestPhase_id(jwt);
-            for (int j = 0; j < phaseCreateRequest.getMaterialOfPhaseCreateRequest().size(); j++) {
-                materialOfPhaseService.createMaterialOfPhase(newest_phase_id, phaseCreateRequest
-                        .getMaterialOfPhaseCreateRequest().get(j), jwt);
-
-            }
-            if (phaseCreateRequest.getListTool_id().size() > 0 &&
-                    phaseCreateRequest.getListTool_id().get(0) != 0) {
-                for (int j = 0; j < phaseCreateRequest.getListTool_id().size(); j++) {
-                    toolInPhaseService
-                            .createToolInPhase(new ToolInPhaseRequest(phaseCreateRequest.getListTool_id().get(j),
-                                    newest_phase_id), jwt);
-                }
-            }
-        }
-        logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
-                "FORMULA",
-                "CREATE",
-                String.valueOf(formulaRepository.getLatestFormula_idOfProject(formulaCreateRequest.getProject_id())),
-                new Date()));
-        return formulaRepository.getFormula_idByProject_idAndVersion(formula.getProject_id(),
-                formula.getFormula_version());
-    }
-
-    public int updateFormula(int formula_id, FormulaUpdateRequest formulaUpdateRequest, String jwt) {
-        Formula updateFormula = formulaRepository.getFormulaByFormula_id(formula_id);
-        if (updateFormula != null && !updateFormula.getFormula_status().equals("approved")) {
-            updateFormula.setFormula_cost(formulaUpdateRequest.getFormula_cost());
-            updateFormula.setFormula_weight(formulaUpdateRequest.getFormula_weight());
-            updateFormula.setVolume(formulaUpdateRequest.getVolume());
-            updateFormula.setProduct_weight(formulaUpdateRequest.getProduct_weight());
-            updateFormula.setDensity(formulaUpdateRequest.getDensity());
-            updateFormula.setDescription(formulaUpdateRequest.getDescription());
-            updateFormula.setLoss(formulaUpdateRequest.getLoss());
-            List<PhaseUpdateRequest> listPhaseUpdate = formulaUpdateRequest.getPhaseUpdateRequest();
-            List<Integer> listOldPhase_id = phaseService.getAllPhase_idOfFormula(formula_id, jwt);
-            for (int i = 0; i < listPhaseUpdate.size(); i++) {
-                PhaseUpdateRequest phaseUpdateRequest = listPhaseUpdate.get(i);
-                int phase_id = phaseUpdateRequest.getPhase_id();
-                if (phase_id != 0) {
-                    phaseService.updatePhase(phaseUpdateRequest, jwt);
-                    listOldPhase_id.remove(Integer.valueOf(phase_id));
-                    toolInPhaseService.deleteAllToolInPhaseByPhase_id(phase_id, jwt);
-                } else if (phase_id == 0) {
-                    PhaseCreateRequest phaseCreateRequest = new PhaseCreateRequest();
-                    phaseCreateRequest.setPhase_description(phaseUpdateRequest.getPhase_description());
-                    phaseCreateRequest.setPhase_index(phaseCreateRequest.getPhase_index());
-                    List<MaterialOfPhaseUpdateRequest> listMaterialUpdateInput = phaseUpdateRequest
-                            .getMaterialOfPhaseUpdateRequest();
-                    phaseService.createPhase(formula_id, phaseCreateRequest, jwt);
-                    phase_id = phaseService.getNewestPhase_id(jwt);
-                    for (int j = 0; j < listMaterialUpdateInput.size(); j++) {
-                        MaterialOfPhaseUpdateRequest materialOfPhaseUpdate = listMaterialUpdateInput.get(j);
-                        MaterialOfPhaseCreateRequest materialOfPhaseCreate = new MaterialOfPhaseCreateRequest();
-                        materialOfPhaseCreate.setMaterial_id(materialOfPhaseUpdate.getMaterial_id());
-                        materialOfPhaseCreate.setMaterial_cost(materialOfPhaseUpdate.getMaterial_cost());
-                        materialOfPhaseCreate.setMaterial_percent(materialOfPhaseUpdate.getMaterial_percent());
-                        materialOfPhaseCreate.setMaterial_weight(materialOfPhaseUpdate.getMaterial_weight());
-                        materialOfPhaseCreate.setMaterial_description(materialOfPhaseUpdate.getMaterial_description());
-                        materialOfPhaseService.createMaterialOfPhase(phase_id, materialOfPhaseCreate, jwt);
-                    }
-                }
-                if (listPhaseUpdate.get(i).getListTool_id().size() > 0 &&
-                        listPhaseUpdate.get(i).getListTool_id().get(0) != 0) {
-                    for (int j = 0; j < listPhaseUpdate.get(i).getListTool_id().size(); j++) {
-                        toolInPhaseService.createToolInPhase(
-                                new ToolInPhaseRequest(
-                                        listPhaseUpdate.get(i).getListTool_id().get(j),
-                                        phase_id),
-                                jwt);
-                    }
-                }
-            }
-            if (listOldPhase_id.size() > 0) {
-                for (int i = 0; i < listOldPhase_id.size(); i++) {
-                    phaseService.deletePhase(listOldPhase_id.get(i), jwt);
-                }
-            }
-            formulaRepository.save(updateFormula);
-            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
-                    "FORMULA",
-                    "UPDATE",
-                    String.valueOf(formula_id),
-                    new Date()));
-            return formulaRepository.getFormula_idByProject_idAndVersion(updateFormula.getProject_id(),
-                    updateFormula.getFormula_version());
-        }
-        return 0;
-    }
-
-    public boolean setFormula_status(int formula_id, String status, String jwt) {
-        Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
-        if (formula != null) {
-            if (!status.equals("on process") && !status.equals("approved")
-                    && !status.equals("pending") && !status.equals("canceled")) {
-                return false;
-            }
-            if (status.equals("approved") || status.equals("on process")) {
-                if (!formula.getFormula_status().equals("pending")) {
-                    return false;
-                }
-            }
-            formula.setFormula_status(status);
-            formula.setModified_time(new Date());
+        try {
+            Formula formula = new Formula();
+            formula.setProject_id(formulaCreateRequest.getProject_id());
+            formula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
+            formula.setFormula_pre_version("none");
+            formula.setFormula_version(
+                    String.valueOf(formulaRepository.getTotalFormulaOfProduct(formula.getProject_id()) + 1));
+            formula.setFormula_status("on process");
+            formula.setFormula_cost(formulaCreateRequest.getFormula_cost());
+            formula.setFormula_weight(formulaCreateRequest.getFormula_weight());
+            formula.setVolume(formulaCreateRequest.getVolume());
+            formula.setProduct_weight(formulaCreateRequest.getProduct_weight());
+            formula.setDensity(formulaCreateRequest.getDensity());
+            formula.setDescription(formulaCreateRequest.getDescription());
+            formula.setLoss(formulaCreateRequest.getLoss());
+            formula.setCreated_time(new Date());
             formulaRepository.save(formula);
-            if (status.equals("approved")) {
-                notificationService.createNotification(new Notification(
-                        formula.getCreated_user_id(),
-                        "Thông qua!",
-                        "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án" +
-                                projectService.getProjectByProject_id(formula.getProject_id(), jwt).getProject_name() +
-                                " đã được chấp thuận!",
-                        new Date()));
-                logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
-                        "FORMULA",
-                        "ACCEPT",
-                        String.valueOf(formula_id),
-                        new Date()));
-            } else if (status.equals("on process")) {
-                notificationService.createNotification(new Notification(
-                        formula.getCreated_user_id(),
-                        "Từ chối!",
-                        "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án" +
-                                projectService.getProjectByProject_id(formula.getProject_id(), jwt).getProject_name() +
-                                " đã bị từ chối!",
-                        new Date()));
-                logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
-                        "FORMULA",
-                        "DENY",
-                        String.valueOf(formula_id),
-                        new Date()));
-            } else if (status.equals("pending")) {
-                logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
-                        "FORMULA",
-                        "SUBMIT",
-                        String.valueOf(formula_id),
-                        new Date()));
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public int upgradeFormula(int formula_id, FormulaUpgradeRequest formulaUpgradeRequest, String jwt) {
-        Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
-        Formula newFormula = new Formula();
-        if (formula != null) {
-            newFormula.setProject_id(formula.getProject_id());
-            newFormula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
-            newFormula.setFormula_pre_version(formula.getFormula_version());
-            newFormula.setFormula_version(formula.getFormula_version() + "." + String
-                    .valueOf(formulaRepository.totalFormulaHaveMatchPreVersion(formula.getProject_id(),
-                            formula.getFormula_version()) + 1));
-            newFormula.setVolume(formulaUpgradeRequest.getVolume());
-            newFormula.setProduct_weight(formulaUpgradeRequest.getProduct_weight());
-            newFormula.setDensity(formulaUpgradeRequest.getDensity());
-            newFormula.setFormula_cost(formulaUpgradeRequest.getFormula_cost());
-            newFormula.setFormula_weight(formulaUpgradeRequest.getFormula_weight());
-            newFormula.setFormula_status("on process");
-            newFormula.setCreated_time(formula.getCreated_time());
-            newFormula.setModified_time(new Date());
-            newFormula.setDescription(formulaUpgradeRequest.getDescription());
-            newFormula.setLoss(formulaUpgradeRequest.getLoss());
-            formulaRepository.save(newFormula);
-            for (int i = 0; i < formulaUpgradeRequest.getPhaseCreateRequest().size(); i++) {
-                PhaseCreateRequest phaseCreateRequest = formulaUpgradeRequest.getPhaseCreateRequest().get(i);
-                phaseService.createPhase(formulaRepository.getLatestFormula_idOfProject(formula.getProject_id()),
+            for (int i = 0; i < formulaCreateRequest.getPhaseCreateRequest().size(); i++) {
+                PhaseCreateRequest phaseCreateRequest = formulaCreateRequest.getPhaseCreateRequest().get(i);
+                phaseService.createPhase(
+                        formulaRepository.getLatestFormula_idOfProject(formulaCreateRequest.getProject_id()),
                         phaseCreateRequest, jwt);
                 int newest_phase_id = phaseService.getNewestPhase_id(jwt);
                 for (int j = 0; j < phaseCreateRequest.getMaterialOfPhaseCreateRequest().size(); j++) {
-                    materialOfPhaseService.createMaterialOfPhase(newest_phase_id,
-                            phaseCreateRequest.getMaterialOfPhaseCreateRequest().get(j), jwt);
+                    materialOfPhaseService.createMaterialOfPhase(newest_phase_id, phaseCreateRequest
+                            .getMaterialOfPhaseCreateRequest().get(j), jwt);
+
                 }
                 if (phaseCreateRequest.getListTool_id().size() > 0 &&
                         phaseCreateRequest.getListTool_id().get(0) != 0) {
@@ -438,13 +251,204 @@ public class FormulaService {
             }
             logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                     "FORMULA",
-                    "UPGRADE",
-                    String.valueOf(formula_id),
+                    "CREATE",
+                    String.valueOf(
+                            formulaRepository.getLatestFormula_idOfProject(formulaCreateRequest.getProject_id())),
                     new Date()));
-            return formulaRepository.getFormula_idByProject_idAndVersion(newFormula.getProject_id(),
-                    newFormula.getFormula_version());
-        } else {
+            return formulaRepository.getFormula_idByProject_idAndVersion(formula.getProject_id(),
+                    formula.getFormula_version());
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public int updateFormula(int formula_id, FormulaUpdateRequest formulaUpdateRequest, String jwt) {
+        try {
+            Formula updateFormula = formulaRepository.getFormulaByFormula_id(formula_id);
+            if (updateFormula != null && !updateFormula.getFormula_status().equals("approved")) {
+                updateFormula.setFormula_cost(formulaUpdateRequest.getFormula_cost());
+                updateFormula.setFormula_weight(formulaUpdateRequest.getFormula_weight());
+                updateFormula.setVolume(formulaUpdateRequest.getVolume());
+                updateFormula.setProduct_weight(formulaUpdateRequest.getProduct_weight());
+                updateFormula.setDensity(formulaUpdateRequest.getDensity());
+                updateFormula.setDescription(formulaUpdateRequest.getDescription());
+                updateFormula.setLoss(formulaUpdateRequest.getLoss());
+                List<PhaseUpdateRequest> listPhaseUpdate = formulaUpdateRequest.getPhaseUpdateRequest();
+                List<Integer> listOldPhase_id = phaseService.getAllPhase_idOfFormula(formula_id, jwt);
+                for (int i = 0; i < listPhaseUpdate.size(); i++) {
+                    PhaseUpdateRequest phaseUpdateRequest = listPhaseUpdate.get(i);
+                    int phase_id = phaseUpdateRequest.getPhase_id();
+                    if (phase_id != 0) {
+                        phaseService.updatePhase(phaseUpdateRequest, jwt);
+                        listOldPhase_id.remove(Integer.valueOf(phase_id));
+                        toolInPhaseService.deleteAllToolInPhaseByPhase_id(phase_id, jwt);
+                    } else if (phase_id == 0) {
+                        PhaseCreateRequest phaseCreateRequest = new PhaseCreateRequest();
+                        phaseCreateRequest.setPhase_description(phaseUpdateRequest.getPhase_description());
+                        phaseCreateRequest.setPhase_index(phaseCreateRequest.getPhase_index());
+                        List<MaterialOfPhaseUpdateRequest> listMaterialUpdateInput = phaseUpdateRequest
+                                .getMaterialOfPhaseUpdateRequest();
+                        phaseService.createPhase(formula_id, phaseCreateRequest, jwt);
+                        phase_id = phaseService.getNewestPhase_id(jwt);
+                        for (int j = 0; j < listMaterialUpdateInput.size(); j++) {
+                            MaterialOfPhaseUpdateRequest materialOfPhaseUpdate = listMaterialUpdateInput.get(j);
+                            MaterialOfPhaseCreateRequest materialOfPhaseCreate = new MaterialOfPhaseCreateRequest();
+                            materialOfPhaseCreate.setMaterial_id(materialOfPhaseUpdate.getMaterial_id());
+                            materialOfPhaseCreate.setMaterial_cost(materialOfPhaseUpdate.getMaterial_cost());
+                            materialOfPhaseCreate.setMaterial_percent(materialOfPhaseUpdate.getMaterial_percent());
+                            materialOfPhaseCreate.setMaterial_weight(materialOfPhaseUpdate.getMaterial_weight());
+                            materialOfPhaseCreate
+                                    .setMaterial_description(materialOfPhaseUpdate.getMaterial_description());
+                            materialOfPhaseService.createMaterialOfPhase(phase_id, materialOfPhaseCreate, jwt);
+                        }
+                    }
+                    if (listPhaseUpdate.get(i).getListTool_id().size() > 0 &&
+                            listPhaseUpdate.get(i).getListTool_id().get(0) != 0) {
+                        for (int j = 0; j < listPhaseUpdate.get(i).getListTool_id().size(); j++) {
+                            toolInPhaseService.createToolInPhase(
+                                    new ToolInPhaseRequest(
+                                            listPhaseUpdate.get(i).getListTool_id().get(j),
+                                            phase_id),
+                                    jwt);
+                        }
+                    }
+                }
+                if (listOldPhase_id.size() > 0) {
+                    for (int i = 0; i < listOldPhase_id.size(); i++) {
+                        phaseService.deletePhase(listOldPhase_id.get(i), jwt);
+                    }
+                }
+                formulaRepository.save(updateFormula);
+                logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                        "FORMULA",
+                        "UPDATE",
+                        String.valueOf(formula_id),
+                        new Date()));
+                return formulaRepository.getFormula_idByProject_idAndVersion(updateFormula.getProject_id(),
+                        updateFormula.getFormula_version());
+            }
             return 0;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public boolean setFormula_status(int formula_id, String status, String jwt) {
+        try {
+            Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
+            if (formula != null) {
+                if (!status.equals("on process") && !status.equals("approved")
+                        && !status.equals("pending") && !status.equals("canceled")) {
+                    return false;
+                }
+                if (status.equals("approved") || status.equals("on process")) {
+                    if (!formula.getFormula_status().equals("pending")) {
+                        return false;
+                    }
+                }
+                formula.setFormula_status(status);
+                formula.setModified_time(new Date());
+                formulaRepository.save(formula);
+                if (status.equals("approved")) {
+                    notificationService.createNotification(new Notification(
+                            formula.getCreated_user_id(),
+                            "Thông qua!",
+                            "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án " +
+                                    projectService.getProjectByProject_id(formula.getProject_id(), jwt)
+                                            .getProject_name()
+                                    +
+                                    " đã được chấp thuận!",
+                            new Date()));
+                    logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                            "FORMULA",
+                            "ACCEPT",
+                            String.valueOf(formula_id),
+                            new Date()));
+                } else if (status.equals("on process")) {
+                    notificationService.createNotification(new Notification(
+                            formula.getCreated_user_id(),
+                            "Từ chối!",
+                            "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án " +
+                                    projectService.getProjectByProject_id(formula.getProject_id(), jwt)
+                                            .getProject_name()
+                                    +
+                                    " đã bị từ chối!",
+                            new Date()));
+                    logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                            "FORMULA",
+                            "DENY",
+                            String.valueOf(formula_id),
+                            new Date()));
+                } else if (status.equals("pending")) {
+                    logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                            "FORMULA",
+                            "SUBMIT",
+                            String.valueOf(formula_id),
+                            new Date()));
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public int upgradeFormula(int formula_id, FormulaUpgradeRequest formulaUpgradeRequest, String jwt) {
+        try {
+            Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
+            Formula newFormula = new Formula();
+            if (formula != null) {
+                newFormula.setProject_id(formula.getProject_id());
+                newFormula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
+                newFormula.setFormula_pre_version(formula.getFormula_version());
+                newFormula.setFormula_version(formula.getFormula_version() + "." + String
+                        .valueOf(formulaRepository.totalFormulaHaveMatchPreVersion(formula.getProject_id(),
+                                formula.getFormula_version()) + 1));
+                newFormula.setVolume(formulaUpgradeRequest.getVolume());
+                newFormula.setProduct_weight(formulaUpgradeRequest.getProduct_weight());
+                newFormula.setDensity(formulaUpgradeRequest.getDensity());
+                newFormula.setFormula_cost(formulaUpgradeRequest.getFormula_cost());
+                newFormula.setFormula_weight(formulaUpgradeRequest.getFormula_weight());
+                newFormula.setFormula_status("on process");
+                newFormula.setCreated_time(formula.getCreated_time());
+                newFormula.setModified_time(new Date());
+                newFormula.setDescription(formulaUpgradeRequest.getDescription());
+                newFormula.setLoss(formulaUpgradeRequest.getLoss());
+                formulaRepository.save(newFormula);
+                for (int i = 0; i < formulaUpgradeRequest.getPhaseCreateRequest().size(); i++) {
+                    PhaseCreateRequest phaseCreateRequest = formulaUpgradeRequest.getPhaseCreateRequest().get(i);
+                    phaseService.createPhase(formulaRepository.getLatestFormula_idOfProject(formula.getProject_id()),
+                            phaseCreateRequest, jwt);
+                    int newest_phase_id = phaseService.getNewestPhase_id(jwt);
+                    for (int j = 0; j < phaseCreateRequest.getMaterialOfPhaseCreateRequest().size(); j++) {
+                        materialOfPhaseService.createMaterialOfPhase(newest_phase_id,
+                                phaseCreateRequest.getMaterialOfPhaseCreateRequest().get(j), jwt);
+                    }
+                    if (phaseCreateRequest.getListTool_id().size() > 0 &&
+                            phaseCreateRequest.getListTool_id().get(0) != 0) {
+                        for (int j = 0; j < phaseCreateRequest.getListTool_id().size(); j++) {
+                            toolInPhaseService
+                                    .createToolInPhase(
+                                            new ToolInPhaseRequest(phaseCreateRequest.getListTool_id().get(j),
+                                                    newest_phase_id),
+                                            jwt);
+                        }
+                    }
+                }
+                logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                        "FORMULA",
+                        "UPGRADE",
+                        String.valueOf(formula_id),
+                        new Date()));
+                return formulaRepository.getFormula_idByProject_idAndVersion(newFormula.getProject_id(),
+                        newFormula.getFormula_version());
+            } else {
+                return 0;
+            }
+        } catch (Exception e) {
+            throw e;
         }
     }
 
@@ -460,7 +464,7 @@ public class FormulaService {
                     notificationService.createNotification(new Notification(
                             formula.getCreated_user_id(),
                             "Từ chối!",
-                            "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án" +
+                            "Công thức phiên bản " + formula.getFormula_version() + " thuộc dự án " +
                                     projectService.getProjectByProject_id(formula.getProject_id(), jwt)
                                             .getProject_name()
                                     +
@@ -476,11 +480,6 @@ public class FormulaService {
             }
             return false;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FORMULA DENY",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -492,11 +491,6 @@ public class FormulaService {
                     formulaRepository.getTotalFormulaOnProcessWithMonthAndYear(month, year),
                     formulaRepository.getTotalFormulaApprovedWithMonthAndYear(month, year));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FORMULA STATISTIC WITH MONTH AND YEAR",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -530,11 +524,6 @@ public class FormulaService {
             }
             return listResponses;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FORMULA STATISTIC FROM DATE TO DATE",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -546,11 +535,6 @@ public class FormulaService {
                     formulaRepository.getTotalFormulaOnProcess(),
                     formulaRepository.getTotalFormulaApproved());
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FORMULA STATISTIC OF ALL TIME",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }

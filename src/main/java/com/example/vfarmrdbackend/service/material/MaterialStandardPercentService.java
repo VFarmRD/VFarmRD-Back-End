@@ -22,64 +22,88 @@ public class MaterialStandardPercentService {
     LogService logService;
 
     public List<MaterialStandardPercent> getAllMaterialStandardPercent() {
-        return materialStandardPercentRepository.findAll();
+        try {
+            return materialStandardPercentRepository.findAll();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public MaterialStandardPercent getMaterialStandardPercent(int msp_id) {
-        return materialStandardPercentRepository.getMaterialStandardPercentById(msp_id);
+        try {
+            return materialStandardPercentRepository.getMaterialStandardPercentById(msp_id);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public MaterialStandardPercent getMaterialStandardPercentByMaterial_id(String material_id) {
-        return materialStandardPercentRepository.getMaterialStandardPercentByMaterial_id(material_id);
+        try {
+            return materialStandardPercentRepository.getMaterialStandardPercentByMaterial_id(material_id);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public boolean createMaterialStandardPercent(MaterialStandardPercentRequest request, String jwt) {
-        if (materialStandardPercentRepository
-                .getMaterialStandardPercentByMaterial_id(request.getMaterial_id()) == null) {
-            MaterialStandardPercent newMaterialStandardPercent = new MaterialStandardPercent();
-            newMaterialStandardPercent.setMaterial_id(request.getMaterial_id());
-            newMaterialStandardPercent.setMax_percent(request.getMax_percent());
-            materialStandardPercentRepository.save(newMaterialStandardPercent);
-            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
-                    "MATERIAL STANDARD PERCENT",
-                    "CREATE",
-                    String.valueOf(materialStandardPercentRepository
-                            .getMaterialStandardPercentByMaterial_id(request.getMaterial_id())),
-                    new Date()));
-            return true;
+        try {
+            if (materialStandardPercentRepository
+                    .getMaterialStandardPercentByMaterial_id(request.getMaterial_id()) == null) {
+                MaterialStandardPercent newMaterialStandardPercent = new MaterialStandardPercent();
+                newMaterialStandardPercent.setMaterial_id(request.getMaterial_id());
+                newMaterialStandardPercent.setMax_percent(request.getMax_percent());
+                materialStandardPercentRepository.save(newMaterialStandardPercent);
+                logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                        "MATERIAL STANDARD PERCENT",
+                        "CREATE",
+                        String.valueOf(materialStandardPercentRepository
+                                .getMaterialStandardPercentByMaterial_id(request.getMaterial_id())),
+                        new Date()));
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            throw e;
         }
-        return false;
     }
 
     public boolean updateMaterialStandardPercent(int msp_id, MaterialStandardPercentRequest request, String jwt) {
-        MaterialStandardPercent updateMaterialStandardPercent = materialStandardPercentRepository
-                .getMaterialStandardPercentById(msp_id);
-        if (updateMaterialStandardPercent != null) {
-            updateMaterialStandardPercent.setMaterial_id(request.getMaterial_id());
-            updateMaterialStandardPercent.setMax_percent(request.getMax_percent());
-            materialStandardPercentRepository.save(updateMaterialStandardPercent);
-            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
-                    "MATERIAL STANDARD PERCENT",
-                    "UPDATE",
-                    String.valueOf(msp_id),
-                    new Date()));
-            return true;
+        try {
+            MaterialStandardPercent updateMaterialStandardPercent = materialStandardPercentRepository
+                    .getMaterialStandardPercentById(msp_id);
+            if (updateMaterialStandardPercent != null) {
+                updateMaterialStandardPercent.setMaterial_id(request.getMaterial_id());
+                updateMaterialStandardPercent.setMax_percent(request.getMax_percent());
+                materialStandardPercentRepository.save(updateMaterialStandardPercent);
+                logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                        "MATERIAL STANDARD PERCENT",
+                        "UPDATE",
+                        String.valueOf(msp_id),
+                        new Date()));
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            throw e;
         }
-        return false;
     }
 
     public boolean deleteMaterialStandardPercent(int msp_id, String jwt) {
-        MaterialStandardPercent deleteMaterialStandardPercent = materialStandardPercentRepository
-                .getMaterialStandardPercentById(msp_id);
-        if (deleteMaterialStandardPercent != null) {
-            materialStandardPercentRepository.delete(deleteMaterialStandardPercent);
-            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
-                    "MATERIAL STANDARD PERCENT",
-                    "UPDATE",
-                    String.valueOf(msp_id),
-                    new Date()));
-            return true;
+        try {
+            MaterialStandardPercent deleteMaterialStandardPercent = materialStandardPercentRepository
+                    .getMaterialStandardPercentById(msp_id);
+            if (deleteMaterialStandardPercent != null) {
+                materialStandardPercentRepository.delete(deleteMaterialStandardPercent);
+                logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                        "MATERIAL STANDARD PERCENT",
+                        "UPDATE",
+                        String.valueOf(msp_id),
+                        new Date()));
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            throw e;
         }
-        return false;
     }
 }

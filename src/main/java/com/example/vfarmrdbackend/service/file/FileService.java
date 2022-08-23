@@ -6,13 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-
 import com.example.vfarmrdbackend.model.log.Log;
-import com.example.vfarmrdbackend.model.error.ErrorModel;
 import com.example.vfarmrdbackend.model.file.File;
 import com.example.vfarmrdbackend.payload.file.FileResponse;
 import com.example.vfarmrdbackend.repository.file.FileRepository;
-import com.example.vfarmrdbackend.service.error.ErrorService;
 import com.example.vfarmrdbackend.service.log.LogService;
 import com.example.vfarmrdbackend.service.others.JwtService;
 
@@ -31,9 +28,6 @@ public class FileService {
     @Autowired
     LogService logService;
 
-    @Autowired
-    ErrorService errorService;
-
     public void deleteOldFile(String object_type, String object_id, String jwt) {
         try {
             File oldFile = fileRepository.getFileByObjTypeAndId(object_type, String.valueOf(object_id));
@@ -41,11 +35,7 @@ public class FileService {
                 fileRepository.delete(oldFile);
             }
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FILE DELETE OLD FILE",
-                    e.getMessage(),
-                    new Date()));
+            throw e;
         }
     }
 
@@ -76,11 +66,6 @@ public class FileService {
             listFile_id.put("listFile_id", fileRepository.getNewestFile_id(object_type, object_id, listFile.size()));
             return listFile_id;
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FILE UPLOAD",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
 
@@ -100,11 +85,6 @@ public class FileService {
                     file.getFile_type(),
                     file.getFile_data().length);
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    user_id,
-                    "FILE GET",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -113,11 +93,6 @@ public class FileService {
         try {
             return fileRepository.getFileToDownload(file_id);
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FILE GET DOWNLOAD LINK",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -126,11 +101,6 @@ public class FileService {
         try {
             return fileRepository.getAllFileWithUser_id(user_id).stream();
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    user_id,
-                    "FILE GET ALL WITH USER ID",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -139,11 +109,6 @@ public class FileService {
         try {
             return fileRepository.findFileWithKeyword(keyword, user_id).stream();
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    user_id,
-                    "FILE FIND",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -158,11 +123,6 @@ public class FileService {
                     String.valueOf(file_id),
                     new Date()));
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FILE DELETE",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -171,11 +131,6 @@ public class FileService {
         try {
             return fileRepository.getFileByObjTypeAndId(object_type, object_id);
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FILE GET BY OBJECT TYPE AND ID",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
@@ -184,11 +139,6 @@ public class FileService {
         try {
             return fileRepository.getFileByMaterial_id(material_id).stream();
         } catch (Exception e) {
-            errorService.createError(new ErrorModel(
-                    JwtService.getUser_idFromToken(jwt),
-                    "FILE GET MATERIAL",
-                    e.getMessage(),
-                    new Date()));
             throw e;
         }
     }
