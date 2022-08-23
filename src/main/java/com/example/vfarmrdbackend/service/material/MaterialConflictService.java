@@ -89,53 +89,60 @@ public class MaterialConflictService {
             List<Integer> listMaterialConflict_id = materialConflictRepository
                     .getMaterialConflictIdBMaterial_id(material_id);
             List<MaterialConflictCreateRequest> listCreateRequest = new ArrayList<>();
-            for (int i = 0; i < listRequest.size(); i++) {
-                if (listRequest.get(i).getMaterialconflict_id() != 0) {
-                    for (int j = 0; j < listMaterialConflict.size(); j++) {
-                        if (listMaterialConflict.get(j).getFirst_material_id() == material_id) {
-                            MaterialConflict updateConflict = materialConflictRepository
-                                    .getMaterialConflictById(listRequest.get(j).getMaterialconflict_id());
-                            updateConflict.setFirst_material_id(listRequest.get(i).getFirst_material_id());
-                            updateConflict.setSecond_material_id(listRequest.get(i).getSecond_material_id());
-                            updateConflict.setDescription(listRequest.get(i).getDescription());
-                            materialConflictRepository.save(updateConflict);
-                            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
-                                    "MATERIAL CONFLICT",
-                                    "UPDATE",
-                                    String.valueOf(materialConflictRepository.getMaterialConflictByTwoMaterial_id(
-                                            listRequest.get(i).getFirst_material_id(),
-                                            listRequest.get(i).getSecond_material_id())),
-                                    new Date()));
-                        } else if (listMaterialConflict.get(j).getSecond_material_id() == material_id) {
-                            MaterialConflict updateConflict = materialConflictRepository
-                                    .getMaterialConflictById(listRequest.get(j).getMaterialconflict_id());
-                            updateConflict.setFirst_material_id(listRequest.get(i).getSecond_material_id());
-                            updateConflict.setSecond_material_id(listRequest.get(i).getFirst_material_id());
-                            updateConflict.setDescription(listRequest.get(i).getDescription());
-                            materialConflictRepository.save(updateConflict);
-                            logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
-                                    "MATERIAL CONFLICT",
-                                    "UPDATE",
-                                    String.valueOf(materialConflictRepository.getMaterialConflictByTwoMaterial_id(
-                                            listRequest.get(i).getSecond_material_id(),
-                                            listRequest.get(i).getFirst_material_id())),
-                                    new Date()));
+            if (listMaterialConflict != null) {
+                for (int i = 0; i < listRequest.size(); i++) {
+                    if (listRequest.get(i).getMaterialconflict_id() != 0) {
+                        for (int j = 0; j < listMaterialConflict.size(); j++) {
+                            if (listMaterialConflict.get(j).getFirst_material_id() == material_id) {
+                                MaterialConflict updateConflict = materialConflictRepository
+                                        .getMaterialConflictById(listRequest.get(j).getMaterialconflict_id());
+                                updateConflict.setFirst_material_id(listRequest.get(i).getFirst_material_id());
+                                updateConflict.setSecond_material_id(listRequest.get(i).getSecond_material_id());
+                                updateConflict.setDescription(listRequest.get(i).getDescription());
+                                materialConflictRepository.save(updateConflict);
+                                logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                                        "MATERIAL CONFLICT",
+                                        "UPDATE",
+                                        String.valueOf(materialConflictRepository.getMaterialConflictByTwoMaterial_id(
+                                                listRequest.get(i).getFirst_material_id(),
+                                                listRequest.get(i).getSecond_material_id())),
+                                        new Date()));
+                            } else if (listMaterialConflict.get(j).getSecond_material_id() == material_id) {
+                                MaterialConflict updateConflict = materialConflictRepository
+                                        .getMaterialConflictById(listRequest.get(j).getMaterialconflict_id());
+                                updateConflict.setFirst_material_id(listRequest.get(i).getSecond_material_id());
+                                updateConflict.setSecond_material_id(listRequest.get(i).getFirst_material_id());
+                                updateConflict.setDescription(listRequest.get(i).getDescription());
+                                materialConflictRepository.save(updateConflict);
+                                logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
+                                        "MATERIAL CONFLICT",
+                                        "UPDATE",
+                                        String.valueOf(materialConflictRepository.getMaterialConflictByTwoMaterial_id(
+                                                listRequest.get(i).getSecond_material_id(),
+                                                listRequest.get(i).getFirst_material_id())),
+                                        new Date()));
+                            }
+                            listMaterialConflict_id
+                                    .remove(Integer.valueOf(listRequest.get(i).getMaterialconflict_id()));
                         }
-                        listMaterialConflict_id.remove(Integer.valueOf(listRequest.get(i).getMaterialconflict_id()));
+                    } else if (listRequest.get(i).getMaterialconflict_id() == 0) {
+                        MaterialConflictCreateRequest createRequest = new MaterialConflictCreateRequest();
+                        createRequest.setFirst_material_id(listRequest.get(i).getFirst_material_id());
+                        createRequest.setSecond_material_id(listRequest.get(i).getSecond_material_id());
+                        createRequest.setDescription(listRequest.get(i).getDescription());
+                        listCreateRequest.add(createRequest);
                     }
-                } else if (listRequest.get(i).getMaterialconflict_id() == 0) {
-                    MaterialConflictCreateRequest createRequest = new MaterialConflictCreateRequest();
-                    createRequest.setFirst_material_id(listRequest.get(i).getFirst_material_id());
-                    createRequest.setSecond_material_id(listRequest.get(i).getSecond_material_id());
-                    createRequest.setDescription(listRequest.get(i).getDescription());
-                    listCreateRequest.add(createRequest);
                 }
             }
-            for (int i = 0; i < listCreateRequest.size(); i++) {
-                createMaterialConflict(listCreateRequest, jwt);
+            if (listCreateRequest != null) {
+                for (int i = 0; i < listCreateRequest.size(); i++) {
+                    createMaterialConflict(listCreateRequest, jwt);
+                }
             }
-            for (int i = 0; i < listMaterialConflict_id.size(); i++) {
-                deleteMaterialConflict(listMaterialConflict_id.get(i), jwt);
+            if (listMaterialConflict_id != null) {
+                for (int i = 0; i < listMaterialConflict_id.size(); i++) {
+                    deleteMaterialConflict(listMaterialConflict_id.get(i), jwt);
+                }
             }
         } catch (Exception e) {
             throw e;
