@@ -8,6 +8,7 @@ import java.util.List;
 import com.example.vfarmrdbackend.service.user.UserInProjectService;
 import com.example.vfarmrdbackend.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.log.Log;
@@ -368,4 +369,21 @@ public class ProjectService {
             throw e;
         }
     }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void setProjectIfOvertime() {
+        try {
+            Date date = new Date();
+            List<Project> listProject = projectRepository.findAll();
+            for (int i = 0; i < listProject.size(); i++) {
+                Project project = listProject.get(i);
+                if (date.equals(project.getComplete_date()) || date.after(project.getComplete_date())) {
+                    project.setProject_status("canceled");
+                }
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
 }
