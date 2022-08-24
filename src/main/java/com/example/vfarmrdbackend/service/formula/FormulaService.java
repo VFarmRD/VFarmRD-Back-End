@@ -538,12 +538,4 @@ public class FormulaService {
             throw e;
         }
     }
-
-    public Formula getFormulaInfoByFormula_id(int formula_id) {
-        try {
-            return formulaRepository.getFormulaByFormula_id(formula_id);
-        } catch (Exception e) {
-            throw e;
-        }
-    }
 }

@@ -22,7 +22,6 @@ import com.example.vfarmrdbackend.payload.file.FileResponse;
 import com.example.vfarmrdbackend.payload.test.TestGetResponse;
 import com.example.vfarmrdbackend.repository.test.TestRepository;
 import com.example.vfarmrdbackend.service.file.FileService;
-import com.example.vfarmrdbackend.service.formula.FormulaService;
 import com.example.vfarmrdbackend.service.notification.NotificationService;
 import com.example.vfarmrdbackend.service.others.JwtService;
 import com.example.vfarmrdbackend.service.project.ProjectService;
@@ -46,9 +45,6 @@ public class TestService {
 
     @Autowired
     ProjectService projectService;
-
-    @Autowired
-    FormulaService formulaService;
 
     public List<Test> getAllTestWithFormula_id(int formula_id, String jwt) {
         try {
@@ -103,13 +99,13 @@ public class TestService {
                 testRepository.save(test);
                 List<Integer> listUser = userInProjectService.getAllUser_idInProjectWithProject_id(
                         projectService.getProjectByFormula_id(testCreateRequest.getFormula_id()).getProject_id());
-
                 for (int j = 0; j < listUser.size(); j++) {
                     notificationService.createNotification(new Notification(
                             listUser.get(j),
                             "Thông báo",
-                            "Tiểu chuẩn của phiên bản " + formulaService
-                                    .getFormulaInfoByFormula_id(testCreateRequest.getFormula_id()).getFormula_version()
+                            "Tiểu chuẩn của phiên bản "
+                                    + testRepository
+                                            .getFormula_versionByFormula_idInTest(testCreateRequest.getFormula_id())
                                     + " trong dự án "
                                     + projectService.getProjectByFormula_id(testCreateRequest.getFormula_id())
                                             .getProject_name()
@@ -136,8 +132,8 @@ public class TestService {
                     notificationService.createNotification(new Notification(
                             listUser.get(j),
                             "Thông báo",
-                            "Tiểu chuẩn của phiên bản " + formulaService
-                                    .getFormulaInfoByFormula_id(test.getFormula_id()).getFormula_version()
+                            "Tiểu chuẩn của phiên bản " + testRepository
+                                    .getFormula_versionByFormula_idInTest(test.getFormula_id())
                                     + " trong dự án "
                                     + projectService.getProjectByFormula_id(test.getFormula_id())
                                             .getProject_name()

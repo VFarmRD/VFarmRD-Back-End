@@ -1,7 +1,6 @@
 package com.example.vfarmrdbackend.controller.material;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

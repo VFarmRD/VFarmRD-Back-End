@@ -24,4 +24,7 @@ public interface TestRepository extends JpaRepository<Test, Integer> {
 
     @Query(value = "select t.test_id from tests t where t.formula_id = :formula_id", nativeQuery = true)
     List<Integer> getTest_idWithFormula_id(@Param("formula_id") int formula_id);
+
+    @Query(value = "select f.formula_version from formulas f where f.formula_id = :formula_id", nativeQuery = true)
+    String getFormula_versionByFormula_idInTest(@Param("formula_id") int formula_id);
 }
