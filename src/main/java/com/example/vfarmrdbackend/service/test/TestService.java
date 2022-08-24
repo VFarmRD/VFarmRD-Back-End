@@ -1,8 +1,10 @@
 package com.example.vfarmrdbackend.service.test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.example.vfarmrdbackend.service.user.UserInProjectService;
 import com.example.vfarmrdbackend.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.example.vfarmrdbackend.model.test.Test;
 import com.example.vfarmrdbackend.model.user.User;
 import com.example.vfarmrdbackend.model.file.File;
+import com.example.vfarmrdbackend.model.notification.Notification;
 import com.example.vfarmrdbackend.payload.test.TestCreateRequest;
 import com.example.vfarmrdbackend.payload.test.TestCreateValue;
 import com.example.vfarmrdbackend.payload.test.TestUpdateMultipleRequest;
@@ -19,7 +22,10 @@ import com.example.vfarmrdbackend.payload.file.FileResponse;
 import com.example.vfarmrdbackend.payload.test.TestGetResponse;
 import com.example.vfarmrdbackend.repository.test.TestRepository;
 import com.example.vfarmrdbackend.service.file.FileService;
+import com.example.vfarmrdbackend.service.formula.FormulaService;
+import com.example.vfarmrdbackend.service.notification.NotificationService;
 import com.example.vfarmrdbackend.service.others.JwtService;
+import com.example.vfarmrdbackend.service.project.ProjectService;
 
 @Service
 public class TestService {
@@ -31,6 +37,18 @@ public class TestService {
 
     @Autowired
     FileService fileService;
+
+    @Autowired
+    NotificationService notificationService;
+
+    @Autowired
+    UserInProjectService userInProjectService;
+
+    @Autowired
+    ProjectService projectService;
+
+    @Autowired
+    FormulaService formulaService;
 
     public List<Test> getAllTestWithFormula_id(int formula_id, String jwt) {
         try {
@@ -83,6 +101,21 @@ public class TestService {
                 test.setTest_expect(testCreateValue.getTest_expect());
                 test.setTest_result(testCreateValue.isTest_result());
                 testRepository.save(test);
+                List<Integer> listUser = userInProjectService.getAllUser_idInProjectWithProject_id(
+                        projectService.getProjectByFormula_id(testCreateRequest.getFormula_id()).getProject_id());
+
+                for (int j = 0; j < listUser.size(); j++) {
+                    notificationService.createNotification(new Notification(
+                            listUser.get(j),
+                            "Thông báo",
+                            "Tiểu chuẩn của phiên bản " + formulaService
+                                    .getFormulaInfoByFormula_id(testCreateRequest.getFormula_id()).getFormula_version()
+                                    + " trong dự án "
+                                    + projectService.getProjectByFormula_id(testCreateRequest.getFormula_id())
+                                            .getProject_name()
+                                    + " đã được tạo!",
+                            new Date()));
+                }
             }
         } catch (Exception e) {
             throw e;
@@ -97,6 +130,20 @@ public class TestService {
                 test.setTest_expect(request.getTest_expect());
                 test.setTest_result(request.isTest_result());
                 testRepository.save(test);
+                List<Integer> listUser = userInProjectService.getAllUser_idInProjectWithProject_id(
+                        projectService.getProjectByFormula_id(test.getFormula_id()).getProject_id());
+                for (int j = 0; j < listUser.size(); j++) {
+                    notificationService.createNotification(new Notification(
+                            listUser.get(j),
+                            "Thông báo",
+                            "Tiểu chuẩn của phiên bản " + formulaService
+                                    .getFormulaInfoByFormula_id(test.getFormula_id()).getFormula_version()
+                                    + " trong dự án "
+                                    + projectService.getProjectByFormula_id(test.getFormula_id())
+                                            .getProject_name()
+                                    + " đã được cập nhật!",
+                            new Date()));
+                }
             }
         } catch (Exception e) {
             throw e;

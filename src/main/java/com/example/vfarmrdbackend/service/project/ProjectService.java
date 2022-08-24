@@ -386,4 +386,11 @@ public class ProjectService {
         }
     }
 
+    public Project getProjectByFormula_id(int formula_id) {
+        try {
+            return projectRepository.getProjectByFormula_id(formula_id);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

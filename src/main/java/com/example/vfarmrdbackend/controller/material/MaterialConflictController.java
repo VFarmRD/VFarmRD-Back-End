@@ -1,6 +1,7 @@
 package com.example.vfarmrdbackend.controller.material;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -86,7 +87,7 @@ public class MaterialConflictController {
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             materialConflictService.createMaterialConflict(request, jwt);
-            return ResponseEntity.status(HttpStatus.OK).body(
+            return ResponseEntity.status(HttpStatus.OK).body( 
                     new MessageResponse("Thành công", "Tạo nguyên liệu xung đột thành công!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
