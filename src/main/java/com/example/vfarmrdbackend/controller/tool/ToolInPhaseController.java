@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.vfarmrdbackend.payload.tool.ToolInPhaseRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.tool.request.ToolInPhaseRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
 import com.example.vfarmrdbackend.service.tool.ToolInPhaseService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

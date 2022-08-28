@@ -25,6 +25,16 @@ public class Test {
         return test_expect;
     }
 
+    public Test(int test_id, int formula_id, String test_content, int user_id, String test_expect,
+            boolean test_result) {
+        this.test_id = test_id;
+        this.formula_id = formula_id;
+        this.test_content = test_content;
+        this.user_id = user_id;
+        this.test_expect = test_expect;
+        this.test_result = test_result;
+    }
+
     public void setTest_expect(String test_expect) {
         this.test_expect = test_expect;
     }

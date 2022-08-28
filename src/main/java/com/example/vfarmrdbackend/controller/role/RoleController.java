@@ -1,6 +1,6 @@
 package com.example.vfarmrdbackend.controller.role;
 
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
 import com.example.vfarmrdbackend.service.role.RoleService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

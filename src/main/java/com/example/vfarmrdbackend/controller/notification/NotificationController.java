@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.vfarmrdbackend.payload.notification.NotificationRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.notification.request.NotificationRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
 import com.example.vfarmrdbackend.service.notification.NotificationService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

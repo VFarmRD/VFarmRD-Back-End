@@ -2,10 +2,10 @@ package com.example.vfarmrdbackend.controller.test;
 
 import java.util.List;
 
-import com.example.vfarmrdbackend.payload.test.TestCreateRequest;
-import com.example.vfarmrdbackend.payload.test.TestUpdateMultipleRequest;
-import com.example.vfarmrdbackend.payload.test.TestUpdateRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.test.request.TestCreateRequest;
+import com.example.vfarmrdbackend.payload.test.request.TestUpdateMultipleRequest;
+import com.example.vfarmrdbackend.payload.test.request.TestUpdateRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
 import com.example.vfarmrdbackend.service.test.TestService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -74,7 +74,8 @@ public class TestController {
     @PutMapping("/tests/{test_id}")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateTest(@PathVariable("test_id") int test_id,
-            @RequestBody TestUpdateRequest request, @RequestHeader(required = false, value = "Authorization") String jwt) {
+            @RequestBody TestUpdateRequest request,
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             testService.updateTest(test_id, request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");
@@ -87,7 +88,8 @@ public class TestController {
     @PutMapping("/tests/formulas/{formula_id}")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateMultipleTestInFormula(@PathVariable("formula_id") int formula_id,
-            @RequestBody List<TestUpdateMultipleRequest> listRequest, @RequestHeader(required = false, value = "Authorization") String jwt) {
+            @RequestBody List<TestUpdateMultipleRequest> listRequest,
+            @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             testService.updateMultipleTest(formula_id, listRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body("Update test successfully!");

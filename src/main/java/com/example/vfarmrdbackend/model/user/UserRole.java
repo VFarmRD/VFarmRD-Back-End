@@ -18,6 +18,12 @@ public class UserRole {
     public UserRole() {
     }
 
+    public UserRole(int user_role_id, int user_id, int role_id) {
+        this.user_role_id = user_role_id;
+        this.user_id = user_id;
+        this.role_id = role_id;
+    }
+
     public int getUser_role_id() {
         return user_role_id;
     }

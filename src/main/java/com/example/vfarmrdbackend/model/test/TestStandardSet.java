@@ -18,6 +18,12 @@ public class TestStandardSet {
     public TestStandardSet() {
     }
 
+    public TestStandardSet(int teststandardset_id, String teststandardset_name, String description) {
+        this.teststandardset_id = teststandardset_id;
+        this.teststandardset_name = teststandardset_name;
+        this.description = description;
+    }
+
     public int getTeststandardset_id() {
         return teststandardset_id;
     }

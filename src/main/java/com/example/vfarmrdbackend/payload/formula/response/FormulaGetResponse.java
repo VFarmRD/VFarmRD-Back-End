@@ -1,7 +1,7 @@
-package com.example.vfarmrdbackend.payload.formula;
+package com.example.vfarmrdbackend.payload.formula.response;
 
-import com.example.vfarmrdbackend.payload.phase.PhaseGetResponse;
-import com.example.vfarmrdbackend.payload.test.TestGetResponse;
+import com.example.vfarmrdbackend.payload.phase.response.PhaseGetResponse;
+import com.example.vfarmrdbackend.payload.test.response.TestGetResponse;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +26,29 @@ public class FormulaGetResponse {
     private Date modified_time;
 
     public FormulaGetResponse() {
+    }
+
+    public FormulaGetResponse(int project_id, String formula_version, float formula_cost, float formula_weight,
+            float user_id, String user_name, float volume, float product_weight, float density, String description,
+            float loss, String deny_reason, List<PhaseGetResponse> phaseGetResponse, String test_status,
+            List<TestGetResponse> listTestResponse, Date created_time, Date modified_time) {
+        this.project_id = project_id;
+        this.formula_version = formula_version;
+        this.formula_cost = formula_cost;
+        this.formula_weight = formula_weight;
+        this.user_id = user_id;
+        this.user_name = user_name;
+        this.volume = volume;
+        this.product_weight = product_weight;
+        this.density = density;
+        this.description = description;
+        this.loss = loss;
+        this.deny_reason = deny_reason;
+        this.phaseGetResponse = phaseGetResponse;
+        this.test_status = test_status;
+        this.listTestResponse = listTestResponse;
+        this.created_time = created_time;
+        this.modified_time = modified_time;
     }
 
     public float getVolume() {

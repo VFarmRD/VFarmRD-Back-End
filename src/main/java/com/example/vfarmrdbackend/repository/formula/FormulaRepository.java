@@ -24,8 +24,8 @@ public interface FormulaRepository extends JpaRepository<Formula, Integer> {
         @Query(value = "select * from formulas f where f.project_id = :project_id", nativeQuery = true)
         List<Formula> getAllFormulaByProject_id(@Param("project_id") int project_id);
 
-        @Query(value = "SELECT count(*) FROM formulas f WHERE f.project_id = :project_id", nativeQuery = true)
-        int getTotalFormulaOfProduct(@Param("project_id") int project_id);
+        @Query(value = "SELECT f.formula_version FROM formulas f WHERE f.project_id = :project_id order by f.formula_version desc limit 1;", nativeQuery = true)
+        String getLatestFormula_versionOfProject(@Param("project_id") int project_id);
 
         @Query(value = "SELECT f.formula_id FROM formulas f WHERE f.project_id = :project_id order by f.formula_id desc limit 1", nativeQuery = true)
         int getLatestFormula_idOfProject(@Param("project_id") int project_id);

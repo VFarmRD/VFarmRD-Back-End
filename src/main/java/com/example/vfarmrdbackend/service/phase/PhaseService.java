@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.vfarmrdbackend.model.material.MaterialOfPhase;
 import com.example.vfarmrdbackend.model.phase.Phase;
-import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseCreateRequest;
-import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseUpdateRequest;
-import com.example.vfarmrdbackend.payload.phase.PhaseCreateRequest;
-import com.example.vfarmrdbackend.payload.phase.PhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.material.request.MaterialOfPhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.material.request.MaterialOfPhaseCreateRequest;
+import com.example.vfarmrdbackend.payload.phase.request.PhaseCreateRequest;
+import com.example.vfarmrdbackend.payload.phase.request.PhaseUpdateRequest;
 import com.example.vfarmrdbackend.repository.material.MaterialOfPhaseRepository;
 import com.example.vfarmrdbackend.repository.phase.PhaseRepository;
 import com.example.vfarmrdbackend.service.tool.ToolInPhaseService;
@@ -46,10 +46,10 @@ public class PhaseService {
 
     public void createPhase(int formula_id, PhaseCreateRequest phaseCreateRequest, String jwt) {
         try {
-            Phase phase = new Phase();
-            phase.setFormula_id(formula_id);
-            phase.setPhase_index(phaseCreateRequest.getPhase_index());
-            phase.setPhase_description(phaseCreateRequest.getPhase_description());
+            Phase phase = new Phase(
+                    phaseCreateRequest.getPhase_index(),
+                    formula_id,
+                    phaseCreateRequest.getPhase_description());
             phaseRepository.save(phase);
         } catch (Exception e) {
             throw e;
@@ -113,9 +113,9 @@ public class PhaseService {
         }
     }
 
-    public int getNewestPhase_id(String jwt) {
+    public int getNewestPhase_idOfFormula(int formula_id, String jwt) {
         try {
-            return phaseRepository.getLatestPhase_id();
+            return phaseRepository.getNewestPhase_idOfFormula(formula_id);
         } catch (Exception e) {
             throw e;
         }

@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.product;
+package com.example.vfarmrdbackend.payload.product.response;
 
 public class ProductStatisticsResponse {
     private int total_product;

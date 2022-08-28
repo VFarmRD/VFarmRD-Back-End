@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.formula;
+package com.example.vfarmrdbackend.payload.formula.response;
 
 import java.util.Date;
 
@@ -22,6 +22,29 @@ public class FormulaGetAllResponse {
     private float loss;
 
     public FormulaGetAllResponse() {
+    }
+
+    public FormulaGetAllResponse(int formula_id, int project_id, String project_name, String formula_pre_version,
+            String formula_version, String formula_status, float formula_cost, float formula_weight, float user_id,
+            String user_name, float volume, float product_weight, float density, Date created_time, Date modified_time,
+            String description, float loss) {
+        this.formula_id = formula_id;
+        this.project_id = project_id;
+        this.project_name = project_name;
+        this.formula_pre_version = formula_pre_version;
+        this.formula_version = formula_version;
+        this.formula_status = formula_status;
+        this.formula_cost = formula_cost;
+        this.formula_weight = formula_weight;
+        this.user_id = user_id;
+        this.user_name = user_name;
+        this.volume = volume;
+        this.product_weight = product_weight;
+        this.density = density;
+        this.created_time = created_time;
+        this.modified_time = modified_time;
+        this.description = description;
+        this.loss = loss;
     }
 
     public Date getCreated_time() {

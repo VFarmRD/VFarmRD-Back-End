@@ -2,10 +2,10 @@ package com.example.vfarmrdbackend.controller.material;
 
 import java.util.List;
 
-import com.example.vfarmrdbackend.model.material.MaterialOfPhase;
-import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseUpdateRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.material.request.MaterialOfPhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
 import com.example.vfarmrdbackend.service.material.MaterialOfPhaseService;
+import com.example.vfarmrdbackend.service.others.ValidatorService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,17 +34,14 @@ public class MaterialOfPhaseController {
     @Autowired
     MaterialOfPhaseService materialOfPhaseService;
 
+    @Autowired
+    ValidatorService validatorService;
+
     @GetMapping("/materialofphase")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllMOPwithPhase_id(@RequestParam("phase_id") int phase_id) {
         try {
-            List<MaterialOfPhase> listMaterialOfPhases = materialOfPhaseService.getAllMaterialOfPhase(phase_id);
-            if (listMaterialOfPhases != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(listMaterialOfPhases);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        "Can't found any material!");
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(materialOfPhaseService.getAllMaterialOfPhase(phase_id));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -55,13 +52,7 @@ public class MaterialOfPhaseController {
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getMaterialOfPhase(@PathVariable("mop_id") int mop_id) {
         try {
-            MaterialOfPhase materialOfPhase = materialOfPhaseService.getMaterialOfPhase(mop_id);
-            if (materialOfPhase != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(materialOfPhase);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        "Can't found material!");
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(materialOfPhaseService.getMaterialOfPhase(mop_id));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -74,13 +65,21 @@ public class MaterialOfPhaseController {
             @RequestBody MaterialOfPhaseUpdateRequest materialOfPhaseUpdateRequest,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
-            if (materialOfPhaseService.updateMaterialOfPhase(materialOfPhaseUpdateRequest, jwt)) {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        "Update Material Of Phase successfully!");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        "Material Of Phase not found!");
+            if (validatorService.validateFloat(materialOfPhaseUpdateRequest.getMaterial_cost())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Giá nguyên liệu không hợp lệ!"));
             }
+            if (validatorService.validateFloat(materialOfPhaseUpdateRequest.getMaterial_percent())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Phần trăm nguyên liệu không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(materialOfPhaseUpdateRequest.getMaterial_weight())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng nguyên liệu không hợp lệ!"));
+            }
+            materialOfPhaseService.updateMaterialOfPhase(materialOfPhaseUpdateRequest, jwt);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new MessageResponse("Thành công", "Cập nhật nguyên liệu trong pha thành công!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -92,13 +91,9 @@ public class MaterialOfPhaseController {
     public ResponseEntity<?> deleteMaterialOfPhase(@PathVariable("mop_id") int mop_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
-            if (materialOfPhaseService.deleteMaterialOfPhase(mop_id, jwt)) {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        "Delete Material Of Phase successfully!");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        "Material Of Phase not found!");
-            }
+            materialOfPhaseService.deleteMaterialOfPhase(mop_id, jwt);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new MessageResponse("Thành công", "Xóa nguyên liệu trong pha thành công!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.material;
+package com.example.vfarmrdbackend.payload.material.request;
 
 public class MaterialConflictCreateRequest {
     private String first_material_id;

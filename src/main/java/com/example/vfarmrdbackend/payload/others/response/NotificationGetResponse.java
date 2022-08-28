@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.others;
+package com.example.vfarmrdbackend.payload.others.response;
 
 import java.util.Date;
 

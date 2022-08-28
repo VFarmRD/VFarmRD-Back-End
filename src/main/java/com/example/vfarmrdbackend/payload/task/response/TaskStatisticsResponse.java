@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.task;
+package com.example.vfarmrdbackend.payload.task.response;
 
 public class TaskStatisticsResponse {
     private int total_task;

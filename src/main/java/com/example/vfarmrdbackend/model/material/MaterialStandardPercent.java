@@ -18,6 +18,11 @@ public class MaterialStandardPercent {
     public MaterialStandardPercent() {
     }
 
+    public MaterialStandardPercent(String material_id, float max_percent) {
+        this.material_id = material_id;
+        this.max_percent = max_percent;
+    }
+
     public int getMsp_id() {
         return msp_id;
     }

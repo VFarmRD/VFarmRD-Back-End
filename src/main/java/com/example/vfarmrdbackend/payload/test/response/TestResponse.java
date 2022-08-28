@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.test;
+package com.example.vfarmrdbackend.payload.test.response;
 
 public class TestResponse {
     private int test_id;
@@ -10,6 +10,17 @@ public class TestResponse {
     private int teststandardset_id;
 
     public TestResponse() {
+    }
+
+    public TestResponse(int test_id, String test_content, int user_id, String test_expect, boolean test_result,
+            String object_type, int teststandardset_id) {
+        this.test_id = test_id;
+        this.test_content = test_content;
+        this.user_id = user_id;
+        this.test_expect = test_expect;
+        this.test_result = test_result;
+        this.object_type = object_type;
+        this.teststandardset_id = teststandardset_id;
     }
 
     public int getTest_id() {

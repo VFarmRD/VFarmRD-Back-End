@@ -1,10 +1,11 @@
-package com.example.vfarmrdbackend.payload.formula;
+package com.example.vfarmrdbackend.payload.formula.request;
 
-import com.example.vfarmrdbackend.payload.phase.PhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.phase.request.PhaseCreateRequest;
 
 import java.util.List;
 
-public class FormulaUpdateRequest {
+public class FormulaCreateRequest {
+    private int project_id;
     private float formula_cost;
     private float formula_weight;
     private float volume;
@@ -12,9 +13,9 @@ public class FormulaUpdateRequest {
     private float density;
     private String description;
     private float loss;
-    private List<PhaseUpdateRequest> phaseUpdateRequest;
+    private List<PhaseCreateRequest> phaseCreateRequest;
 
-    public FormulaUpdateRequest() {
+    public FormulaCreateRequest() {
     }
 
     public float getVolume() {
@@ -49,12 +50,12 @@ public class FormulaUpdateRequest {
         this.formula_cost = formula_cost;
     }
 
-    public List<PhaseUpdateRequest> getPhaseUpdateRequest() {
-        return phaseUpdateRequest;
+    public List<PhaseCreateRequest> getPhaseCreateRequest() {
+        return phaseCreateRequest;
     }
 
-    public void setPhaseUpdateRequest(List<PhaseUpdateRequest> phaseUpdateRequest) {
-        this.phaseUpdateRequest = phaseUpdateRequest;
+    public void setPhaseCreateRequest(List<PhaseCreateRequest> phaseCreateRequest) {
+        this.phaseCreateRequest = phaseCreateRequest;
     }
 
     public String getDescription() {
@@ -79,6 +80,14 @@ public class FormulaUpdateRequest {
 
     public void setFormula_weight(float formula_weight) {
         this.formula_weight = formula_weight;
+    }
+
+    public int getProject_id() {
+        return project_id;
+    }
+
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
     }
 
 }

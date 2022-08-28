@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.product;
+package com.example.vfarmrdbackend.payload.product.request;
 
 public class ProductUpdateRequest {
     private String product_id;

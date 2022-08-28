@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.project;
+package com.example.vfarmrdbackend.payload.project.response;
 
 public class ProjectStatisticsResponse {
     private int total_project;

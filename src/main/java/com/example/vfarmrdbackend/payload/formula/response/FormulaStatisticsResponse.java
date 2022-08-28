@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.formula;
+package com.example.vfarmrdbackend.payload.formula.response;
 
 public class FormulaStatisticsResponse {
     private int total_formula;

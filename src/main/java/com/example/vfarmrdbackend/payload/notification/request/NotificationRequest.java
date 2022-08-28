@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.notification;
+package com.example.vfarmrdbackend.payload.notification.request;
 
 import java.util.List;
 

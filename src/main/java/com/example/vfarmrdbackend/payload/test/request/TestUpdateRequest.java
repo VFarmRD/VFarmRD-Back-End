@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.test;
+package com.example.vfarmrdbackend.payload.test.request;
 
 public class TestUpdateRequest {
     private String test_content;

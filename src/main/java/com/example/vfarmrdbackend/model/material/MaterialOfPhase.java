@@ -22,6 +22,16 @@ public class MaterialOfPhase {
     public MaterialOfPhase() {
     }
 
+    public MaterialOfPhase(int phase_id, String material_id, float material_cost, float material_weight,
+            float material_percent, String material_description) {
+        this.phase_id = phase_id;
+        this.material_id = material_id;
+        this.material_cost = material_cost;
+        this.material_weight = material_weight;
+        this.material_percent = material_percent;
+        this.material_description = material_description;
+    }
+
     public float getMaterial_cost() {
         return material_cost;
     }

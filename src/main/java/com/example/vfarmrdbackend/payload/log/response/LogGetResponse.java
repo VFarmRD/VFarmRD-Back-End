@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.log;
+package com.example.vfarmrdbackend.payload.log.response;
 
 import java.util.Date;
 
@@ -11,6 +11,16 @@ public class LogGetResponse {
     private Date created_time;
 
     public LogGetResponse() {
+    }
+
+    public LogGetResponse(int log_id, int user_id, String user_fullname, String object_type, String object_id,
+            Date created_time) {
+        this.log_id = log_id;
+        this.user_id = user_id;
+        this.user_fullname = user_fullname;
+        this.object_type = object_type;
+        this.object_id = object_id;
+        this.created_time = created_time;
     }
 
     public int getLog_id() {

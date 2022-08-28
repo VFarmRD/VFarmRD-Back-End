@@ -26,6 +26,19 @@ public class Task {
     public Task() {
     }
 
+    public Task(int task_id, String task_name, int user_id, int project_id, Date created_date, Date start_date,
+            Date estimated_date, String task_status, String description) {
+        this.task_id = task_id;
+        this.task_name = task_name;
+        this.user_id = user_id;
+        this.project_id = project_id;
+        this.created_date = created_date;
+        this.start_date = start_date;
+        this.estimated_date = estimated_date;
+        this.task_status = task_status;
+        this.description = description;
+    }
+
     public int getTask_id() {
         return task_id;
     }

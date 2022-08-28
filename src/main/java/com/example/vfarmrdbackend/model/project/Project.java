@@ -29,6 +29,23 @@ public class Project {
     public Project() {
     }
 
+    public Project(int project_id, String project_name, String client_id, int created_user_id, String project_code,
+            Date created_time, Date modified_time, Date start_date, Date complete_date, String requirement,
+            String project_status, float estimated_weight) {
+        this.project_id = project_id;
+        this.project_name = project_name;
+        this.client_id = client_id;
+        this.created_user_id = created_user_id;
+        this.project_code = project_code;
+        this.created_time = created_time;
+        this.modified_time = modified_time;
+        this.start_date = start_date;
+        this.complete_date = complete_date;
+        this.requirement = requirement;
+        this.project_status = project_status;
+        this.estimated_weight = estimated_weight;
+    }
+
     public String getProject_status() {
         return project_status;
     }

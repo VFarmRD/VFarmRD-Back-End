@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.others;
+package com.example.vfarmrdbackend.payload.others.response;
 
 public class MessageResponse {
     private String title;

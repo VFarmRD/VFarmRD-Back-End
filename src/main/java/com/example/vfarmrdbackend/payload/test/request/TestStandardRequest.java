@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.test;
+package com.example.vfarmrdbackend.payload.test.request;
 
 public class TestStandardRequest {
     private String teststandard_name;

@@ -1,10 +1,11 @@
 package com.example.vfarmrdbackend.controller.formula;
 
-import com.example.vfarmrdbackend.payload.formula.FormulaCreateRequest;
-import com.example.vfarmrdbackend.payload.formula.FormulaUpdateRequest;
-import com.example.vfarmrdbackend.payload.formula.FormulaUpgradeRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.formula.request.FormulaCreateRequest;
+import com.example.vfarmrdbackend.payload.formula.request.FormulaUpdateRequest;
+import com.example.vfarmrdbackend.payload.formula.request.FormulaUpgradeRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
 import com.example.vfarmrdbackend.service.formula.FormulaService;
+import com.example.vfarmrdbackend.service.others.ValidatorService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,6 +32,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class FormulaController {
     @Autowired
     FormulaService formulaService;
+
+    @Autowired
+    ValidatorService validatorService;
 
     @GetMapping("/formulas")
     @PreAuthorize("hasAuthority('staff') " +
@@ -81,8 +85,31 @@ public class FormulaController {
     public ResponseEntity<?> createFormula(@RequestBody FormulaCreateRequest formulaCreateRequest,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    formulaService.createFormula(formulaCreateRequest, jwt));
+            if (validatorService.validateFloat(formulaCreateRequest.getFormula_cost())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Chi phí công thức không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaCreateRequest.getFormula_weight())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng công thức không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaCreateRequest.getVolume())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Thể tích công thức không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaCreateRequest.getProduct_weight())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng dự án không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaCreateRequest.getDensity())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Dung sai công thức không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaCreateRequest.getLoss())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Hao hụt công thức không hợp lệ!"));
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(formulaService.createFormula(formulaCreateRequest, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -94,13 +121,9 @@ public class FormulaController {
     public ResponseEntity<?> deleteFormula(@PathVariable("formula_id") int formula_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
-            if (formulaService.setFormula_status(formula_id, "canceled", jwt)) {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new MessageResponse("Thành công", "Công thức đã bị xóa!"));
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new MessageResponse("Lỗi", "Công thức không tồn tại!"));
-            }
+            formulaService.setFormula_status(formula_id, "canceled", jwt);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new MessageResponse("Thành công", "Công thức đã bị xóa!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -114,12 +137,32 @@ public class FormulaController {
             @RequestBody FormulaUpdateRequest formulaUpdateRequest,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
-            int id = formulaService.updateFormula(formula_id, formulaUpdateRequest, jwt);
-            if (id != 0) {
-                return ResponseEntity.status(HttpStatus.OK).body(id);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(id);
+            if (validatorService.validateFloat(formulaUpdateRequest.getFormula_cost())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Chi phí công thức không hợp lệ!"));
             }
+            if (validatorService.validateFloat(formulaUpdateRequest.getFormula_weight())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng công thức không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaUpdateRequest.getVolume())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Thể tích công thức không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaUpdateRequest.getProduct_weight())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng dự án không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaUpdateRequest.getDensity())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Dung sai công thức không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaUpdateRequest.getLoss())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Hao hụt công thức không hợp lệ!"));
+            }
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(formulaService.updateFormula(formula_id, formulaUpdateRequest, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -133,12 +176,32 @@ public class FormulaController {
             @RequestBody FormulaUpgradeRequest formulaUpgradeRequest,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
-            int id = formulaService.upgradeFormula(formula_id, formulaUpgradeRequest, jwt);
-            if (id != 0) {
-                return ResponseEntity.status(HttpStatus.OK).body(id);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(id);
+            if (validatorService.validateFloat(formulaUpgradeRequest.getFormula_cost())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Chi phí công thức không hợp lệ!"));
             }
+            if (validatorService.validateFloat(formulaUpgradeRequest.getFormula_weight())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng công thức không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaUpgradeRequest.getVolume())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Thể tích công thức không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaUpgradeRequest.getProduct_weight())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng dự án không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaUpgradeRequest.getDensity())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Dung sai công thức không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(formulaUpgradeRequest.getLoss())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Hao hụt công thức không hợp lệ!"));
+            }
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(formulaService.upgradeFormula(formula_id, formulaUpgradeRequest, jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

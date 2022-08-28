@@ -1,11 +1,10 @@
-package com.example.vfarmrdbackend.payload.formula;
+package com.example.vfarmrdbackend.payload.formula.request;
 
-import com.example.vfarmrdbackend.payload.phase.PhaseCreateRequest;
+import com.example.vfarmrdbackend.payload.phase.request.PhaseCreateRequest;
 
 import java.util.List;
 
-public class FormulaCreateRequest {
-    private int project_id;
+public class FormulaUpgradeRequest {
     private float formula_cost;
     private float formula_weight;
     private float volume;
@@ -15,7 +14,7 @@ public class FormulaCreateRequest {
     private float loss;
     private List<PhaseCreateRequest> phaseCreateRequest;
 
-    public FormulaCreateRequest() {
+    public FormulaUpgradeRequest() {
     }
 
     public float getVolume() {
@@ -80,14 +79,6 @@ public class FormulaCreateRequest {
 
     public void setFormula_weight(float formula_weight) {
         this.formula_weight = formula_weight;
-    }
-
-    public int getProject_id() {
-        return project_id;
-    }
-
-    public void setProject_id(int project_id) {
-        this.project_id = project_id;
     }
 
 }

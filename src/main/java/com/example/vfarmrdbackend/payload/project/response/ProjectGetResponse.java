@@ -1,9 +1,9 @@
-package com.example.vfarmrdbackend.payload.project;
+package com.example.vfarmrdbackend.payload.project.response;
 
 import java.util.Date;
 import java.util.List;
 
-import com.example.vfarmrdbackend.payload.user.UserInProjectResponse;
+import com.example.vfarmrdbackend.payload.user.response.UserInProjectResponse;
 
 public class ProjectGetResponse {
     private int project_id;

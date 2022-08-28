@@ -15,22 +15,22 @@ import com.example.vfarmrdbackend.model.notification.Notification;
 import com.example.vfarmrdbackend.model.phase.Phase;
 import com.example.vfarmrdbackend.model.test.Test;
 import com.example.vfarmrdbackend.model.user.User;
-import com.example.vfarmrdbackend.payload.formula.FormulaCreateRequest;
-import com.example.vfarmrdbackend.payload.formula.FormulaUpdateRequest;
-import com.example.vfarmrdbackend.payload.formula.FormulaUpgradeRequest;
-import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseCreateRequest;
-import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseUpdateRequest;
-import com.example.vfarmrdbackend.payload.phase.PhaseCreateRequest;
-import com.example.vfarmrdbackend.payload.phase.PhaseUpdateRequest;
-import com.example.vfarmrdbackend.payload.tool.ToolInPhaseRequest;
-import com.example.vfarmrdbackend.payload.formula.FormulaGetAllResponse;
-import com.example.vfarmrdbackend.payload.formula.FormulaGetResponse;
-import com.example.vfarmrdbackend.payload.formula.FormulaStatisticsFromDateToDateResponse;
-import com.example.vfarmrdbackend.payload.formula.FormulaStatisticsResponse;
-import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseGetResponse;
-import com.example.vfarmrdbackend.payload.phase.PhaseGetResponse;
-import com.example.vfarmrdbackend.payload.test.TestGetResponse;
-import com.example.vfarmrdbackend.payload.tool.ToolInPhaseResponse;
+import com.example.vfarmrdbackend.payload.formula.request.FormulaCreateRequest;
+import com.example.vfarmrdbackend.payload.formula.request.FormulaUpdateRequest;
+import com.example.vfarmrdbackend.payload.formula.request.FormulaUpgradeRequest;
+import com.example.vfarmrdbackend.payload.formula.response.FormulaGetAllResponse;
+import com.example.vfarmrdbackend.payload.formula.response.FormulaGetResponse;
+import com.example.vfarmrdbackend.payload.formula.response.FormulaStatisticsFromDateToDateResponse;
+import com.example.vfarmrdbackend.payload.formula.response.FormulaStatisticsResponse;
+import com.example.vfarmrdbackend.payload.material.request.MaterialOfPhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.material.request.MaterialOfPhaseCreateRequest;
+import com.example.vfarmrdbackend.payload.phase.request.PhaseCreateRequest;
+import com.example.vfarmrdbackend.payload.phase.request.PhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.tool.request.ToolInPhaseRequest;
+import com.example.vfarmrdbackend.payload.material.response.MaterialOfPhaseGetResponse;
+import com.example.vfarmrdbackend.payload.phase.response.PhaseGetResponse;
+import com.example.vfarmrdbackend.payload.test.response.TestGetResponse;
+import com.example.vfarmrdbackend.payload.tool.response.ToolInPhaseResponse;
 import com.example.vfarmrdbackend.repository.formula.FormulaRepository;
 import com.example.vfarmrdbackend.service.project.ProjectService;
 import com.example.vfarmrdbackend.service.test.TestService;
@@ -213,32 +213,38 @@ public class FormulaService {
 
     public int createFormula(FormulaCreateRequest formulaCreateRequest, String jwt) {
         try {
-            Formula formula = new Formula();
-            formula.setProject_id(formulaCreateRequest.getProject_id());
-            formula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
-            formula.setFormula_pre_version("none");
-            formula.setFormula_version(
-                    String.valueOf(formulaRepository.getTotalFormulaOfProduct(formula.getProject_id()) + 1));
-            formula.setFormula_status("on process");
-            formula.setFormula_cost(formulaCreateRequest.getFormula_cost());
-            formula.setFormula_weight(formulaCreateRequest.getFormula_weight());
-            formula.setVolume(formulaCreateRequest.getVolume());
-            formula.setProduct_weight(formulaCreateRequest.getProduct_weight());
-            formula.setDensity(formulaCreateRequest.getDensity());
-            formula.setDescription(formulaCreateRequest.getDescription());
-            formula.setLoss(formulaCreateRequest.getLoss());
-            formula.setCreated_time(new Date());
+            String latest_formula_version = formulaRepository
+                    .getLatestFormula_versionOfProject(formulaCreateRequest.getProject_id());
+            String formula_version = "";
+            if (latest_formula_version == null) {
+                formula_version = "1";
+            } else if (latest_formula_version.length() == 1) {
+                formula_version = String.valueOf(Integer.valueOf(latest_formula_version) + 1);
+            } else if (latest_formula_version.length() > 1) {
+                formula_version = String.valueOf(Integer.valueOf(latest_formula_version.split("\\.")[0]) + 1);
+            }
+            Formula formula = new Formula(formulaCreateRequest.getProject_id(),
+                    JwtService.getUser_idFromToken(jwt),
+                    "none",
+                    formula_version,
+                    "on process",
+                    formulaCreateRequest.getFormula_cost(),
+                    formulaCreateRequest.getFormula_weight(),
+                    new Date(),
+                    formulaCreateRequest.getVolume(),
+                    formulaCreateRequest.getProduct_weight(),
+                    formulaCreateRequest.getDensity(),
+                    formulaCreateRequest.getDescription(),
+                    formulaCreateRequest.getLoss());
             formulaRepository.save(formula);
             for (int i = 0; i < formulaCreateRequest.getPhaseCreateRequest().size(); i++) {
                 PhaseCreateRequest phaseCreateRequest = formulaCreateRequest.getPhaseCreateRequest().get(i);
-                phaseService.createPhase(
-                        formulaRepository.getLatestFormula_idOfProject(formulaCreateRequest.getProject_id()),
-                        phaseCreateRequest, jwt);
-                int newest_phase_id = phaseService.getNewestPhase_id(jwt);
+                int formula_id = formulaRepository.getLatestFormula_idOfProject(formulaCreateRequest.getProject_id());
+                phaseService.createPhase(formula_id, phaseCreateRequest, jwt);
+                int newest_phase_id = phaseService.getNewestPhase_idOfFormula(formula_id, jwt);
                 for (int j = 0; j < phaseCreateRequest.getMaterialOfPhaseCreateRequest().size(); j++) {
                     materialOfPhaseService.createMaterialOfPhase(newest_phase_id, phaseCreateRequest
                             .getMaterialOfPhaseCreateRequest().get(j), jwt);
-
                 }
                 if (phaseCreateRequest.getListTool_id().size() > 0 &&
                         phaseCreateRequest.getListTool_id().get(0) != 0) {
@@ -289,7 +295,7 @@ public class FormulaService {
                         List<MaterialOfPhaseUpdateRequest> listMaterialUpdateInput = phaseUpdateRequest
                                 .getMaterialOfPhaseUpdateRequest();
                         phaseService.createPhase(formula_id, phaseCreateRequest, jwt);
-                        phase_id = phaseService.getNewestPhase_id(jwt);
+                        phase_id = phaseService.getNewestPhase_idOfFormula(formula_id, jwt);
                         for (int j = 0; j < listMaterialUpdateInput.size(); j++) {
                             MaterialOfPhaseUpdateRequest materialOfPhaseUpdate = listMaterialUpdateInput.get(j);
                             MaterialOfPhaseCreateRequest materialOfPhaseCreate = new MaterialOfPhaseCreateRequest();
@@ -398,30 +404,31 @@ public class FormulaService {
     public int upgradeFormula(int formula_id, FormulaUpgradeRequest formulaUpgradeRequest, String jwt) {
         try {
             Formula formula = formulaRepository.getFormulaByFormula_id(formula_id);
-            Formula newFormula = new Formula();
             if (formula != null) {
-                newFormula.setProject_id(formula.getProject_id());
-                newFormula.setCreated_user_id(JwtService.getUser_idFromToken(jwt));
-                newFormula.setFormula_pre_version(formula.getFormula_version());
-                newFormula.setFormula_version(formula.getFormula_version() + "." + String
-                        .valueOf(formulaRepository.totalFormulaHaveMatchPreVersion(formula.getProject_id(),
-                                formula.getFormula_version()) + 1));
-                newFormula.setVolume(formulaUpgradeRequest.getVolume());
-                newFormula.setProduct_weight(formulaUpgradeRequest.getProduct_weight());
-                newFormula.setDensity(formulaUpgradeRequest.getDensity());
-                newFormula.setFormula_cost(formulaUpgradeRequest.getFormula_cost());
-                newFormula.setFormula_weight(formulaUpgradeRequest.getFormula_weight());
-                newFormula.setFormula_status("on process");
-                newFormula.setCreated_time(formula.getCreated_time());
-                newFormula.setModified_time(new Date());
-                newFormula.setDescription(formulaUpgradeRequest.getDescription());
-                newFormula.setLoss(formulaUpgradeRequest.getLoss());
+                Formula newFormula = new Formula(formula.getProject_id(),
+                        JwtService.getUser_idFromToken(jwt),
+                        formula.getFormula_version(),
+                        formula.getFormula_version() + "." + String
+                                .valueOf(formulaRepository.totalFormulaHaveMatchPreVersion(formula.getProject_id(),
+                                        formula.getFormula_version()) + 1),
+                        "on process",
+                        formulaUpgradeRequest.getFormula_cost(),
+                        formulaUpgradeRequest.getFormula_weight(),
+                        new Date(),
+                        formulaUpgradeRequest.getVolume(),
+                        formulaUpgradeRequest.getProduct_weight(),
+                        formulaUpgradeRequest.getDensity(),
+                        formulaUpgradeRequest.getDescription(),
+                        formulaUpgradeRequest.getLoss());
                 formulaRepository.save(newFormula);
                 for (int i = 0; i < formulaUpgradeRequest.getPhaseCreateRequest().size(); i++) {
                     PhaseCreateRequest phaseCreateRequest = formulaUpgradeRequest.getPhaseCreateRequest().get(i);
                     phaseService.createPhase(formulaRepository.getLatestFormula_idOfProject(formula.getProject_id()),
                             phaseCreateRequest, jwt);
-                    int newest_phase_id = phaseService.getNewestPhase_id(jwt);
+                    int newest_phase_id = phaseService.getNewestPhase_idOfFormula(
+                            formulaRepository.getFormula_idByProject_idAndVersion(newFormula.getProject_id(),
+                                    newFormula.getFormula_version()),
+                            jwt);
                     for (int j = 0; j < phaseCreateRequest.getMaterialOfPhaseCreateRequest().size(); j++) {
                         materialOfPhaseService.createMaterialOfPhase(newest_phase_id,
                                 phaseCreateRequest.getMaterialOfPhaseCreateRequest().get(j), jwt);

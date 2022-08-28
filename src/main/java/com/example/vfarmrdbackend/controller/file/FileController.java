@@ -1,8 +1,8 @@
 package com.example.vfarmrdbackend.controller.file;
 
 import com.example.vfarmrdbackend.model.file.File;
-import com.example.vfarmrdbackend.payload.file.FileResponse;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.file.response.FileResponse;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
 import com.example.vfarmrdbackend.service.file.FileService;
 import com.example.vfarmrdbackend.service.others.JwtService;
 
@@ -127,7 +127,7 @@ public class FileController {
                 try {
                         fileService.deleteFile(file_id, jwt);
                         return ResponseEntity.status(HttpStatus.OK).body(
-                                        "Delete File successfully!");
+                                new MessageResponse("Thành công", "Xóa File thành công!"));
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                                         new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.user.UserInProject;
-import com.example.vfarmrdbackend.payload.user.UserInProjectResponse;
+import com.example.vfarmrdbackend.payload.user.response.UserInProjectResponse;
 import com.example.vfarmrdbackend.repository.user.UserInProjectRepository;
 
 @Service

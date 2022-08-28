@@ -7,10 +7,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.example.vfarmrdbackend.model.user.User;
-import com.example.vfarmrdbackend.payload.user.UserRequest;
-import com.example.vfarmrdbackend.payload.user.LoginRequest;
-import com.example.vfarmrdbackend.payload.user.SignupRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.user.request.UserRequest;
+import com.example.vfarmrdbackend.payload.user.request.LoginRequest;
+import com.example.vfarmrdbackend.payload.user.request.SignupRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
 import com.example.vfarmrdbackend.repository.user.UserRepository;
 import com.example.vfarmrdbackend.service.user.UserService;
 import com.example.vfarmrdbackend.service.others.JwtService;

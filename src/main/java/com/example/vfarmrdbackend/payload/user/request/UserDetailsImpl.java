@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.user;
+package com.example.vfarmrdbackend.payload.user.request;
 
 import java.util.ArrayList;
 import java.util.Collection;

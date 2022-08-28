@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.tool;
+package com.example.vfarmrdbackend.payload.tool.response;
 
 public class ToolInPhaseResponse {
     private int toolinphase_id;

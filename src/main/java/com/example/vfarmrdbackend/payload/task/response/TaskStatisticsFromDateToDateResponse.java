@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.task;
+package com.example.vfarmrdbackend.payload.task.response;
 
 public class TaskStatisticsFromDateToDateResponse {
     private String date;

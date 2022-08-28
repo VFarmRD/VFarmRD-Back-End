@@ -32,6 +32,24 @@ public class Formula {
     public Formula() {
     }
 
+    public Formula(int project_id, int created_user_id, String formula_pre_version, String formula_version,
+            String formula_status, float formula_cost, float formula_weight, Date created_time, float volume,
+            float product_weight, float density, String description, float loss) {
+        this.project_id = project_id;
+        this.created_user_id = created_user_id;
+        this.formula_pre_version = formula_pre_version;
+        this.formula_version = formula_version;
+        this.formula_status = formula_status;
+        this.formula_cost = formula_cost;
+        this.formula_weight = formula_weight;
+        this.created_time = created_time;
+        this.volume = volume;
+        this.product_weight = product_weight;
+        this.density = density;
+        this.description = description;
+        this.loss = loss;
+    }
+
     public int getFormula_id() {
         return formula_id;
     }

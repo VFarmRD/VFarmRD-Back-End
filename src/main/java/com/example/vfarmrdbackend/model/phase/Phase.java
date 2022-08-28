@@ -19,6 +19,12 @@ public class Phase {
     public Phase() {
     }
 
+    public Phase(int phase_index, int formula_id, String phase_description) {
+        this.phase_index = phase_index;
+        this.formula_id = formula_id;
+        this.phase_description = phase_description;
+    }
+
     public int getPhase_id() {
         return phase_id;
     }

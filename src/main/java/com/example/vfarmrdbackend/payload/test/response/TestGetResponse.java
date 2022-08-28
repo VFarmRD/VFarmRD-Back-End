@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.test;
+package com.example.vfarmrdbackend.payload.test.response;
 
 import com.example.vfarmrdbackend.payload.file.response.FileResponse;
 
@@ -14,6 +14,19 @@ public class TestGetResponse {
     private FileResponse fileResponse;
 
     public TestGetResponse() {
+    }
+
+    public TestGetResponse(int test_id, String test_content, int user_id, String user_name, String user_role,
+            String test_expect, boolean test_result, String object_type, FileResponse fileResponse) {
+        this.test_id = test_id;
+        this.test_content = test_content;
+        this.user_id = user_id;
+        this.user_name = user_name;
+        this.user_role = user_role;
+        this.test_expect = test_expect;
+        this.test_result = test_result;
+        this.object_type = object_type;
+        this.fileResponse = fileResponse;
     }
 
     public int getTest_id() {

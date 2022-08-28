@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.phase;
+package com.example.vfarmrdbackend.payload.phase.request;
 
 import java.util.List;
 

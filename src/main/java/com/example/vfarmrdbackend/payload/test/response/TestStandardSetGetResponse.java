@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.test;
+package com.example.vfarmrdbackend.payload.test.response;
 
 import java.util.List;
 
@@ -11,6 +11,14 @@ public class TestStandardSetGetResponse {
     private List<TestStandard> testStandard;
 
     public TestStandardSetGetResponse() {
+    }
+
+    public TestStandardSetGetResponse(int teststandardset_id, String teststandardset_name, String description,
+            List<TestStandard> testStandard) {
+        this.teststandardset_id = teststandardset_id;
+        this.teststandardset_name = teststandardset_name;
+        this.description = description;
+        this.testStandard = testStandard;
     }
 
     public int getTeststandardset_id() {

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.log.Log;
 import com.example.vfarmrdbackend.model.material.MaterialStandardPercent;
-import com.example.vfarmrdbackend.payload.material.MaterialStandardPercentRequest;
+import com.example.vfarmrdbackend.payload.material.request.MaterialStandardPercentRequest;
 import com.example.vfarmrdbackend.repository.material.MaterialStandardPercentRepository;
 import com.example.vfarmrdbackend.service.log.LogService;
 import com.example.vfarmrdbackend.service.others.JwtService;
@@ -49,9 +49,9 @@ public class MaterialStandardPercentService {
         try {
             if (materialStandardPercentRepository
                     .getMaterialStandardPercentByMaterial_id(request.getMaterial_id()) == null) {
-                MaterialStandardPercent newMaterialStandardPercent = new MaterialStandardPercent();
-                newMaterialStandardPercent.setMaterial_id(request.getMaterial_id());
-                newMaterialStandardPercent.setMax_percent(request.getMax_percent());
+                MaterialStandardPercent newMaterialStandardPercent = new MaterialStandardPercent(
+                        request.getMaterial_id(),
+                        request.getMax_percent());
                 materialStandardPercentRepository.save(newMaterialStandardPercent);
                 logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                         "MATERIAL STANDARD PERCENT",

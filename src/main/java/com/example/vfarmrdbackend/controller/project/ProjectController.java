@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.vfarmrdbackend.payload.project.ProjectRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.project.request.ProjectRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
+import com.example.vfarmrdbackend.service.others.ValidatorService;
 import com.example.vfarmrdbackend.service.project.ProjectService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -29,6 +30,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class ProjectController {
     @Autowired
     ProjectService projectService;
+
+    @Autowired
+    ValidatorService validatorService;
 
     @GetMapping("/projects/")
     @PreAuthorize("hasAuthority('staff') " +
@@ -91,6 +95,26 @@ public class ProjectController {
     public ResponseEntity<?> createProject(@RequestBody ProjectRequest request,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
+            if (validatorService.validateString(request.getProject_name())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Tên dự án không hợp lệ!"));
+            }
+            if (validatorService.validateString(request.getProject_code())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Mã dự án không hợp lệ!"));
+            }
+            if (validatorService.validateDate(request.getStart_date(), request.getComplete_date())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Ngày bắt đầu hoặc ngày hoàn thành không hợp lệ!"));
+            }
+            if (validatorService.validateString(request.getRequirement())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Yêu cầu dự án không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(request.getEstimated_weight())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng dự án không hợp lệ!"));
+            }
             projectService.createProject(request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Tạo Dự Án mới thành công!"));
@@ -105,6 +129,26 @@ public class ProjectController {
     public ResponseEntity<?> updateProjects(@PathVariable("project_id") int project_id,
             @RequestBody ProjectRequest request, @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
+            if (validatorService.validateString(request.getProject_name())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Tên dự án không hợp lệ!"));
+            }
+            if (validatorService.validateString(request.getProject_code())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Mã dự án không hợp lệ!"));
+            }
+            if (validatorService.validateDate(request.getStart_date(), request.getComplete_date())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Ngày bắt đầu hoặc ngày hoàn thành không hợp lệ!"));
+            }
+            if (validatorService.validateString(request.getRequirement())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Yêu cầu dự án không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(request.getEstimated_weight())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng dự án không hợp lệ!"));
+            }
             projectService.updateProject(project_id, request, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Cập nhật Dự Án thành công!"));

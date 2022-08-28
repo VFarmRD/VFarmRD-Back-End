@@ -1,7 +1,7 @@
-package com.example.vfarmrdbackend.payload.phase;
+package com.example.vfarmrdbackend.payload.phase.response;
 
 import com.example.vfarmrdbackend.payload.material.response.MaterialOfPhaseGetResponse;
-import com.example.vfarmrdbackend.payload.tool.ToolInPhaseResponse;
+import com.example.vfarmrdbackend.payload.tool.response.ToolInPhaseResponse;
 
 import java.util.List;
 
@@ -13,6 +13,16 @@ public class PhaseGetResponse {
     private List<ToolInPhaseResponse> listToolInPhaseResponse;
 
     public PhaseGetResponse() {
+    }
+
+    public PhaseGetResponse(int phase_id, String phase_name, String phase_description,
+            List<MaterialOfPhaseGetResponse> materialOfPhaseGetResponse,
+            List<ToolInPhaseResponse> listToolInPhaseResponse) {
+        this.phase_id = phase_id;
+        this.phase_name = phase_name;
+        this.phase_description = phase_description;
+        this.materialOfPhaseGetResponse = materialOfPhaseGetResponse;
+        this.listToolInPhaseResponse = listToolInPhaseResponse;
     }
 
     public String getPhase_name() {

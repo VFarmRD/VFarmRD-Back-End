@@ -34,6 +34,28 @@ public class Product {
     public Product() {
     }
 
+    public Product(String product_code, String product_name, int formula_id, String client_id, int user_id,
+            String product_inquiry, String product_status, String brand_name, float volume, float product_weight,
+            float density, float tolerance, int material_norm_loss, Date created_time, String expired_date,
+            float retail_price) {
+        this.product_code = product_code;
+        this.product_name = product_name;
+        this.formula_id = formula_id;
+        this.client_id = client_id;
+        this.user_id = user_id;
+        this.product_inquiry = product_inquiry;
+        this.product_status = product_status;
+        this.brand_name = brand_name;
+        this.volume = volume;
+        this.product_weight = product_weight;
+        this.density = density;
+        this.tolerance = tolerance;
+        this.material_norm_loss = material_norm_loss;
+        this.created_time = created_time;
+        this.expired_date = expired_date;
+        this.retail_price = retail_price;
+    }
+
     public int getFormula_id() {
         return formula_id;
     }

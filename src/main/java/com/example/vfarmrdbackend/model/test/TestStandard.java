@@ -19,6 +19,13 @@ public class TestStandard {
     public TestStandard() {
     }
 
+    public TestStandard(int teststandard_id, String teststandard_name, String description, int teststandardset_id) {
+        this.teststandard_id = teststandard_id;
+        this.teststandard_name = teststandard_name;
+        this.description = description;
+        this.teststandardset_id = teststandardset_id;
+    }
+
     public int getTeststandard_id() {
         return teststandard_id;
     }

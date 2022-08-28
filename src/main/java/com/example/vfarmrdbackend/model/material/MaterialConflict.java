@@ -19,6 +19,12 @@ public class MaterialConflict {
     public MaterialConflict() {
     }
 
+    public MaterialConflict(String first_material_id, String second_material_id, String description) {
+        this.first_material_id = first_material_id;
+        this.second_material_id = second_material_id;
+        this.description = description;
+    }
+
     public int getMaterialconflict_id() {
         return materialconflict_id;
     }

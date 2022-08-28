@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 import com.example.vfarmrdbackend.model.log.Log;
 import com.example.vfarmrdbackend.model.notification.Notification;
 import com.example.vfarmrdbackend.model.project.Project;
-import com.example.vfarmrdbackend.payload.project.ProjectRequest;
-import com.example.vfarmrdbackend.payload.project.ProjectStatisticsFromDateToDateResponse;
-import com.example.vfarmrdbackend.payload.project.ProjectStatisticsResponse;
-import com.example.vfarmrdbackend.payload.project.ProjectGetResponse;
+import com.example.vfarmrdbackend.payload.project.request.ProjectRequest;
+import com.example.vfarmrdbackend.payload.project.response.ProjectStatisticsFromDateToDateResponse;
+import com.example.vfarmrdbackend.payload.project.response.ProjectStatisticsResponse;
+import com.example.vfarmrdbackend.payload.project.response.ProjectGetResponse;
 import com.example.vfarmrdbackend.repository.project.ProjectRepository;
 import com.example.vfarmrdbackend.service.log.LogService;
 import com.example.vfarmrdbackend.service.notification.NotificationService;
@@ -370,15 +370,15 @@ public class ProjectService {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 */15 * ? * *")
     public void setProjectIfOvertime() {
         try {
-            Date date = new Date();
             List<Project> listProject = projectRepository.findAll();
             for (int i = 0; i < listProject.size(); i++) {
                 Project project = listProject.get(i);
-                if (date.equals(project.getComplete_date()) || date.after(project.getComplete_date())) {
+                if (project.getComplete_date().equals(new Date()) || project.getComplete_date().before(new Date())) {
                     project.setProject_status("canceled");
+                    projectRepository.save(project);
                 }
             }
         } catch (Exception e) {

@@ -1,7 +1,5 @@
 package com.example.vfarmrdbackend.controller.task;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.vfarmrdbackend.payload.task.TaskCreateRequest;
-import com.example.vfarmrdbackend.payload.task.TaskUpdateRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
-import com.example.vfarmrdbackend.payload.task.TaskGetResponse;
+import com.example.vfarmrdbackend.payload.task.request.TaskCreateRequest;
+import com.example.vfarmrdbackend.payload.task.request.TaskUpdateRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
+import com.example.vfarmrdbackend.service.others.ValidatorService;
 import com.example.vfarmrdbackend.service.task.TaskService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -34,17 +32,14 @@ public class TaskController {
     @Autowired
     public TaskService taskService;
 
+    @Autowired
+    ValidatorService validatorService;
+
     @GetMapping("/tasks")
     @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllTasks(@RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
-            List<TaskGetResponse> listTasks = taskService.getAllTasks("%", jwt);
-            if (listTasks != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(listTasks);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        "Can't found any task!");
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(taskService.getAllTasks("%", jwt));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -68,8 +63,22 @@ public class TaskController {
     public ResponseEntity<?> createTask(@RequestBody TaskCreateRequest taskCreateRequest,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
+            if (validatorService.validateString(taskCreateRequest.getTask_name())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Tên nhiệm vụ không hợp lệ!"));
+            }
+            if (validatorService.validateDate(taskCreateRequest.getStart_date(),
+                    taskCreateRequest.getEstimated_date())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Ngày bắt đầu hoặc ngày dự tính không hợp lệ!"));
+            }
+            if (validatorService.validateString(taskCreateRequest.getDescription())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Ghi chú nhiệm vụ không hợp lệ!"));
+            }
             taskService.createTask(taskCreateRequest, jwt);
-            return ResponseEntity.status(HttpStatus.OK).body("Create Task successfully!!");
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new MessageResponse("Thành công", "Tạo nhiệm vụ thành công!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -82,11 +91,22 @@ public class TaskController {
             @RequestBody TaskUpdateRequest taskUpdateRequest,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
-            if (taskService.updateTask(task_id, taskUpdateRequest, jwt)) {
-                return ResponseEntity.status(HttpStatus.OK).body("Update task successfully!");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not found!");
+            if (validatorService.validateString(taskUpdateRequest.getTask_name())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Tên nhiệm vụ không hợp lệ!"));
             }
+            if (validatorService.validateDate(taskUpdateRequest.getStart_date(),
+                    taskUpdateRequest.getEstimated_date())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Ngày bắt đầu hoặc ngày dự tính không hợp lệ!"));
+            }
+            if (validatorService.validateString(taskUpdateRequest.getDescription())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Ghi chú nhiệm vụ không hợp lệ!"));
+            }
+            taskService.updateTask(task_id, taskUpdateRequest, jwt);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new MessageResponse("Thành công", "Cập nhật nhiệm vụ thành công!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -98,11 +118,9 @@ public class TaskController {
     public ResponseEntity<?> deleteTask(@PathVariable("task_id") int task_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
-            if (taskService.deleteTask(task_id, jwt)) {
-                return ResponseEntity.status(HttpStatus.OK).body("Delete task successfully!");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not found!");
-            }
+            taskService.deleteTask(task_id, jwt);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new MessageResponse("Thành công", "Xóa nhiệm vụ thành công!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -177,4 +195,5 @@ public class TaskController {
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
+
 }

@@ -10,9 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.vfarmrdbackend.model.material.MaterialOfPhase;
 import com.example.vfarmrdbackend.model.file.File;
-import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseCreateRequest;
-import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseUpdateRequest;
-import com.example.vfarmrdbackend.payload.material.MaterialStatisticResponse;
+import com.example.vfarmrdbackend.payload.material.request.MaterialOfPhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.material.response.MaterialStatisticResponse;
+import com.example.vfarmrdbackend.payload.material.request.MaterialOfPhaseCreateRequest;
 import com.example.vfarmrdbackend.repository.material.MaterialOfPhaseRepository;
 import com.example.vfarmrdbackend.service.file.FileService;
 
@@ -43,13 +43,12 @@ public class MaterialOfPhaseService {
     public void createMaterialOfPhase(int phase_id, MaterialOfPhaseCreateRequest materialOfPhaseCreateRequest,
             String jwt) {
         try {
-            MaterialOfPhase materialOfPhase = new MaterialOfPhase();
-            materialOfPhase.setPhase_id(phase_id);
-            materialOfPhase.setMaterial_id(materialOfPhaseCreateRequest.getMaterial_id());
-            materialOfPhase.setMaterial_cost(materialOfPhaseCreateRequest.getMaterial_cost());
-            materialOfPhase.setMaterial_weight(materialOfPhaseCreateRequest.getMaterial_weight());
-            materialOfPhase.setMaterial_percent(materialOfPhaseCreateRequest.getMaterial_percent());
-            materialOfPhase.setMaterial_description(materialOfPhaseCreateRequest.getMaterial_description());
+            MaterialOfPhase materialOfPhase = new MaterialOfPhase(phase_id,
+                    materialOfPhaseCreateRequest.getMaterial_id(),
+                    materialOfPhaseCreateRequest.getMaterial_cost(),
+                    materialOfPhaseCreateRequest.getMaterial_weight(),
+                    materialOfPhaseCreateRequest.getMaterial_percent(),
+                    materialOfPhaseCreateRequest.getMaterial_description());
             materialOfPhaseRepository.save(materialOfPhase);
         } catch (Exception e) {
             throw e;
@@ -84,17 +83,6 @@ public class MaterialOfPhaseService {
                 return true;
             }
             return false;
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    public void deleteAllMaterialsOfPhaseByPhase_id(int phase_id) {
-        try {
-            List<MaterialOfPhase> listMOP = materialOfPhaseRepository.getAllMaterialOfOnePhase(phase_id);
-            for (int i = 0; i < listMOP.size(); i++) {
-                materialOfPhaseRepository.delete(listMOP.get(i));
-            }
         } catch (Exception e) {
             throw e;
         }

@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.project;
+package com.example.vfarmrdbackend.payload.project.response;
 
 public class ProjectStatisticsFromDateToDateResponse {
     private String date;

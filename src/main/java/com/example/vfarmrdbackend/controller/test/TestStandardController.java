@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.vfarmrdbackend.payload.test.TestStandardRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.test.request.TestStandardRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
+import com.example.vfarmrdbackend.service.others.ValidatorService;
 import com.example.vfarmrdbackend.service.test.TestStandardService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -29,6 +30,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class TestStandardController {
     @Autowired
     TestStandardService testStandardService;
+
+    @Autowired
+    ValidatorService validatorService;
 
     @GetMapping("/teststandards")
     @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")

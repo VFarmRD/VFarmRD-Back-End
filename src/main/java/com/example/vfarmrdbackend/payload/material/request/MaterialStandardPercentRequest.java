@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.material;
+package com.example.vfarmrdbackend.payload.material.request;
 
 public class MaterialStandardPercentRequest {
     private String material_id;

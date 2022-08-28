@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.user;
+package com.example.vfarmrdbackend.payload.user.request;
 
 public class UserRequest {
     private int user_id;

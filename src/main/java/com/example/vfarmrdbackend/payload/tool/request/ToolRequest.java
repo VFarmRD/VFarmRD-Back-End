@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.tool;
+package com.example.vfarmrdbackend.payload.tool.request;
 
 public class ToolRequest {
     private String tool_name;

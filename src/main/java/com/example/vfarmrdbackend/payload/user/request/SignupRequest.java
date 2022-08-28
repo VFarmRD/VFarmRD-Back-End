@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.user;
+package com.example.vfarmrdbackend.payload.user.request;
 
 import javax.validation.constraints.*;
 

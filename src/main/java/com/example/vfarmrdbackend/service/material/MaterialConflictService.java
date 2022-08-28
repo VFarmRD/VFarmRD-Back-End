@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.log.Log;
 import com.example.vfarmrdbackend.model.material.MaterialConflict;
-import com.example.vfarmrdbackend.payload.material.MaterialConflictCreateRequest;
-import com.example.vfarmrdbackend.payload.material.MaterialConflictUpdateRequest;
+import com.example.vfarmrdbackend.payload.material.request.MaterialConflictCreateRequest;
+import com.example.vfarmrdbackend.payload.material.request.MaterialConflictUpdateRequest;
 import com.example.vfarmrdbackend.repository.material.MaterialConflictRepository;
 import com.example.vfarmrdbackend.service.log.LogService;
 import com.example.vfarmrdbackend.service.others.JwtService;
@@ -51,15 +51,15 @@ public class MaterialConflictService {
         try {
             for (int i = 0; i < listRequest.size(); i++) {
                 MaterialConflictCreateRequest request = listRequest.get(i);
-                MaterialConflict firstNewMaterialConflict = new MaterialConflict();
-                firstNewMaterialConflict.setFirst_material_id(request.getFirst_material_id());
-                firstNewMaterialConflict.setSecond_material_id(request.getSecond_material_id());
-                firstNewMaterialConflict.setDescription(request.getDescription());
+                MaterialConflict firstNewMaterialConflict = new MaterialConflict(
+                        request.getFirst_material_id(),
+                        request.getSecond_material_id(),
+                        request.getDescription());
                 materialConflictRepository.save(firstNewMaterialConflict);
-                MaterialConflict secondNewMaterialConflict = new MaterialConflict();
-                secondNewMaterialConflict.setFirst_material_id(request.getSecond_material_id());
-                secondNewMaterialConflict.setSecond_material_id(request.getFirst_material_id());
-                secondNewMaterialConflict.setDescription(request.getDescription());
+                MaterialConflict secondNewMaterialConflict = new MaterialConflict(
+                        request.getSecond_material_id(),
+                        request.getFirst_material_id(),
+                        request.getDescription());
                 materialConflictRepository.save(secondNewMaterialConflict);
                 logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
                         "MATERIAL CONFLICT",

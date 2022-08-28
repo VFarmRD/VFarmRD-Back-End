@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.formula;
+package com.example.vfarmrdbackend.payload.formula.response;
 
 public class FormulaStatisticsFromDateToDateResponse {
     private String date;

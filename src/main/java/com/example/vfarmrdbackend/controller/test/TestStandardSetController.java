@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.vfarmrdbackend.payload.test.TestStandardSetCreateRequest;
-import com.example.vfarmrdbackend.payload.test.TestStandardSetUpdateRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.test.request.TestStandardSetCreateRequest;
+import com.example.vfarmrdbackend.payload.test.request.TestStandardSetUpdateRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
 import com.example.vfarmrdbackend.service.test.TestStandardSetService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

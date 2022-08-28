@@ -16,12 +16,12 @@ import com.example.vfarmrdbackend.model.log.Log;
 import com.example.vfarmrdbackend.model.notification.Notification;
 import com.example.vfarmrdbackend.model.task.Task;
 import com.example.vfarmrdbackend.model.user.User;
-import com.example.vfarmrdbackend.payload.project.ProjectGetResponse;
-import com.example.vfarmrdbackend.payload.task.TaskCreateRequest;
-import com.example.vfarmrdbackend.payload.task.TaskUpdateRequest;
-import com.example.vfarmrdbackend.payload.task.TaskGetResponse;
-import com.example.vfarmrdbackend.payload.task.TaskStatisticsFromDateToDateResponse;
-import com.example.vfarmrdbackend.payload.task.TaskStatisticsResponse;
+import com.example.vfarmrdbackend.payload.project.response.ProjectGetResponse;
+import com.example.vfarmrdbackend.payload.task.request.TaskCreateRequest;
+import com.example.vfarmrdbackend.payload.task.request.TaskUpdateRequest;
+import com.example.vfarmrdbackend.payload.task.response.TaskGetResponse;
+import com.example.vfarmrdbackend.payload.task.response.TaskStatisticsFromDateToDateResponse;
+import com.example.vfarmrdbackend.payload.task.response.TaskStatisticsResponse;
 import com.example.vfarmrdbackend.repository.task.TaskRepository;
 import com.example.vfarmrdbackend.repository.user.UserRepository;
 import com.example.vfarmrdbackend.service.log.LogService;
@@ -47,7 +47,7 @@ public class TaskService {
 
     private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 */15 * ? * *")
     public void setTask_statusIfOvertime() {
         try {
             Date date = new Date();

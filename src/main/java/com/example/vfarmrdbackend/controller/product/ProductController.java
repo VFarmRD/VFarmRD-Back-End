@@ -3,9 +3,10 @@ package com.example.vfarmrdbackend.controller.product;
 import java.util.List;
 
 import com.example.vfarmrdbackend.model.product.Product;
-import com.example.vfarmrdbackend.payload.product.ProductCreateRequest;
-import com.example.vfarmrdbackend.payload.product.ProductUpdateRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.product.request.ProductCreateRequest;
+import com.example.vfarmrdbackend.payload.product.request.ProductUpdateRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
+import com.example.vfarmrdbackend.service.others.ValidatorService;
 import com.example.vfarmrdbackend.service.product.ProductService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -35,6 +36,9 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    ValidatorService validatorService;
+
     @GetMapping("/products")
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
@@ -60,12 +64,11 @@ public class ProductController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getProductByProduct_id(@PathVariable("product_id") String product_id) {
-        Product product = productService.getProductByProduct_id(product_id);
-        if (product != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(product);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    "Product not found!");
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(productService.getProductByProduct_id(product_id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -73,12 +76,11 @@ public class ProductController {
     @PreAuthorize("hasAuthority('staff') " +
             "or hasAuthority('manager')")
     public ResponseEntity<?> getProductByFormula_id(@PathVariable("formula_id") int formula_id) {
-        List<Product> products = productService.getProductByFormula_id(formula_id);
-        if (products != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(products);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    "Product not found!");
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(productService.getProductByFormula_id(formula_id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
     }
 
@@ -87,6 +89,38 @@ public class ProductController {
     public ResponseEntity<?> createProduct(@RequestBody ProductCreateRequest productCreateRequest,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
+            if (validatorService.validateString(productCreateRequest.getProduct_name())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Tên sản phẩm không hợp lệ!"));
+            }
+            if (validatorService.validateString(productCreateRequest.getBrand_name())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Tên doanh nghiệp không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(productCreateRequest.getVolume())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Thể tích sản phẩm không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(productCreateRequest.getProduct_weight())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng sản phẩm không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(productCreateRequest.getDensity())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng riêng không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(productCreateRequest.getTolerance())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Dung sai không hợp lệ!"));
+            }
+            if (validatorService.validateInteger(productCreateRequest.getMaterial_norm_loss())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Độ hao hụt nguyên liệu không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(productCreateRequest.getRetail_price())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Giá bán không hợp lệ!"));
+            }
             return ResponseEntity.status(HttpStatus.OK).body(
                     productService.createProduct(productCreateRequest, jwt));
         } catch (Exception e) {
@@ -100,9 +134,41 @@ public class ProductController {
     public ResponseEntity<?> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
+            if (validatorService.validateString(productUpdateRequest.getProduct_name())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Tên sản phẩm không hợp lệ!"));
+            }
+            if (validatorService.validateString(productUpdateRequest.getBrand_name())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Tên doanh nghiệp không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(productUpdateRequest.getVolume())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Thể tích sản phẩm không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(productUpdateRequest.getProduct_weight())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng sản phẩm không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(productUpdateRequest.getDensity())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Khối lượng riêng không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(productUpdateRequest.getTolerance())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Dung sai không hợp lệ!"));
+            }
+            if (validatorService.validateInteger(productUpdateRequest.getMaterial_norm_loss())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Độ hao hụt nguyên liệu không hợp lệ!"));
+            }
+            if (validatorService.validateFloat(productUpdateRequest.getRetail_price())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Giá bán không hợp lệ!"));
+            }
             productService.updateProduct(productUpdateRequest, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    "Update product successfully!");
+                    new MessageResponse("Thành công", "Cập nhật sản phẩm thành công!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
@@ -116,7 +182,7 @@ public class ProductController {
         try {
             productService.deleteProduct(product_id, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    "Delete product successfully!");
+                    new MessageResponse("Thành công", "Xóa sản phẩm thành công!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

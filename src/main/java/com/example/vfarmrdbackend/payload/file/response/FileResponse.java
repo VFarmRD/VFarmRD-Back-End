@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.file;
+package com.example.vfarmrdbackend.payload.file.response;
 
 public class FileResponse {
 

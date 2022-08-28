@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.material;
+package com.example.vfarmrdbackend.payload.material.response;
 
 public class MaterialOfPhaseGetResponse {
     private int mop_id;

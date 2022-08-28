@@ -1,4 +1,6 @@
-package com.example.vfarmrdbackend.payload.test;
+package com.example.vfarmrdbackend.payload.test.request;
+
+import com.example.vfarmrdbackend.payload.test.request.TestStandardRequest;
 
 import java.util.List;
 

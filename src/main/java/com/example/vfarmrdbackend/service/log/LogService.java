@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.log.Log;
-import com.example.vfarmrdbackend.payload.log.LogGetResponse;
+import com.example.vfarmrdbackend.payload.log.response.LogGetResponse;
 import com.example.vfarmrdbackend.repository.log.LogRepository;
 import com.example.vfarmrdbackend.repository.user.UserRepository;
 

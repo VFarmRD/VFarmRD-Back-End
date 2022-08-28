@@ -3,8 +3,8 @@ package com.example.vfarmrdbackend.controller.phase;
 import java.util.List;
 
 import com.example.vfarmrdbackend.model.phase.Phase;
-import com.example.vfarmrdbackend.payload.phase.PhaseUpdateRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.phase.request.PhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
 import com.example.vfarmrdbackend.service.phase.PhaseService;
 
 import org.springframework.beans.factory.annotation.Autowired;

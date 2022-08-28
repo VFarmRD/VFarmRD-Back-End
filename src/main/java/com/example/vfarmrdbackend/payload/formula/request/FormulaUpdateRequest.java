@@ -1,10 +1,10 @@
-package com.example.vfarmrdbackend.payload.formula;
+package com.example.vfarmrdbackend.payload.formula.request;
 
-import com.example.vfarmrdbackend.payload.phase.PhaseCreateRequest;
+import com.example.vfarmrdbackend.payload.phase.request.PhaseUpdateRequest;
 
 import java.util.List;
 
-public class FormulaUpgradeRequest {
+public class FormulaUpdateRequest {
     private float formula_cost;
     private float formula_weight;
     private float volume;
@@ -12,9 +12,9 @@ public class FormulaUpgradeRequest {
     private float density;
     private String description;
     private float loss;
-    private List<PhaseCreateRequest> phaseCreateRequest;
+    private List<PhaseUpdateRequest> phaseUpdateRequest;
 
-    public FormulaUpgradeRequest() {
+    public FormulaUpdateRequest() {
     }
 
     public float getVolume() {
@@ -49,12 +49,12 @@ public class FormulaUpgradeRequest {
         this.formula_cost = formula_cost;
     }
 
-    public List<PhaseCreateRequest> getPhaseCreateRequest() {
-        return phaseCreateRequest;
+    public List<PhaseUpdateRequest> getPhaseUpdateRequest() {
+        return phaseUpdateRequest;
     }
 
-    public void setPhaseCreateRequest(List<PhaseCreateRequest> phaseCreateRequest) {
-        this.phaseCreateRequest = phaseCreateRequest;
+    public void setPhaseUpdateRequest(List<PhaseUpdateRequest> phaseUpdateRequest) {
+        this.phaseUpdateRequest = phaseUpdateRequest;
     }
 
     public String getDescription() {

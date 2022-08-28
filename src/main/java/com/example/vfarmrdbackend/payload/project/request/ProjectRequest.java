@@ -1,4 +1,4 @@
-package com.example.vfarmrdbackend.payload.project;
+package com.example.vfarmrdbackend.payload.project.request;
 
 import java.util.Date;
 import java.util.List;

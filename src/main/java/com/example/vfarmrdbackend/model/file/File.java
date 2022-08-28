@@ -27,6 +27,19 @@ public class File {
     public File() {
     }
 
+    public File(int file_id, int user_id, String file_name, String file_type, String object_type, String object_id,
+            Date created_time, Date modified_time, byte[] file_data) {
+        this.file_id = file_id;
+        this.user_id = user_id;
+        this.file_name = file_name;
+        this.file_type = file_type;
+        this.object_type = object_type;
+        this.object_id = object_id;
+        this.created_time = created_time;
+        this.modified_time = modified_time;
+        this.file_data = file_data;
+    }
+
     public int getFile_id() {
         return file_id;
     }

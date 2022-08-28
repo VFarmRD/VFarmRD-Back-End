@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.vfarmrdbackend.model.test.TestStandard;
-import com.example.vfarmrdbackend.payload.test.TestStandardRequest;
-import com.example.vfarmrdbackend.payload.others.MessageResponse;
+import com.example.vfarmrdbackend.payload.test.request.TestStandardRequest;
+import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
 import com.example.vfarmrdbackend.repository.test.TestStandardRepository;
 
 @Service
