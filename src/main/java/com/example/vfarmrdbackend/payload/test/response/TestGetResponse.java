@@ -1,6 +1,6 @@
 package com.example.vfarmrdbackend.payload.test;
 
-import com.example.vfarmrdbackend.payload.file.FileResponse;
+import com.example.vfarmrdbackend.payload.file.response.FileResponse;
 
 public class TestGetResponse {
     private int test_id;

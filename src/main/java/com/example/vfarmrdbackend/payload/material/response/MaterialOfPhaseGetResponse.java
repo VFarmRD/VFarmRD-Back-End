@@ -11,6 +11,16 @@ public class MaterialOfPhaseGetResponse {
     public MaterialOfPhaseGetResponse() {
     }
 
+    public MaterialOfPhaseGetResponse(int mop_id, String material_id, float material_cost, float material_weight,
+            float material_percent, String material_description) {
+        this.mop_id = mop_id;
+        this.material_id = material_id;
+        this.material_cost = material_cost;
+        this.material_weight = material_weight;
+        this.material_percent = material_percent;
+        this.material_description = material_description;
+    }
+
     public int getMop_id() {
         return mop_id;
     }

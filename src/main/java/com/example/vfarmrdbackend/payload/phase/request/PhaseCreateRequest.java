@@ -1,8 +1,8 @@
 package com.example.vfarmrdbackend.payload.phase;
 
-import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseCreateRequest;
-
 import java.util.List;
+
+import com.example.vfarmrdbackend.payload.material.request.MaterialOfPhaseCreateRequest;
 
 public class PhaseCreateRequest {
     private int phase_index;

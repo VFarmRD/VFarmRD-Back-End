@@ -1,6 +1,6 @@
 package com.example.vfarmrdbackend.payload.phase;
 
-import com.example.vfarmrdbackend.payload.material.MaterialOfPhaseUpdateRequest;
+import com.example.vfarmrdbackend.payload.material.request.MaterialOfPhaseUpdateRequest;
 
 import java.util.List;
 
