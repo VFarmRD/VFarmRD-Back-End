@@ -104,7 +104,7 @@ public class TestService {
                 notificationService.createNotification(new Notification(
                         listUser.get(j),
                         "Thông báo",
-                        "Tiểu chuẩn của phiên bản "
+                        "Tiêu chuẩn của phiên bản "
                                 + testRepository
                                         .getFormula_versionByFormula_idInTest(testCreateRequest.getFormula_id())
                                 + " trong dự án "
@@ -126,20 +126,6 @@ public class TestService {
                 test.setTest_expect(request.getTest_expect());
                 test.setTest_result(request.isTest_result());
                 testRepository.save(test);
-                List<Integer> listUser = userInProjectService.getAllUser_idInProjectWithProject_id(
-                        projectService.getProjectByFormula_id(test.getFormula_id()).getProject_id());
-                for (int j = 0; j < listUser.size(); j++) {
-                    notificationService.createNotification(new Notification(
-                            listUser.get(j),
-                            "Thông báo",
-                            "Tiểu chuẩn của phiên bản " + testRepository
-                                    .getFormula_versionByFormula_idInTest(test.getFormula_id())
-                                    + " trong dự án "
-                                    + projectService.getProjectByFormula_id(test.getFormula_id())
-                                            .getProject_name()
-                                    + " đã được cập nhật!",
-                            new Date()));
-                }
             }
         } catch (Exception e) {
             throw e;
