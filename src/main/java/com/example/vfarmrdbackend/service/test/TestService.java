@@ -97,21 +97,21 @@ public class TestService {
                 test.setTest_expect(testCreateValue.getTest_expect());
                 test.setTest_result(testCreateValue.isTest_result());
                 testRepository.save(test);
-                List<Integer> listUser = userInProjectService.getAllUser_idInProjectWithProject_id(
-                        projectService.getProjectByFormula_id(testCreateRequest.getFormula_id()).getProject_id());
-                for (int j = 0; j < listUser.size(); j++) {
-                    notificationService.createNotification(new Notification(
-                            listUser.get(j),
-                            "Thông báo",
-                            "Tiểu chuẩn của phiên bản "
-                                    + testRepository
-                                            .getFormula_versionByFormula_idInTest(testCreateRequest.getFormula_id())
-                                    + " trong dự án "
-                                    + projectService.getProjectByFormula_id(testCreateRequest.getFormula_id())
-                                            .getProject_name()
-                                    + " đã được tạo!",
-                            new Date()));
-                }
+            }
+            List<Integer> listUser = userInProjectService.getAllUser_idInProjectWithProject_id(
+                    projectService.getProjectByFormula_id(testCreateRequest.getFormula_id()).getProject_id());
+            for (int j = 0; j < listUser.size(); j++) {
+                notificationService.createNotification(new Notification(
+                        listUser.get(j),
+                        "Thông báo",
+                        "Tiểu chuẩn của phiên bản "
+                                + testRepository
+                                        .getFormula_versionByFormula_idInTest(testCreateRequest.getFormula_id())
+                                + " trong dự án "
+                                + projectService.getProjectByFormula_id(testCreateRequest.getFormula_id())
+                                        .getProject_name()
+                                + " đã được tạo!",
+                        new Date()));
             }
         } catch (Exception e) {
             throw e;
