@@ -176,25 +176,6 @@ public class ProductService {
         }
     }
 
-    public boolean deleteProductFromSystem(String product_code, String jwt) {
-        try {
-            Product product = productRepository.getProductByProduct_code(product_code);
-            if (product != null) {
-                productRepository.delete(product);
-                logService.createLog(new Log(JwtService.getUser_idFromToken(jwt),
-                        "PRODUCT",
-                        "DELETE",
-                        String.valueOf(product.getProduct_id()),
-                        new Date()));
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
     public boolean checkProduct_codeExisted(String product_code) {
         try {
             Product product = productRepository.getProductByProduct_code(product_code);

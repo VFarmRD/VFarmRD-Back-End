@@ -30,7 +30,7 @@ public class ToolCategoryController {
     ToolCategoryService toolCategoryService;
 
     @GetMapping("/toolcategories/")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllToolCategories() {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -42,7 +42,7 @@ public class ToolCategoryController {
     }
 
     @GetMapping("/toolcategories/{toolcategory_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getToolCategory(@PathVariable("toolcategory_id") int toolcategory_id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -54,7 +54,7 @@ public class ToolCategoryController {
     }
 
     @PostMapping("/toolcategories")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createToolCategory(@RequestHeader(required = false, value = "Authorization") String jwt,
             @RequestBody ToolCategoryRequest request) {
         try {
@@ -68,7 +68,7 @@ public class ToolCategoryController {
     }
 
     @PutMapping("/toolcategories/{toolcategory_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateToolCategory(@PathVariable("toolcategory_id") int toolcategory_id,
             @RequestHeader(required = false, value = "Authorization") String jwt,
             @RequestBody ToolCategoryRequest request) {
@@ -83,7 +83,7 @@ public class ToolCategoryController {
     }
 
     @DeleteMapping("/toolcategories/{toolcategory_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteToolCategory(@PathVariable("toolcategory_id") int toolcategory_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {

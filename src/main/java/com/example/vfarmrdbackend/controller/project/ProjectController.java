@@ -35,8 +35,7 @@ public class ProjectController {
     ValidatorService validatorService;
 
     @GetMapping("/projects/")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllProject(@RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(projectService.getAllProjects(jwt));
@@ -47,8 +46,7 @@ public class ProjectController {
     }
 
     @GetMapping("/projects/users/{user_id}")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getProjectByUser_id(@PathVariable("user_id") int user_id,
             @RequestParam(defaultValue = "", required = false) String project_status,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
@@ -62,8 +60,7 @@ public class ProjectController {
     }
 
     @GetMapping("/projects/have-formula-status")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getProjectByStatus(
             @RequestParam(defaultValue = "", required = false) String formula_status,
             @RequestParam(defaultValue = "", required = false) String user_id,
@@ -78,8 +75,7 @@ public class ProjectController {
     }
 
     @GetMapping("/projects/{project_id}")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getProjectByProject_id(@PathVariable("project_id") int project_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -91,7 +87,7 @@ public class ProjectController {
     }
 
     @PostMapping("/projects/")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createProject(@RequestBody ProjectRequest request,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -125,7 +121,7 @@ public class ProjectController {
     }
 
     @PutMapping("/projects/{project_id}")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateProjects(@PathVariable("project_id") int project_id,
             @RequestBody ProjectRequest request, @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -159,7 +155,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/projects/{project_id}")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteProject(@PathVariable("project_id") int project_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -173,7 +169,7 @@ public class ProjectController {
     }
 
     @PutMapping("/projects/{project_id}/recover-project")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> recoverProject(@PathVariable("project_id") int project_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -187,8 +183,7 @@ public class ProjectController {
     }
 
     @GetMapping("/projects/materials/{material_id}")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getProjectByMaterial_id(@PathVariable("material_id") String material_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -226,8 +221,7 @@ public class ProjectController {
     }
 
     @GetMapping("/projects/clients/{client_id}")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getProjectByClient_id(@PathVariable("client_id") String client_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {

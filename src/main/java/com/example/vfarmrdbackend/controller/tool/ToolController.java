@@ -30,7 +30,7 @@ public class ToolController {
     ToolService toolService;
 
     @GetMapping("/tools")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllTools() {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -42,7 +42,7 @@ public class ToolController {
     }
 
     @GetMapping("/tools/toolcategories/{toolcategory_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllToolsWithToolCategory_id(@PathVariable("toolcategory_id") int toolcategory_id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -54,7 +54,7 @@ public class ToolController {
     }
 
     @GetMapping("/tools/{tool_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getTool(@PathVariable("tool_id") int tool_id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -66,7 +66,7 @@ public class ToolController {
     }
 
     @PostMapping("/tools")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createTool(@RequestBody ToolRequest request,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -80,7 +80,7 @@ public class ToolController {
     }
 
     @PutMapping("/tools/{tool_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateTool(@PathVariable("tool_id") int tool_id, @RequestBody ToolRequest request,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -94,7 +94,7 @@ public class ToolController {
     }
 
     @DeleteMapping("/tools/{tool_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteTool(@PathVariable("tool_id") int tool_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {

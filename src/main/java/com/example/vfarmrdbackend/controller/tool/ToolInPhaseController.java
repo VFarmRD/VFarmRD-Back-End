@@ -30,7 +30,7 @@ public class ToolInPhaseController {
     ToolInPhaseService toolInPhaseService;
 
     @GetMapping("/toolinphases")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllToolInPhase() {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -42,7 +42,7 @@ public class ToolInPhaseController {
     }
 
     @GetMapping("/toolinphases/{toolinphase_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getToolInPhase(@PathVariable("toolinphase_id") int toolinphase_id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -54,7 +54,7 @@ public class ToolInPhaseController {
     }
 
     @PostMapping("/toolinphases")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createToolInPhase(@RequestBody ToolInPhaseRequest request,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -68,7 +68,7 @@ public class ToolInPhaseController {
     }
 
     @PutMapping("/toolinphases/{toolinphase_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateToolInPhase(@PathVariable("toolinphase_id") int toolinphase_id,
             @RequestBody ToolInPhaseRequest request,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
@@ -83,7 +83,7 @@ public class ToolInPhaseController {
     }
 
     @DeleteMapping("/toolinphases/{toolinphase_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteToolInPhase(@PathVariable("toolinphase_id") int toolinphase_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {

@@ -47,7 +47,7 @@ public class TaskController {
     }
 
     @GetMapping("/tasks/{task_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getTaskByTask_id(@PathVariable("task_id") int task_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {

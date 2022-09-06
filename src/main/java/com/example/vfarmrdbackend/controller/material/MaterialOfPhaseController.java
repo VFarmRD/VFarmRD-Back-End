@@ -101,7 +101,7 @@ public class MaterialOfPhaseController {
     }
 
     @GetMapping("/materialofphase/projects/{project_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllMaterial_idWithProject_id(@PathVariable("project_id") int project_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -114,8 +114,7 @@ public class MaterialOfPhaseController {
     }
 
     @PostMapping("/materials/{material_id}/upload")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> uploadFileForMaterial(@RequestParam("file") List<MultipartFile> listFile,
             @PathVariable("material_id") String material_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
@@ -142,8 +141,7 @@ public class MaterialOfPhaseController {
     }
 
     @GetMapping("/materials/{material_id}/get-file")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getFileByMaterial_id(@PathVariable("material_id") String material_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {

@@ -37,8 +37,7 @@ public class FormulaController {
     ValidatorService validatorService;
 
     @GetMapping("/formulas")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllFormulaByProject_id(@RequestParam("project_id") int project_id,
             @RequestParam(defaultValue = "", required = false) String formula_status,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
@@ -52,8 +51,7 @@ public class FormulaController {
     }
 
     @GetMapping("/formulas/users/{user_id}")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllFormulaByUser_idAndFormula_status(@PathVariable("user_id") int user_id,
             @RequestParam(defaultValue = "", required = false) String formula_status,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
@@ -68,8 +66,7 @@ public class FormulaController {
     }
 
     @GetMapping("/formulas/{formula_id}")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getFormulaByFormula_id(@PathVariable("formula_id") int formula_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {

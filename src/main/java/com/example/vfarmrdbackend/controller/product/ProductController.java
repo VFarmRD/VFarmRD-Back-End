@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,8 +39,7 @@ public class ProductController {
     ValidatorService validatorService;
 
     @GetMapping("/products")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllProducts(@RequestParam(defaultValue = "", required = false) String product_name,
             @RequestParam(defaultValue = "", required = false) String client_id,
             @RequestParam(defaultValue = "", required = false) String created_user_id,
@@ -61,8 +59,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{product_id}")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getProductByProduct_id(@PathVariable("product_id") String product_id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(productService.getProductByProduct_id(product_id));
@@ -73,8 +70,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/formulas/{formula_id}")
-    @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getProductByFormula_id(@PathVariable("formula_id") int formula_id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(productService.getProductByFormula_id(formula_id));
@@ -85,7 +81,7 @@ public class ProductController {
     }
 
     @PostMapping("/products/create")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createProduct(@RequestBody ProductCreateRequest productCreateRequest,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -130,7 +126,7 @@ public class ProductController {
     }
 
     @PutMapping("/products/update")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -176,27 +172,13 @@ public class ProductController {
     }
 
     @PutMapping("/products/delete/{product_id}")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteProduct(@PathVariable("product_id") String product_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
             productService.deleteProduct(product_id, jwt);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new MessageResponse("Thành công", "Xóa sản phẩm thành công!"));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
-        }
-    }
-
-    @DeleteMapping("/products/{product_code}/remove-from-system")
-    @PreAuthorize("hasAuthority('manager')")
-    public ResponseEntity<?> removeProductFromSystem(@PathVariable("product_code") String product_code,
-            @RequestHeader(required = false, value = "Authorization") String jwt) {
-        try {
-            productService.deleteProductFromSystem(product_code, jwt);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    "Delete product successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));

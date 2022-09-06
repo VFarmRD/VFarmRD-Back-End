@@ -35,7 +35,7 @@ public class TestStandardController {
     ValidatorService validatorService;
 
     @GetMapping("/teststandards")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllStandard() {
         try {
             return testStandardService.getAllStandard();
@@ -46,7 +46,7 @@ public class TestStandardController {
     }
 
     @GetMapping("/teststandards/{teststandard_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getStandard(@RequestParam("teststandard_id") int teststandard_id) {
         try {
             return testStandardService.getStandard(teststandard_id);
@@ -57,7 +57,7 @@ public class TestStandardController {
     }
 
     @PostMapping("/teststandards")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createStandard(
             @RequestParam(defaultValue = "", required = false) int teststandardset_id,
             @RequestBody TestStandardRequest testStandardRequest, @RequestHeader(required = false, value = "Authorization") String jwt) {
@@ -70,7 +70,7 @@ public class TestStandardController {
     }
 
     @PutMapping("/teststandards/{teststandard_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateStandard(@PathVariable("teststandard_id") int teststandard_id,
             @RequestBody TestStandardRequest testStandardRequest, @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -82,7 +82,7 @@ public class TestStandardController {
     }
 
     @DeleteMapping("/teststandards/{teststandard_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteStandard(@RequestParam("teststandard_id") int teststandard_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {

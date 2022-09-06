@@ -32,7 +32,7 @@ public class TestStandardSetController {
     TestStandardSetService testStandardSetService;
 
     @GetMapping("/teststandardsets")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllStandardSet() {
         try {
             return testStandardSetService.getAllStandardSet();
@@ -43,7 +43,7 @@ public class TestStandardSetController {
     }
 
     @GetMapping("/teststandardsets/{teststandardset_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getStandardSet(@PathVariable("teststandardset_id") int teststandardset_id) {
         try {
             return testStandardSetService.getStandardSet(teststandardset_id);
@@ -54,7 +54,7 @@ public class TestStandardSetController {
     }
 
     @PostMapping("/teststandardsets")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createStandardSet(@RequestBody TestStandardSetCreateRequest request,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -66,7 +66,7 @@ public class TestStandardSetController {
     }
 
     @PutMapping("/teststandardsets/{teststandardset_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> updateStandardSet(@PathVariable("teststandardset_id") int teststandardset_id,
             @RequestBody TestStandardSetUpdateRequest request, @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -78,7 +78,7 @@ public class TestStandardSetController {
     }
 
     @DeleteMapping("/teststandardsets/{teststandardset_id}")
-    @PreAuthorize("hasAuthority('staff') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> deleteStandardSet(@RequestParam("teststandardset_id") int teststandardset_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {

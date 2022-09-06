@@ -38,8 +38,7 @@ public class FileController {
         FileService fileService;
 
         @PostMapping("/files/upload")
-        @PreAuthorize("hasAuthority('staff') " +
-                        "or hasAuthority('manager')")
+        @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
         public ResponseEntity<?> uploadFile(@RequestParam("file") List<MultipartFile> listFile,
                         @RequestParam("object_type") String object_type,
                         @RequestParam("object_id") String object_id,
@@ -58,8 +57,7 @@ public class FileController {
         }
 
         @GetMapping("/files")
-        @PreAuthorize("hasAuthority('staff') " +
-                        "or hasAuthority('manager')")
+        @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
         public ResponseEntity<?> getAllFilesWithUser_id(
                         @RequestHeader(required = false, value = "Authorization") String jwt) {
                 try {
@@ -97,8 +95,7 @@ public class FileController {
         }
 
         @GetMapping("/files/search")
-        @PreAuthorize("hasAuthority('staff') " +
-                        "or hasAuthority('manager')")
+        @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
         public ResponseEntity<?> findFileWithKeyword(@RequestParam("keyword") String keyword,
                         @RequestHeader(required = false, value = "Authorization") String jwt) {
                 try {
@@ -125,8 +122,7 @@ public class FileController {
         }
 
         @DeleteMapping("/files/delete/{file_id}")
-        @PreAuthorize("hasAuthority('staff') " +
-                        "or hasAuthority('manager')")
+        @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
         public ResponseEntity<?> deleteFile(@PathVariable("file_id") int file_id,
                         @RequestHeader(required = false, value = "Authorization") String jwt) {
                 try {
