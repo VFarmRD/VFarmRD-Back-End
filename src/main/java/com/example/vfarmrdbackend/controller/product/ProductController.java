@@ -41,7 +41,7 @@ public class ProductController {
 
     @GetMapping("/products")
     @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+            "or hasAuthority('manager') or hasAuthority('admin')")
     public ResponseEntity<?> getAllProducts(@RequestParam(defaultValue = "", required = false) String product_name,
             @RequestParam(defaultValue = "", required = false) String client_id,
             @RequestParam(defaultValue = "", required = false) String created_user_id,
@@ -62,7 +62,7 @@ public class ProductController {
 
     @GetMapping("/products/{product_id}")
     @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+            "or hasAuthority('manager') or hasAuthority('admin')")
     public ResponseEntity<?> getProductByProduct_id(@PathVariable("product_id") String product_id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(productService.getProductByProduct_id(product_id));
@@ -74,7 +74,7 @@ public class ProductController {
 
     @GetMapping("/products/formulas/{formula_id}")
     @PreAuthorize("hasAuthority('staff') " +
-            "or hasAuthority('manager')")
+            "or hasAuthority('manager') or hasAuthority('admin')")
     public ResponseEntity<?> getProductByFormula_id(@PathVariable("formula_id") int formula_id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(productService.getProductByFormula_id(formula_id));
@@ -85,7 +85,7 @@ public class ProductController {
     }
 
     @PostMapping("/products/create")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('admin') or hasAuthority('staff')")
     public ResponseEntity<?> createProduct(@RequestBody ProductCreateRequest productCreateRequest,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -130,7 +130,7 @@ public class ProductController {
     }
 
     @PutMapping("/products/update")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('admin') or hasAuthority('staff')")
     public ResponseEntity<?> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -176,7 +176,7 @@ public class ProductController {
     }
 
     @PutMapping("/products/delete/{product_id}")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('admin') or hasAuthority('staff')")
     public ResponseEntity<?> deleteProduct(@PathVariable("product_id") String product_id,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -190,7 +190,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/{product_code}/remove-from-system")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('admin') or hasAuthority('staff')")
     public ResponseEntity<?> removeProductFromSystem(@PathVariable("product_code") String product_code,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
@@ -204,7 +204,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/statistics")
-    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff') or hasAuthority('admin')")
     public ResponseEntity<?> getProductStatistics(
             @RequestParam(defaultValue = "none", required = false) String from_date,
             @RequestParam(defaultValue = "none", required = false) String to_date,
