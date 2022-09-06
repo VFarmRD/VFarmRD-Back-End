@@ -84,12 +84,12 @@ public class UserController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         try {
             if (userService.checkUser_nameIsExisted(signUpRequest.getUser_name())) {
-                return ResponseEntity.status(HttpStatus.IM_USED).body(
-                        "This username is already registered!");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Tên người dùng này đã được đăng ký!"));
             }
             if (userService.checkUser_nameIsExisted(signUpRequest.getEmail())) {
-                return ResponseEntity.status(HttpStatus.IM_USED).body(
-                        "This email is already registered!");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new MessageResponse("Lỗi", "Email này đã được đăng ký!"));
             }
             userService.register(signUpRequest);
             return ResponseEntity.status(HttpStatus.OK).body("Create account completed!");

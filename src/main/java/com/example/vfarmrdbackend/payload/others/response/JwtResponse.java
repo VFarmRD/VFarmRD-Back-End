@@ -3,8 +3,8 @@ package com.example.vfarmrdbackend.payload.others.response;
 import java.util.List;
 
 public class JwtResponse {
-  private String token;
-  private String type = "Bearer";
+  private String accessToken;
+  private String tokenType = "Bearer";
   private int user_id;
   private String user_name;
   private String fullname;
@@ -13,7 +13,7 @@ public class JwtResponse {
 
   public JwtResponse(String accessToken, int user_id, String user_name, String fullname, String email,
       List<String> roles) {
-    this.token = accessToken;
+    this.accessToken = accessToken;
     this.user_id = user_id;
     this.user_name = user_name;
     this.fullname = fullname;
@@ -22,19 +22,19 @@ public class JwtResponse {
   }
 
   public String getAccessToken() {
-    return token;
+    return accessToken;
   }
 
   public void setAccessToken(String accessToken) {
-    this.token = accessToken;
+    this.accessToken = accessToken;
   }
 
   public String getTokenType() {
-    return type;
+    return tokenType;
   }
 
   public void setTokenType(String tokenType) {
-    this.type = tokenType;
+    this.tokenType = tokenType;
   }
 
   public int getUser_id() {
@@ -45,40 +45,12 @@ public class JwtResponse {
     this.user_id = user_id;
   }
 
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
   public String getUser_name() {
     return user_name;
   }
 
   public void setUser_name(String user_name) {
     this.user_name = user_name;
-  }
-
-  public List<String> getRoles() {
-    return roles;
-  }
-
-  public String getToken() {
-    return token;
-  }
-
-  public void setToken(String token) {
-    this.token = token;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
   }
 
   public String getFullname() {
@@ -89,7 +61,20 @@ public class JwtResponse {
     this.fullname = fullname;
   }
 
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public List<String> getRoles() {
+    return roles;
+  }
+
   public void setRoles(List<String> roles) {
     this.roles = roles;
   }
+
 }

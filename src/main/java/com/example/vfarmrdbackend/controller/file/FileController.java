@@ -8,6 +8,7 @@ import com.example.vfarmrdbackend.service.others.JwtService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,9 @@ public class FileController {
                         return ResponseEntity.status(HttpStatus.OK).body(
                                         fileService.uploadFile(listFile, object_type,
                                                         object_id, jwt));
+                } catch (SizeLimitExceededException e) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                                        new MessageResponse("Lỗi", "File bạn tải lên quá giới hạn cho phép!(5MB)"));
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                                         new MessageResponse("Lỗi", "Hệ thống gặp sự cố!"));
@@ -56,7 +60,8 @@ public class FileController {
         @GetMapping("/files")
         @PreAuthorize("hasAuthority('staff') " +
                         "or hasAuthority('manager')")
-        public ResponseEntity<?> getAllFilesWithUser_id(@RequestHeader(required = false, value = "Authorization") String jwt) {
+        public ResponseEntity<?> getAllFilesWithUser_id(
+                        @RequestHeader(required = false, value = "Authorization") String jwt) {
                 try {
                         List<FileResponse> files = fileService
                                         .getAllFilesWithUser_id(JwtService.getUser_idFromToken(jwt))
@@ -127,7 +132,7 @@ public class FileController {
                 try {
                         fileService.deleteFile(file_id, jwt);
                         return ResponseEntity.status(HttpStatus.OK).body(
-                                new MessageResponse("Thành công", "Xóa File thành công!"));
+                                        new MessageResponse("Thành công", "Xóa File thành công!"));
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                                         new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
