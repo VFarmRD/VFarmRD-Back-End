@@ -100,7 +100,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    @PreAuthorize("hasAuthority('admin') or hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> getAllUsers(@RequestParam(defaultValue = "", required = false) String user_name,
             @RequestParam(defaultValue = "", required = false) String email,
             @RequestParam(defaultValue = "", required = false) String fullname,
