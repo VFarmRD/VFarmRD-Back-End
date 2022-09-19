@@ -91,7 +91,7 @@ public class ProjectController {
     }
 
     @PostMapping("/projects/")
-    @PreAuthorize("hasAuthority('manager')")
+    @PreAuthorize("hasAuthority('manager') or hasAuthority('staff')")
     public ResponseEntity<?> createProject(@RequestBody ProjectRequest request,
             @RequestHeader(required = false, value = "Authorization") String jwt) {
         try {
