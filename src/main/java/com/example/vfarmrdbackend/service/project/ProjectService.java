@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.example.vfarmrdbackend.model.formula.Formula;
+import com.example.vfarmrdbackend.repository.formula.FormulaRepository;
+import com.example.vfarmrdbackend.service.formula.FormulaService;
 import com.example.vfarmrdbackend.service.user.UserInProjectService;
 import com.example.vfarmrdbackend.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ import com.example.vfarmrdbackend.service.others.JwtService;
 public class ProjectService {
     @Autowired
     ProjectRepository projectRepository;
+
+    @Autowired
+    FormulaRepository formulaRepository;
 
     @Autowired
     LogService logService;
@@ -182,6 +188,15 @@ public class ProjectService {
             updateProject.setRequirement(request.getRequirement());
             updateProject.setEstimated_weight(request.getEstimated_weight());
             projectRepository.save(updateProject);
+            List<Formula> listFormulas = formulaRepository.getAllFormulaByProject_idAndStatus(project_id,
+                    "%on process%");
+            if(listFormulas.size() > 0) {
+                for (int i = 0; i < listFormulas.size(); i++) {
+
+                    listFormulas.get(i).setFormula_weight(request.getEstimated_weight());
+                }
+                formulaRepository.saveAll(listFormulas);
+            }
             List<Integer> listUserInProjectOld = userInProjectService.getAllUser_idInProjectWithProject_id(project_id);
             List<Integer> listUserInProjectNew = request.getListUser_id();
             for (int i = 0; i < listUserInProjectNew.size(); i++) {

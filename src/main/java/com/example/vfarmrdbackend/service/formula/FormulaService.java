@@ -106,6 +106,24 @@ public class FormulaService {
         }
     }
 
+//    public boolean updateAllFormulaWeightByProjectId (int project_id, float weightChange ) {
+//        try {
+//
+//            List<Formula> listFormulas = formulaRepository.getAllFormulaByProject_idAndStatus(project_id,
+//                    "%on process%");
+//            if(listFormulas.size() > 0) {
+//                for (int i = 0; i < listFormulas.size(); i++) {
+//                    listFormulas.get(i).setFormula_weight(weightChange);
+//                }
+//                formulaRepository.saveAll(listFormulas);
+//                return  true;
+//            }
+//            return false;
+//        } catch (Exception e) {
+//            throw e;
+//        }
+//    }
+
     public List<FormulaGetAllResponse> getAllFormulaByUser_idAndFormula_status(int user_id, String formula_status,
             String jwt) {
         try {
