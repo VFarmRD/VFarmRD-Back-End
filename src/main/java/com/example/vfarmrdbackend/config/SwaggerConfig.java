@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 
+import java.util.ArrayList;
+
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "VFarm RD API", version = "v1"))
 @SecurityScheme(
@@ -16,5 +18,4 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
     scheme = "bearer"
 )
 public class SwaggerConfig {
-    
 }
