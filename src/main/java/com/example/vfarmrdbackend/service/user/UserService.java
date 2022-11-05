@@ -204,6 +204,21 @@ public class UserService {
         }
     }
 
+    public boolean updateUserPass(User user){
+        try{
+            User u = userRepository.getUserByUser_name(user.getUser_name());
+            if(u != null){
+                u.setPassword(encoder.encode(user.getPassword()));
+                userRepository.save(u);
+                return true;
+            }else {
+                return false;
+            }
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
     public boolean updateUser(UserRequest userRequest, String jwt) {
         try {
             User user = userRepository.getUserByUser_id(userRequest.getUser_id());
