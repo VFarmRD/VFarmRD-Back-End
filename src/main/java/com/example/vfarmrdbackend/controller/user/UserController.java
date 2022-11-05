@@ -6,12 +6,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.example.vfarmrdbackend.entity.EmailDetails;
 import com.example.vfarmrdbackend.model.user.User;
 import com.example.vfarmrdbackend.payload.user.request.UserRequest;
 import com.example.vfarmrdbackend.payload.user.request.LoginRequest;
 import com.example.vfarmrdbackend.payload.user.request.SignupRequest;
 import com.example.vfarmrdbackend.payload.others.response.MessageResponse;
 import com.example.vfarmrdbackend.repository.user.UserRepository;
+import com.example.vfarmrdbackend.service.email.EmailService;
 import com.example.vfarmrdbackend.service.user.UserService;
 import com.example.vfarmrdbackend.service.others.JwtService;
 
@@ -52,6 +54,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    private EmailService emailService;
 
     Date date;
 
@@ -207,6 +212,31 @@ public class UserController {
                         "Token chưa hết hạn!"));
             }
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
+        }
+    }
+
+    @PostMapping("/auth/renewPassword/{user_name}")
+    public ResponseEntity<?> renewPassword(@PathVariable("user_name") String user_name){
+        try{
+            User user = userRepository.getUserByUser_name(user_name);
+            if(user!=null){
+                String newPass = user.generatePassword(6);
+                String email = user.getEmail();
+                user.setPassword(newPass);
+                userService.updateUserPass(user);
+                EmailDetails details = new EmailDetails(email,"Hệ thống VFARM R&D cập nhật mật khẩu mới cho tài khoản "+user_name+ "\n"+ newPass+"\n", "Hệ Thống VFARM R&D");
+                boolean result = emailService.sendSimpleMail(details);
+                if(result) {
+                    return ResponseEntity.status(HttpStatus.OK).body("Reset password successfully");
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hệ thống đã gặp sự cố!");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is not exist");
+            }
+        }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new MessageResponse("Lỗi", "Hệ thống đã gặp sự cố!"));
         }
